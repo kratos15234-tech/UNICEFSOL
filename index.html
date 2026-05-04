@@ -87,11 +87,24 @@
     footer { position:fixed; bottom:20px; width:100%; text-align:center; font-size:.7rem; opacity:0; z-index:100; letter-spacing:1px; }
 
     @media (max-width: 768px) {
-      header { padding:16px 20px; }
-      #frontsuper { background-size: auto 100%; background-position: left center; width: 55%; left: 0; }
-      #backsuper { background-size: auto 100%; background-position: right center; width: 55%; right: 0; }
-      .layer { padding: 0 6%; }
-    }
+  header { padding:16px 20px; }
+
+  /* Configuration pour que les deux commencent à droite */
+  #frontsuper, #backsuper { 
+    background-size: cover;      /* L'image garde ses proportions en couvrant la zone */
+    background-position: right center; /* L'ancrage est à droite */
+    width: 80%;                  /* Largeur de l'image (ajuste de 0 à 100% selon tes goûts) */
+    left: auto;                  /* On annule le positionnement gauche */
+    right: 0;                    /* On colle l'élément à droite */
+  }
+
+  /* Si tu veux qu'ils se chevauchent avec des opacités différentes (déjà géré par tes IDs) */
+  #frontsuper { z-index: 5; }
+  #backsuper { z-index: 1; }
+
+  .layer { padding: 0 6%; }
+}
+    
   </style>
 </head>
 <body>
