@@ -88,39 +88,43 @@
 
    @media (max-width: 768px) {
   header { padding:16px 20px; }
-  
-  #frontsuper, #backsuper {
-    width: 100%;
-    height: 100vh;
-    left: 0;
-    right: 0;
-    background-repeat: no-repeat;
-    background-position: right bottom;
-    /* Zoom pour correspondre à ton souhait précédent */
-    background-size: auto 85%; 
 
-    /* LE DÉGRADÉ AUX EXTRÉMITÉS : */
-    /* On crée un masque : transparent en haut/bas, opaque au milieu */
-    -webkit-mask-image: linear-gradient(
-      to bottom,
-      transparent 0%,
-      black 15%,
-      black 85%,
-      transparent 100%
-    );
-    mask-image: linear-gradient(
-      to bottom,
-      transparent 0%,
-      black 15%,
-      black 85%,
-      transparent 100%
-    );
+  #frontsuper, #backsuper {
+    /* On force la taille pour que l'image déborde et crée le zoom */
+    width: 150%; 
+    height: 120vh; /* Plus haut que l'écran pour éviter les trous mauves */
+    top: -10vh;    /* On remonte un peu pour centrer le zoom verticalement */
+    left: auto;
+    right: -20%;   /* On la décale vers la droite pour coller l'arbre au bord */
+    
+    background-repeat: no-repeat;
+    background-position: right center;
+    background-size: contain;
+    
+    /* Le dégradé de couleur qui "mange" les bords haut et bas pour cacher le mauve */
+    /* On utilise la couleur de ton fond (#9945FF) pour que ça se fonde dedans */
+    mask-image: linear-gradient(to bottom, transparent, black 20%, black 80%, transparent);
+    -webkit-mask-image: linear-gradient(to bottom, transparent, black 20%, black 80%, transparent);
   }
 
-  #frontsuper { z-index: 5; } 
-  #backsuper { z-index: 1; }
+  /* On ajuste le zoom différemment pour chaque couche pour donner de la profondeur */
+  #frontsuper { 
+    transform: scale(1.4); /* Zoom supplémentaire */
+    z-index: 5; 
+  }
+  
+  #backsuper { 
+    transform: scale(1.2); 
+    z-index: 1; 
+    opacity: 0.3; 
+  }
 
-  .layer { padding: 0 6%; }
+  /* On s'assure que le contenu texte reste par-dessus et lisible */
+  .layer { 
+    padding: 0 6%; 
+    z-index: 20; 
+    background: transparent; 
+  }
 }
     
   </style>
