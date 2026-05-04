@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>$UNICEF — Charity Token</title>
+  <title>$unicef — charity token</title>
   <link rel="icon" type="image/png" href="logo.png">
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;600&display=swap" rel="stylesheet">
   <style>
@@ -51,7 +51,7 @@
     .amount-header { font-size:clamp(5rem,15vw,10rem); }
     #dynamic-text {
       font-size:clamp(2.5rem,6vw,4.5rem); color:#14F195; min-height:1.2em;
-      text-transform:uppercase; letter-spacing:2px;
+      text-transform:lowercase; letter-spacing:2px;
     }
 
     /* ── MISSION ── */
@@ -73,8 +73,8 @@
     .mission-tag { display:inline-flex; align-items:center; gap:10px; margin-top: -8px; position:relative; z-index:2; }
     .mission-tag-line { width: clamp(30px, 5vw, 60px); height:1px; background: linear-gradient(90deg, transparent, #14F195); }
     .mission-tag-line.right { background: linear-gradient(90deg, #14F195, transparent); }
-    .mission-tag-text { font-family:'Outfit'; font-weight:600; font-size: clamp(.6rem, 1.4vw, .85rem); letter-spacing: 4px; text-transform:uppercase; color:#14F195; }
-    .mission-subtitle { font-family:'Outfit'; font-weight:300; font-size: clamp(.75rem, 1.6vw, 1rem); letter-spacing: 2px; text-transform:uppercase; color:rgba(255,255,255,0.5); margin-top: 18px; max-width: 500px; line-height: 1.8; }
+    .mission-tag-text { font-family:'Outfit'; font-weight:600; font-size: clamp(.6rem, 1.4vw, .85rem); letter-spacing: 4px; color:#14F195; }
+    .mission-subtitle { font-family:'Outfit'; font-weight:300; font-size: clamp(.75rem, 1.6vw, 1rem); letter-spacing: 2px; color:rgba(255,255,255,0.5); margin-top: 18px; max-width: 500px; line-height: 1.8; }
 
     .mission-ca-row { display:flex; align-items:center; gap:12px; margin-top: 28px; }
     .ca-display {
@@ -118,7 +118,7 @@
 <body>
 
 <header>
-  <div class="logo-area"><img src="logo.png" height="40"><span>UNICEF</span></div>
+  <div class="logo-area"><img src="logo.png" height="40"><span>unicef</span></div>
   <div class="nav-btns">
     <a href="https://x.com/i/communities/2011296092843831350" target="_blank" class="btn community-btn">community</a>
     <a href="https://pump.fun/coin/3t4GiENDepWKkGicwDoMz2V2fWDZXHLAoJ3ZrpZQpump" target="_blank" class="btn btn-buy">buy $unicef</a>
@@ -155,7 +155,7 @@
     </div>
 
     <div id="amount-layer" class="layer">
-        <p style="letter-spacing:8px; opacity:.6; margin-bottom:20px; text-transform:uppercase; font-size:.8rem;">total donations generated</p>
+        <p style="letter-spacing:8px; opacity:.6; margin-bottom:20px; font-size:.8rem;">total donations generated</p>
         <h2 class="bebas amount-header" id="total-donations">$17,971.19</h2>
         <div style="width:min(600px,85vw); margin-top:40px;">
           <div style="position:relative; height:6px; background:rgba(255,255,255,0.12); border-radius:50px; overflow:visible;">
@@ -213,7 +213,7 @@
     .to('footer', { opacity:1 }, 6.5);
 
   // ── TYPEWRITER
-  const ph = ["42,600 Polio Vaccines", "8,500 Days of essential food", "12,400 Clean water kits", "A second chance for thousands"];
+  const ph = ["42,600 polio vaccines", "8,500 days of essential food", "12,400 clean water kits", "a second chance for thousands"];
   let cur=0, del=false, tx='', el=document.getElementById('dynamic-text');
   function loop() {
     if(!el) return;
@@ -226,7 +226,7 @@
     let o={v:0}; gsap.to(o, { v:100, duration:2, onUpdate:()=>document.getElementById('mpct').innerText=Math.ceil(o.v)+"%" });
   }});
   document.getElementById('ca-text').onclick=function(){
-    navigator.clipboard.writeText(this.innerText); this.innerText="COPIED!";
+    navigator.clipboard.writeText(this.innerText); this.innerText="copied!";
     setTimeout(()=>this.innerText="3t4GiENDepWKkGicwDoMz2V2fWDZXHLAoJ3ZrpZQpump",2000);
   };
   
