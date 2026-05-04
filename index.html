@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>$UNICEF — Charity Token</title>
+  <link rel="icon" type="image/png" href="logo.png">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;600&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    ::-webkit-scrollbar { width: 0; }
+    body { font-family:'Outfit',sans-serif; color:#fff; overflow-x:hidden; background:#9945FF; }
+    
+    #bg-container, #bg-gradient-final, #particles { position:fixed; inset:0; z-index:-1; }
+    #bg-gradient-final { background:linear-gradient(135deg, #9945FF, #14F195); opacity:0; }
+    
+    header { position:fixed; width:100%; display:flex; justify-content:space-between; align-items:center; padding:30px 50px; z-index:100; }
+    .logo-area { display:flex; align-items:center; gap:12px; font-family:'Bebas Neue'; font-size:2rem; }
+    .nav-btns { display:flex; gap:15px; }
+    .btn { text-decoration:none; color:#fff; font-family:'Bebas Neue'; font-size:1.1rem; padding:8px 20px; border:1px solid rgba(255,255,255,.3); border-radius:50px; transition:.3s; }
+    .btn-buy { background:#14F195; color:#000; border:none; }
+
+    #pin-wrap { position:relative; height:900vh; }
+    #pin-scene { position:sticky; top:0; height:100vh; overflow:hidden; }
+    
+    #backsuper, #frontsuper { position:absolute; bottom:0; width:100%; height:100vh; background-size:cover; mix-blend-mode:screen; pointer-events:none; will-change:transform, opacity; }
+    #backsuper { background-image:url('backsuper.png'); z-index:1; opacity:0.4; }
+    #frontsuper { background-image:url('frontsuper.png'); z-index:5; opacity:0.6; }
+
+    .layer { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:0 10%; opacity:0; z-index:10; }
+    .bebas { font-family:'Bebas Neue'; }
+    .amount-header { font-size:clamp(5rem,15vw,10rem); }
+    #dynamic-text { font-size:clamp(2.5rem,6vw,4.5rem); color:#14F195; min-height:1.2em; text-transform:uppercase; letter-spacing:2px; }
+    .ca-display { font-family:monospace; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); padding:12px 20px; border-radius:10px; font-size:0.85rem; color:#14F195; cursor:pointer; margin-top:20px; transition:.3s; }
+    footer { position:fixed; bottom:20px; width:100%; text-align:center; font-size:.7rem; opacity:0; z-index:100; letter-spacing:1px; }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo-area"><img src="logo.png" height="40"><span>UNICEF</span></div>
+  <div class="nav-btns">
+    <a href="https://x.com/i/communities/1968544109838348672" target="_blank" class="btn">COMMUNITY</a>
+    <a href="https://dexscreener.com/solana/5vfdymua7t5ms1qqbrvb5kre5cebasks621h1jvjtvjs" target="_blank" class="btn btn-buy">BUY $UNICEF</a>
+  </div>
+</header>
+
+<div id="bg-container"><div id="bg-gradient-final"></div></div>
+<canvas id="particles"></canvas>
+
+<div id="pin-wrap">
+  <div id="pin-scene">
+    <div id="backsuper"></div><div id="frontsuper"></div>
+
+    <div id="hero-title" class="layer" style="opacity:1">
+      <span class="bebas" style="font-size:clamp(6rem,18vw,12rem); line-height:.8;">EVERY TRADE SAVES</span>
+      <p class="bebas" style="letter-spacing:10px; margin-top:30px; opacity:0.8;">FOR THE CHILDREN</p>
+    </div>
+
+    <div id="mission-content" class="layer">
+      <h2 class="bebas" style="font-size:clamp(8rem,25vw,18rem); line-height:.8;" id="mpct">0%</h2>
+      <div class="bebas" style="background:#14F195; color:#000; padding:5px 15px; font-size:1.5rem; border-radius:4px;">OF ALL FEES GOING DIRECTLY TO UNICEF</div>
+      <div class="ca-display" id="ca-text">3t4GiENDepWKkGicwDoMz2V2fWDZXHLAoJ3ZrpZQpump</div>
+    </div>
+
+    <div id="amount-layer" class="layer">
+        <p style="letter-spacing:8px; opacity:.6; margin-bottom:20px; text-transform:uppercase;">Total Donations Generated</p>
+        <h2 class="bebas amount-header">$17,903.73</h2>
+    </div>
+
+    <div id="story-layer" class="layer">
+      <h2 class="bebas" style="font-size:clamp(3rem,8vw,5rem); opacity:0.7; margin-bottom:20px;">$17,903.73 REPRESENTS...</h2>
+      <div id="dynamic-text" class="bebas"></div>
+    </div>
+
+    <div id="quote-layer" class="layer">
+      <h2 class="bebas" style="font-size:clamp(4rem,10vw,7rem); line-height:1;">TRADING CRYPTO CAN<br><span style="color:#14F195;">SAVE A LIFE.</span></h2>
+    </div>
+  </div>
+</div>
+
+<footer>COMMUNITY CHARITY PROJECT • NOT FINANCIAL ADVICE • INVEST RESPONSIBLY</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+  gsap.registerPlugin(ScrollTrigger);
+  const tl = gsap.timeline({ scrollTrigger:{ trigger:'#pin-wrap', start:'top top', end:'bottom bottom', scrub:1.2 }});
+
+  tl.to('#bg-gradient-final', { opacity:1 }, 0)
+    .to('#hero-title', { opacity:0, y:-50 }, 0.5)
+    .to('#backsuper', { opacity:0, y:'100vh' }, 0.5) 
+    .to('#mission-content', { opacity:1, y:0 }, 0.6)
+    .to('#mission-content', { opacity:0, y:-50 }, 1.5)
+    .to('#frontsuper', { opacity:0, y:'100vh' }, 1.5)
+    .to('#backsuper', { opacity:0.4, y:0 }, 1.6) 
+    .to('#amount-layer', { opacity:1 }, 1.6)
+    .to('#amount-layer', { opacity:0, y:-50 }, 3.2)
+    .to('#backsuper', { opacity:0, y:'100vh' }, 3.2)
+    .to('#frontsuper', { opacity:0.6, y:0 }, 3.3) 
+    .to('#story-layer', { opacity:1 }, 3.3)
+    .to('#story-layer', { opacity:0, y:-50 }, 5.5)
+    .to('#frontsuper', { opacity:0, y:'100vh' }, 5.5) 
+    .to('#quote-layer', { opacity:1 }, 6)
+    .to('footer', { opacity:1 }, 6.5);
+
+  const ph = ["42,600 Polio Vaccines", "8,500 Days of essential food", "12,400 Clean water kits", "A second chance for thousands"];
+  let cur=0, del=false, tx='', el=document.getElementById('dynamic-text');
+  function loop() {
+    let f=ph[cur]; tx=del ? f.substring(0,tx.length-1) : f.substring(0,tx.length+1); el.innerHTML=tx;
+    let s=del?50:100; if(!del&&tx===f){s=2000;del=true} else if(del&&tx===''){del=false;cur=(cur+1)%ph.length;s=500}
+    setTimeout(loop,s);
+  }
+  ScrollTrigger.create({ trigger:'#pin-wrap', start:'55% top', onEnter:()=>loop(), once:true });
+  ScrollTrigger.create({ trigger:'#pin-wrap', start:'15% top', onEnter:()=>{
+    let o={v:0}; gsap.to(o, { v:100, duration:2, onUpdate:()=>document.getElementById('mpct').innerText=Math.ceil(o.v)+"%" });
+  }});
+  document.getElementById('ca-text').onclick=function(){
+    navigator.clipboard.writeText(this.innerText); this.innerText="COPIED!";
+    setTimeout(()=>this.innerText="3t4GiENDepWKkGicwDoMz2V2fWDZXHLAoJ3ZrpZQpump",2000);
+  };
+  const cv=document.getElementById('particles'), cx=cv.getContext('2d');
+  let W,H; rsz=()=>{W=cv.width=innerWidth; H=cv.height=innerHeight}; rsz(); window.onresize=rsz;
+  const pts = Array(80).fill().map(()=>({x:Math.random()*W, y:Math.random()*H, r:Math.random()*1.5, vy:Math.random()*.2+.1, o:Math.random()}));
+  (function anim(){
+    cx.clearRect(0,0,W,H);
+    pts.forEach(p=>{p.y-=p.vy; if(p.y<0)p.y=H; cx.fillStyle=`rgba(255,255,255,${p.o})`; cx.beginPath(); cx.arc(p.x,p.y,p.r,0,7); cx.fill()});
+    requestAnimationFrame(anim);
+  })();
+</script>
+</body>
+</html>
