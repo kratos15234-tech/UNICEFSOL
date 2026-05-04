@@ -87,45 +87,31 @@
     footer { position:fixed; bottom:20px; width:100%; text-align:center; font-size:.7rem; opacity:0; z-index:100; letter-spacing:1px; }
 
    @media (max-width: 768px) {
-  header { padding:16px 20px; }
+      header { padding:16px 20px; }
+      
+      #frontsuper, #backsuper {
+        width: 100%;
+        left: 0;
+        right: 0;
+        background-repeat: no-repeat;
+        /* On pousse l'image vers le bas et on l'ancre à DROITE */
+        background-position: right bottom; 
+        /* LE ZOOM : On agrandit l'image (250% par ex) pour simuler la 2ème capture */
+        background-size: auto 80%; 
+      }
 
-  #frontsuper, #backsuper {
-    /* On force la taille pour que l'image déborde et crée le zoom */
-    width: 150%; 
-    height: 120vh; /* Plus haut que l'écran pour éviter les trous mauves */
-    top: -10vh;    /* On remonte un peu pour centrer le zoom verticalement */
-    left: auto;
-    right: -20%;   /* On la décale vers la droite pour coller l'arbre au bord */
-    
-    background-repeat: no-repeat;
-    background-position: right center;
-    background-size: contain;
-    
-    /* Le dégradé de couleur qui "mange" les bords haut et bas pour cacher le mauve */
-    /* On utilise la couleur de ton fond (#9945FF) pour que ça se fonde dedans */
-    mask-image: linear-gradient(to bottom, transparent, black 20%, black 80%, transparent);
-    -webkit-mask-image: linear-gradient(to bottom, transparent, black 20%, black 80%, transparent);
-  }
+      /* Ajustements spécifiques pour chaque couche */
+      #frontsuper { 
+        background-size: auto 75%; /* Zoom sur les enfants/arbres du devant */
+        z-index: 5; 
+      } 
+      #backsuper { 
+        background-size: auto 90%; /* Un peu plus grand pour l'arrière-plan */
+        z-index: 1; 
+      }
 
-  /* On ajuste le zoom différemment pour chaque couche pour donner de la profondeur */
-  #frontsuper { 
-    transform: scale(1.4); /* Zoom supplémentaire */
-    z-index: 5; 
-  }
-  
-  #backsuper { 
-    transform: scale(1.2); 
-    z-index: 1; 
-    opacity: 0.3; 
-  }
-
-  /* On s'assure que le contenu texte reste par-dessus et lisible */
-  .layer { 
-    padding: 0 6%; 
-    z-index: 20; 
-    background: transparent; 
-  }
-}
+      .layer { padding: 0 6%; }
+    }
     
   </style>
 </head>
