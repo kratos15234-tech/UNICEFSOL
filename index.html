@@ -87,31 +87,41 @@
     footer { position:fixed; bottom:20px; width:100%; text-align:center; font-size:.7rem; opacity:0; z-index:100; letter-spacing:1px; }
 
    @media (max-width: 768px) {
-      header { padding:16px 20px; }
-      
-      #frontsuper, #backsuper {
-        width: 100%;
-        left: 0;
-        right: 0;
-        background-repeat: no-repeat;
-        /* On pousse l'image vers le bas et on l'ancre à DROITE */
-        background-position: right bottom; 
-        /* LE ZOOM : On agrandit l'image (250% par ex) pour simuler la 2ème capture */
-        background-size: auto 80%; 
-      }
+  header { padding:16px 20px; }
+  
+  #frontsuper, #backsuper {
+    width: 100%;
+    height: 100vh;
+    left: 0;
+    right: 0;
+    background-repeat: no-repeat;
+    background-position: right bottom;
+    /* Zoom pour correspondre à ton souhait précédent */
+    background-size: auto 85%; 
 
-      /* Ajustements spécifiques pour chaque couche */
-      #frontsuper { 
-        background-size: auto 75%; /* Zoom sur les enfants/arbres du devant */
-        z-index: 5; 
-      } 
-      #backsuper { 
-        background-size: auto 90%; /* Un peu plus grand pour l'arrière-plan */
-        z-index: 1; 
-      }
+    /* LE DÉGRADÉ AUX EXTRÉMITÉS : */
+    /* On crée un masque : transparent en haut/bas, opaque au milieu */
+    -webkit-mask-image: linear-gradient(
+      to bottom,
+      transparent 0%,
+      black 15%,
+      black 85%,
+      transparent 100%
+    );
+    mask-image: linear-gradient(
+      to bottom,
+      transparent 0%,
+      black 15%,
+      black 85%,
+      transparent 100%
+    );
+  }
 
-      .layer { padding: 0 6%; }
-    }
+  #frontsuper { z-index: 5; } 
+  #backsuper { z-index: 1; }
+
+  .layer { padding: 0 6%; }
+}
     
   </style>
 </head>
