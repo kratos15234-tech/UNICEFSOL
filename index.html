@@ -89,18 +89,19 @@
     @media (max-width: 768px) {
   header { padding:16px 20px; }
 
-  /* Configuration pour que les deux commencent à droite */
   #frontsuper, #backsuper { 
-    background-size: cover;      /* L'image garde ses proportions en couvrant la zone */
-    background-position: right center; /* L'ancrage est à droite */
-    width: 80%;                  /* Largeur de l'image (ajuste de 0 à 100% selon tes goûts) */
-    left: auto;                  /* On annule le positionnement gauche */
-    right: 0;                    /* On colle l'élément à droite */
+    width: 100%;               /* Prend toute la largeur pour ne pas couper l'image */
+    background-size: contain;   /* 'contain' évite que l'image soit zoomée/rognée */
+    background-repeat: no-repeat;
+    background-position: right bottom; /* Colle l'image en bas à droite */
+    right: 0;
+    left: auto;
   }
 
-  /* Si tu veux qu'ils se chevauchent avec des opacités différentes (déjà géré par tes IDs) */
-  #frontsuper { z-index: 5; }
-  #backsuper { z-index: 1; }
+  /* Ajustement optionnel : si les images sont trop grandes, 
+     on réduit la taille du conteneur mais on garde l'ancrage à droite */
+  #frontsuper { background-size: 80% auto; } 
+  #backsuper { background-size: 90% auto; }
 
   .layer { padding: 0 6%; }
 }
