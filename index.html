@@ -86,25 +86,32 @@
 
     footer { position:fixed; bottom:20px; width:100%; text-align:center; font-size:.7rem; opacity:0; z-index:100; letter-spacing:1px; }
 
-    @media (max-width: 768px) {
-  header { padding:16px 20px; }
+   @media (max-width: 768px) {
+      header { padding:16px 20px; }
+      
+      #frontsuper, #backsuper {
+        width: 100%;
+        left: 0;
+        right: 0;
+        background-repeat: no-repeat;
+        /* On pousse l'image vers le bas et on l'ancre à DROITE */
+        background-position: right bottom; 
+        /* LE ZOOM : On agrandit l'image (250% par ex) pour simuler la 2ème capture */
+        background-size: auto 80%; 
+      }
 
-  #frontsuper, #backsuper { 
-    width: 100%;               /* Prend toute la largeur pour ne pas couper l'image */
-    background-size: contain;   /* 'contain' évite que l'image soit zoomée/rognée */
-    background-repeat: no-repeat;
-    background-position: right bottom; /* Colle l'image en bas à droite */
-    right: 0;
-    left: auto;
-  }
+      /* Ajustements spécifiques pour chaque couche */
+      #frontsuper { 
+        background-size: auto 75%; /* Zoom sur les enfants/arbres du devant */
+        z-index: 5; 
+      } 
+      #backsuper { 
+        background-size: auto 90%; /* Un peu plus grand pour l'arrière-plan */
+        z-index: 1; 
+      }
 
-  /* Ajustement optionnel : si les images sont trop grandes, 
-     on réduit la taille du conteneur mais on garde l'ancrage à droite */
-  #frontsuper { background-size: 80% auto; } 
-  #backsuper { background-size: 90% auto; }
-
-  .layer { padding: 0 6%; }
-}
+      .layer { padding: 0 6%; }
+    }
     
   </style>
 </head>
