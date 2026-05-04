@@ -376,12 +376,26 @@
     setTimeout(()=>this.innerText="3t4GiENDepWKkGicwDoMz2V2fWDZXHLAoJ3ZrpZQpump",2000);
   };
 
-  // ── LIVE DONATION TRACKER ──────────────────────────────────────────────────
+
+
+
+
+
+
+  
+
+ // ── LIVE DONATION TRACKER (CORRIGÉ) ─────────────────────────────────────────
   const WALLET      = 'A7Pqb5cSYFg61AFA1TS5CKKx2GbjGHFAwzzAfqPyELQ7';
   const BASE        = 17971.19;
   const START_SIG   = '5diQDoTndVk67dje7uwxEKa3m9ccG6QuE7gnD7ShQ2zYWonLCd3MfEwH4giA41hcakYS58T97vxh7DTKriQ7f7D6';
   const POLL_MS     = 30000;
-  const RPCS        = ['https://api.mainnet-beta.solana.com','https://mainnet.helius-rpc.com/?api-key=demo'];
+  
+  // Utilisation de RPC publics plus robustes
+  const RPCS        = [
+    'https://api.mainnet-beta.solana.com',
+    'https://solana-mainnet.rpc.extrnode.com'
+  ];
+  
   const LS_SIG      = 'unicef_last_sig_v2';
   const LS_TOTAL    = 'unicef_total_v2';
 
@@ -390,7 +404,6 @@
   const fmtSOL = n => n.toFixed(4) + ' SOL';
   const now  = () => new Date().toLocaleTimeString('en-US', {hour:'2-digit',minute:'2-digit',second:'2-digit'});
 
-  // ── DEBUG HELPERS
   function dbLog(msg, type='info') {
     const log = document.getElementById('debug-log');
     if (!log) return;
@@ -400,7 +413,6 @@
     el.innerHTML = `<span style="opacity:.35;flex-shrink:0;">${now()}</span><span>${msg}</span>`;
     log.appendChild(el);
     log.scrollTop = log.scrollHeight;
-    // Keep max 30 lines
     while (log.children.length > 30) log.removeChild(log.firstChild);
   }
   function dbSet(id, val) { const e = document.getElementById(id); if(e) e.innerText = val; }
@@ -409,7 +421,6 @@
     if (dot) dot.style.background = ok ? '#14F195' : '#e74c3c';
   }
 
-  // ── STATE
   function save(sig, total) {
     try { localStorage.setItem(LS_SIG, sig); localStorage.setItem(LS_TOTAL, String(total)); } catch(_) {}
   }
@@ -434,23 +445,34 @@
     for (const url of RPCS) {
       try {
         const r = await fetch(url, {
-          method:'POST', headers:{'Content-Type':'application/json'},
-          body: JSON.stringify({jsonrpc:'2.0',id:1,method,params}),
-          signal: AbortSignal.timeout(8000)
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({jsonrpc:'2.0',id:1,method,params})
         });
         const d = await r.json();
-        if (!d.error && d.result !== undefined) return d.result;
-      } catch(_) {}
+        if (d && d.result !== undefined) return d.result;
+      } catch(e) { console.warn(`RPC Fail on ${url}`); }
     }
     throw new Error('All RPCs failed');
   }
 
   async function refreshPrice() {
     try {
-      const d = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd',
-        {signal:AbortSignal.timeout(5000)}).then(r=>r.json());
-      if (d?.solana?.usd) { solUSD = d.solana.usd; dbSet('debug-sol-price','SOL $'+solUSD.toFixed(2)); }
-    } catch(_) { dbLog('Price fetch failed, using $'+solUSD.toFixed(2),'warn'); }
+      // Binance API est souvent plus stable pour le CORS en direct browser
+      const r = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=SOLUSDT');
+      const d = await r.json();
+      if (d?.price) { 
+        solUSD = parseFloat(d.price); 
+        dbSet('debug-sol-price','SOL $'+solUSD.toFixed(2)); 
+      }
+    } catch(_) { 
+        // Fallback Coingecko si Binance échoue
+        try {
+            const r = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd');
+            const d = await r.json();
+            if(d.solana.usd) solUSD = d.solana.usd;
+        } catch(e) { dbLog('Price fetch failed','warn'); }
+    }
   }
 
   async function getDelta(sig) {
@@ -467,16 +489,17 @@
   async function fetchAllSigsAfter(afterSig) {
     const all = [];
     let before = undefined;
-    while (true) {
-      const opts = {limit:50, commitment:'confirmed', until: afterSig};
-      if (before) opts.before = before;
-      const batch = await rpc('getSignaturesForAddress', [WALLET, opts]);
-      if (!batch?.length) break;
-      all.push(...batch);
-      dbLog(`Fetched ${batch.length} sigs (total ${all.length})...`, 'info');
-      if (batch.length < 50) break;
-      before = batch[batch.length-1].signature;
-    }
+    try {
+        while (true) {
+          const opts = {limit:50, commitment:'confirmed', until: afterSig};
+          if (before) opts.before = before;
+          const batch = await rpc('getSignaturesForAddress', [WALLET, opts]);
+          if (!batch?.length) break;
+          all.push(...batch);
+          if (batch.length < 50) break;
+          before = batch[batch.length-1].signature;
+        }
+    } catch(e) { dbLog("Fetch sigs error", "err"); }
     return all;
   }
 
@@ -486,81 +509,66 @@
       await refreshPrice();
       const {sig: lastSig, total: storedTotal} = load();
 
-      // ── FIRST RUN
       if (!lastSig) {
-        dbLog('First run — fetching all txs since START_SIG...', 'info');
+        dbLog('Initialisation...', 'info');
         const sigs = await fetchAllSigsAfter(START_SIG);
-        dbLog(`Found ${sigs.length} txs total`, 'info');
-
-        let accSOL = 0; let inCount = 0; let outCount = 0;
+        let accSOL = 0;
         for (const s of sigs) {
           if (s.err) continue;
           const d = await getDelta(s.signature);
-          if (d > 0)  { accSOL += d; inCount++; }
-          else if (d < 0) { outCount++; }
+          if (d > 0) accSOL += d;
         }
-
         const newTotal = BASE + (accSOL * solUSD);
         const checkpoint = sigs.length ? sigs[0].signature : START_SIG;
         save(checkpoint, newTotal);
         setDisplay(newTotal, false);
-        document.getElementById('live-status').style.opacity = '1';
         dbStatus(true);
-        dbSet('debug-new-txs', sigs.length);
-        dbSet('debug-added', fmtSOL(accSOL));
-        dbLog(`✓ Init done. +${fmtSOL(accSOL)} (${inCount} in, ${outCount} out/ignored)`, 'ok');
+        dbLog(`Initialisé: +${accSOL.toFixed(2)} SOL`, 'ok');
         return;
       }
 
-      // ── SUBSEQUENT POLLS
-      dbLog('Polling for new txs...', 'info');
       const sigs = await fetchAllSigsAfter(lastSig);
-
       if (!sigs?.length) {
-        setDisplay(storedTotal, false);
-        document.getElementById('live-status').style.opacity = '1';
         dbStatus(true);
-        dbSet('debug-new-txs', 0);
-        dbSet('debug-added', '—');
-        dbLog('No new txs', 'info');
+        dbLog('RAS - En attente', 'info');
         return;
       }
 
-      let addedSOL = 0; let inCount = 0; let outCount = 0;
+      let addedSOL = 0;
       for (const s of sigs) {
         if (s.err) continue;
         const d = await getDelta(s.signature);
-        if (d > 0)  { addedSOL += d; inCount++; }
-        else if (d < -0.001) { outCount++; }
+        if (d > 0) addedSOL += d;
       }
 
+      const currentStoredTotal = parseFloat(localStorage.getItem(LS_TOTAL)) || BASE;
       const addedUSD = addedSOL * solUSD;
-      const newTotal = storedTotal + addedUSD;
+      const newTotal = currentStoredTotal + addedUSD;
+      
       save(sigs[0].signature, newTotal);
       setDisplay(newTotal, addedUSD > 0.01);
-      document.getElementById('live-status').style.opacity = '1';
       dbStatus(true);
-      dbSet('debug-new-txs', sigs.length);
-      dbSet('debug-added', addedSOL > 0 ? fmtSOL(addedSOL) : '0 SOL');
-      dbLog(`${sigs.length} new txs — +${fmtSOL(addedSOL)} (+${fmt(addedUSD)}) | ${outCount} out ignored`, addedUSD > 0.01 ? 'ok' : 'info');
+      dbLog(`${sigs.length} nlles transactions`, 'ok');
 
-      if (addedUSD > 0.01) {
-        const lbl = document.getElementById('live-label');
-        if (lbl) { lbl.innerText = '+' + fmt(addedUSD); setTimeout(()=>lbl.innerText='LIVE',4000); }
-      }
     } catch(e) {
       dbStatus(false);
-      dbLog('Error: ' + e.message, 'err');
+      dbLog('Erreur RPC/Network', 'err');
     }
   }
 
   const {total: cached} = load();
   setDisplay(cached || BASE, false);
-  dbLog('Tracker initialized. Starting first poll...', 'info');
   poll();
   setInterval(poll, POLL_MS);
-  // ── END TRACKER ────────────────────────────────────────────────────────────
 
+
+
+
+
+
+
+
+  
   // ── PARTICLES
   const cv=document.getElementById('particles'), cx=cv.getContext('2d');
   let W,H; rsz=()=>{W=cv.width=innerWidth; H=cv.height=innerHeight}; rsz(); window.onresize=rsz;
