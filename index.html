@@ -94,19 +94,16 @@
         left: 0;
         right: 0;
         background-repeat: no-repeat;
-        /* On pousse l'image vers le bas et on l'ancre à DROITE */
         background-position: right bottom; 
-        /* LE ZOOM : On agrandit l'image (250% par ex) pour simuler la 2ème capture */
         background-size: auto 80%; 
       }
 
-      /* Ajustements spécifiques pour chaque couche */
       #frontsuper { 
-        background-size: auto 75%; /* Zoom sur les enfants/arbres du devant */
+        background-size: auto 75%;
         z-index: 5; 
       } 
       #backsuper { 
-        background-size: auto 90%; /* Un peu plus grand pour l'arrière-plan */
+        background-size: auto 90%;
         z-index: 1; 
       }
 
@@ -156,10 +153,10 @@
 
     <div id="amount-layer" class="layer">
         <p style="letter-spacing:8px; opacity:.6; margin-bottom:20px; font-size:.8rem;">total donations generated</p>
-        <h2 class="bebas amount-header" id="total-donations">$20,931.49</h2>
+        <h2 class="bebas amount-header" id="total-donations">$0.00</h2>
         <div style="width:min(600px,85vw); margin-top:40px;">
           <div style="position:relative; height:6px; background:rgba(255,255,255,0.12); border-radius:50px; overflow:visible;">
-            <div style="position:absolute; left:0; top:0; height:100%; width:17.97%; background:linear-gradient(90deg,#14F195,#9945FF); border-radius:50px; box-shadow:0 0 12px rgba(20,241,149,0.5);"></div>
+            <div id="progress-bar" style="position:absolute; left:0; top:0; height:100%; width:0%; background:linear-gradient(90deg,#14F195,#9945FF); border-radius:50px; box-shadow:0 0 12px rgba(20,241,149,0.5); transition:width 1.5s cubic-bezier(.4,0,.2,1);"></div>
             <!-- goal markers -->
             <div style="position:absolute; left:25%; top:50%; transform:translate(-50%,-50%); width:10px; height:10px; background:#fff; border-radius:50%; border:2px solid rgba(20,241,149,0.6); z-index:2;"></div>
             <div style="position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:10px; height:10px; background:#fff; border-radius:50%; border:2px solid rgba(20,241,149,0.6); z-index:2;"></div>
@@ -177,7 +174,7 @@
     </div>
 
     <div id="story-layer" class="layer">
-      <h2 class="bebas" style="font-size:clamp(3rem,8vw,5rem); opacity:0.7; margin-bottom:20px;">$17,971.19 <span style="background:linear-gradient(90deg,#14F195,#9945FF);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">represents...</span></h2>
+      <h2 class="bebas" style="font-size:clamp(3rem,8vw,5rem); opacity:0.7; margin-bottom:20px;"><span id="story-amount">$0.00</span> <span style="background:linear-gradient(90deg,#14F195,#9945FF);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">represents...</span></h2>
       <div id="dynamic-text" class="bebas"></div>
     </div>
 
@@ -192,6 +189,33 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script>
+  // ── READ STORED DATA ──────────────────────────────────────────────
+  const DEFAULT_AMOUNT  = 20931.49;
+  const DEFAULT_PHRASES = [
+    "42,600 polio vaccines",
+    "8,500 days of essential food",
+    "12,400 clean water kits",
+    "a second chance for thousands"
+  ];
+
+  const storedAmount  = parseFloat(localStorage.getItem('unicef_amount'))  || DEFAULT_AMOUNT;
+  const storedPhrases = JSON.parse(localStorage.getItem('unicef_phrases') || 'null') || DEFAULT_PHRASES;
+
+  // Format money
+  function fmt(n) {
+    return '$' + n.toLocaleString('en-US', { minimumFractionDigits:2, maximumFractionDigits:2 });
+  }
+
+  // ── INJECT VALUES INTO DOM ────────────────────────────────────────
+  document.getElementById('total-donations').textContent = fmt(storedAmount);
+  document.getElementById('story-amount').textContent    = fmt(storedAmount);
+
+  // Progress bar
+  const pct = Math.min((storedAmount / 100000) * 100, 100);
+  // Defer width update so transition plays when bar scrolls into view
+  ScrollTrigger && (window._pendingBarPct = pct);
+
+  // ── GSAP SCROLL TIMELINE ──────────────────────────────────────────
   gsap.registerPlugin(ScrollTrigger);
   const tl = gsap.timeline({ scrollTrigger:{ trigger:'#pin-wrap', start:'top top', end:'bottom bottom', scrub:1.2 }});
 
@@ -212,8 +236,16 @@
     .to('#quote-layer', { opacity:1 }, 6)
     .to('footer', { opacity:1 }, 6.5);
 
-  // ── TYPEWRITER
-  const ph = ["42,600 polio vaccines", "8,500 days of essential food", "12,400 clean water kits", "a second chance for thousands"];
+  // Animate progress bar when amount layer enters view
+  ScrollTrigger.create({
+    trigger: '#pin-wrap', start: '16% top',
+    onEnter: () => {
+      document.getElementById('progress-bar').style.width = pct + '%';
+    }
+  });
+
+  // ── TYPEWRITER (uses stored phrases) ─────────────────────────────
+  const ph = storedPhrases.length ? storedPhrases : DEFAULT_PHRASES;
   let cur=0, del=false, tx='', el=document.getElementById('dynamic-text');
   function loop() {
     if(!el) return;
@@ -222,15 +254,19 @@
     setTimeout(loop,s);
   }
   ScrollTrigger.create({ trigger:'#pin-wrap', start:'55% top', onEnter:()=>loop(), once:true });
+
+  // ── MISSION % COUNTER ─────────────────────────────────────────────
   ScrollTrigger.create({ trigger:'#pin-wrap', start:'15% top', onEnter:()=>{
     let o={v:0}; gsap.to(o, { v:100, duration:2, onUpdate:()=>document.getElementById('mpct').innerText=Math.ceil(o.v)+"%" });
   }});
+
+  // ── COPY CA ───────────────────────────────────────────────────────
   document.getElementById('ca-text').onclick=function(){
     navigator.clipboard.writeText(this.innerText); this.innerText="copied!";
     setTimeout(()=>this.innerText="3t4GiENDepWKkGicwDoMz2V2fWDZXHLAoJ3ZrpZQpump",2000);
   };
   
-  // ── PARTICLES
+  // ── PARTICLES ─────────────────────────────────────────────────────
   const cv=document.getElementById('particles'), cx=cv.getContext('2d');
   let W,H; rsz=()=>{W=cv.width=innerWidth; H=cv.height=innerHeight}; rsz(); window.onresize=rsz;
   const pts = Array(80).fill().map(()=>({x:Math.random()*W, y:Math.random()*H, r:Math.random()*1.5, vy:Math.random()*.2+.1, o:Math.random()}));
