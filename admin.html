@@ -109,7 +109,6 @@
 <!-- ── LOGIN GATE ── -->
 <div id="gate">
   <div class="gate-card">
-    <div class="gate-icon">🔐</div>
     <h2>Admin <span style="background:linear-gradient(90deg,#14F195,#9945FF);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Access</span></h2>
     <p>Enter your credentials to continue</p>
     <input class="gate-input" type="text"     id="user-input" placeholder="Username" autocomplete="off" spellcheck="false">
@@ -120,11 +119,6 @@
   </div>
 </div>
 
-<!-- ── GIF ── -->
-<div class="gif-wrap">
-  <iframe src="https://giphy.com/embed/1192LR6JVpUnba" height="320" frameBorder="0" class="giphy-embed" allowFullScreen></iframe>
-  <p class="gif-credit"><a href="https://giphy.com/gifs/shroomery-envy-1192LR6JVpUnba" target="_blank">via GIPHY</a></p>
-</div>
 
 <!-- ── ADMIN PANEL ── -->
 <div class="card">
@@ -134,15 +128,9 @@
     <input type="number" id="amount-input" min="0" step="0.01" placeholder="0.00">
   </div>
 
-  <div class="preview-block">
-    <div class="preview-label">Progress toward $100k <span id="pct-label">0%</span></div>
-    <div class="bar-track"><div class="bar-fill" id="bar-fill"></div></div>
-    <div class="goal-labels"><span>$0</span><span>$25k</span><span>$50k</span><span>$75k</span><span>$100k</span></div>
-  </div>
-
   <div class="divider"></div>
 
-  <button class="btn-save" onclick="saveAll()">💾 &nbsp;Save Changes</button>
+  <button class="btn-save" onclick="saveAll()"> &nbsp;Save Changes</button>
   <a href="index.html" class="btn-back">← back to main site</a>
 </div>
 
