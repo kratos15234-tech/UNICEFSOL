@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,66 +13,100 @@
       --surface: rgba(255,255,255,0.03); --border: rgba(255,255,255,0.08);
       --text: #fff; --muted: rgba(255,255,255,0.4);
     }
-    body { font-family:'Outfit',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:40px 20px; position:relative; overflow:hidden; }
-    body::before { content:''; position:fixed; inset:0; background-image:linear-gradient(rgba(153,69,255,0.04) 1px,transparent 1px),linear-gradient(90deg,rgba(153,69,255,0.04) 1px,transparent 1px); background-size:40px 40px; pointer-events:none; z-index:0; }
-    body::after { content:''; position:fixed; width:600px; height:600px; background:radial-gradient(circle,rgba(153,69,255,0.12),transparent 70%); top:-200px; left:-200px; pointer-events:none; z-index:0; }
-    .orb2 { position:fixed; width:400px; height:400px; background:radial-gradient(circle,rgba(20,241,149,0.08),transparent 70%); bottom:-100px; right:-100px; pointer-events:none; z-index:0; }
-    .card { position:relative; z-index:1; width:min(520px,100%); background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:48px 44px; backdrop-filter:blur(20px); }
-    .top-badge { display:inline-flex; align-items:center; gap:8px; background:rgba(153,69,255,0.12); border:1px solid rgba(153,69,255,0.3); border-radius:50px; padding:5px 14px; font-size:.65rem; letter-spacing:3px; color:var(--purple); margin-bottom:28px; text-transform:uppercase; }
-    .dot { width:6px; height:6px; border-radius:50%; background:var(--purple); animation:pulse 1.5s infinite; }
+    html, body {
+      min-height: 100vh;
+      overflow-y: auto;
+    }
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 60px 20px 60px;
+      position: relative;
+    }
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image:
+        linear-gradient(rgba(153,69,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(153,69,255,0.04) 1px, transparent 1px);
+      background-size: 40px 40px;
+      pointer-events: none; z-index: 0;
+    }
+    .orb1 { position: fixed; width: 600px; height: 600px; background: radial-gradient(circle, rgba(153,69,255,0.12), transparent 70%); top: -200px; left: -200px; pointer-events: none; z-index: 0; }
+    .orb2 { position: fixed; width: 400px; height: 400px; background: radial-gradient(circle, rgba(20,241,149,0.08), transparent 70%); bottom: -100px; right: -100px; pointer-events: none; z-index: 0; }
+
+    .card {
+      position: relative; z-index: 1;
+      width: min(520px, 100%);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 48px 44px;
+      backdrop-filter: blur(20px);
+    }
+    .top-badge { display: inline-flex; align-items: center; gap: 8px; background: rgba(153,69,255,0.12); border: 1px solid rgba(153,69,255,0.3); border-radius: 50px; padding: 5px 14px; font-size: .65rem; letter-spacing: 3px; color: var(--purple); margin-bottom: 28px; text-transform: uppercase; }
+    .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--purple); animation: pulse 1.5s infinite; }
     @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
-    h1 { font-family:'Bebas Neue'; font-size:3rem; letter-spacing:2px; line-height:1; margin-bottom:6px; }
-    h1 span { background:linear-gradient(90deg,var(--green),var(--purple)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
-    .subtitle { color:var(--muted); font-size:.85rem; margin-bottom:36px; letter-spacing:.5px; }
-    .divider { height:1px; background:var(--border); margin:28px 0; }
-    label { display:block; font-size:.7rem; letter-spacing:3px; text-transform:uppercase; color:var(--muted); margin-bottom:10px; }
-    .input-wrap { position:relative; margin-bottom:20px; }
-    .input-wrap .prefix { position:absolute; left:16px; top:50%; transform:translateY(-50%); font-family:'Bebas Neue'; font-size:1.4rem; color:var(--green); pointer-events:none; }
-    input[type="number"] { width:100%; background:rgba(255,255,255,0.04); border:1px solid var(--border); border-radius:10px; color:#fff; font-family:'Bebas Neue'; font-size:1.8rem; padding:16px 16px 16px 38px; outline:none; transition:border-color .25s,box-shadow .25s; -moz-appearance:textfield; }
-    input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button { -webkit-appearance:none; }
-    input[type="number"]:focus { border-color:var(--green); box-shadow:0 0 0 3px rgba(20,241,149,0.08); }
-    .preview-block { margin-bottom:24px; }
-    .preview-label { display:flex; justify-content:space-between; align-items:center; font-size:.7rem; letter-spacing:3px; text-transform:uppercase; color:var(--muted); margin-bottom:10px; }
-    .preview-label span { color:var(--green); font-family:'Bebas Neue'; font-size:1rem; letter-spacing:1px; }
-    .bar-track { height:6px; background:rgba(255,255,255,0.08); border-radius:50px; overflow:hidden; }
-    .bar-fill { height:100%; background:linear-gradient(90deg,var(--green),var(--purple)); border-radius:50px; box-shadow:0 0 10px rgba(20,241,149,0.4); transition:width .4s cubic-bezier(.4,0,.2,1); width:0%; }
-    .goal-labels { display:flex; justify-content:space-between; font-family:'Bebas Neue'; font-size:.7rem; color:var(--muted); letter-spacing:1px; margin-top:6px; }
-    .stats-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:28px; }
-    .stat-box { background:rgba(255,255,255,0.02); border:1px solid var(--border); border-radius:10px; padding:14px 16px; }
-    .stat-box .s-label { font-size:.6rem; letter-spacing:3px; text-transform:uppercase; color:var(--muted); margin-bottom:4px; }
-    .stat-box .s-value { font-family:'Bebas Neue'; font-size:1.3rem; color:var(--green); }
-    .represents-list { display:flex; flex-direction:column; gap:8px; margin-bottom:24px; }
-    .represent-item { display:flex; gap:8px; align-items:center; }
-    .represent-item input[type="text"] { flex:1; background:rgba(255,255,255,0.04); border:1px solid var(--border); border-radius:8px; color:#fff; font-family:'Outfit'; font-size:.9rem; padding:10px 14px; outline:none; transition:border-color .2s; }
-    .represent-item input[type="text"]:focus { border-color:rgba(20,241,149,0.4); }
-    .btn-remove { width:32px; height:32px; border-radius:8px; background:rgba(255,80,80,0.08); border:1px solid rgba(255,80,80,0.2); color:rgba(255,80,80,0.7); cursor:pointer; font-size:1.1rem; display:flex; align-items:center; justify-content:center; transition:.2s; flex-shrink:0; }
-    .btn-remove:hover { background:rgba(255,80,80,0.18); color:#ff5050; }
-    .btn-add-item { width:100%; padding:9px; border-radius:8px; background:transparent; border:1px dashed rgba(20,241,149,0.25); color:rgba(20,241,149,0.6); cursor:pointer; font-family:'Outfit'; font-size:.82rem; letter-spacing:1px; transition:.2s; }
-    .btn-add-item:hover { background:rgba(20,241,149,0.05); border-color:rgba(20,241,149,0.5); color:var(--green); }
-    .btn-save { width:100%; padding:16px; background:linear-gradient(90deg,var(--green),#0fd87f); border:none; border-radius:10px; font-family:'Bebas Neue'; font-size:1.2rem; letter-spacing:3px; color:#000; cursor:pointer; transition:opacity .2s,transform .15s,box-shadow .2s; box-shadow:0 0 20px rgba(20,241,149,0.2); margin-bottom:10px; }
-    .btn-save:hover { opacity:.9; transform:translateY(-1px); box-shadow:0 4px 24px rgba(20,241,149,0.35); }
-    .btn-save:active { transform:scale(.98); }
-    .btn-back { display:block; text-align:center; text-decoration:none; color:var(--muted); font-size:.75rem; letter-spacing:2px; transition:color .2s; margin-top:8px; }
-    .btn-back:hover { color:#fff; }
-    .toast { position:fixed; top:30px; left:50%; transform:translateX(-50%) translateY(-80px); background:var(--green); color:#000; font-family:'Bebas Neue'; font-size:1rem; letter-spacing:3px; padding:12px 28px; border-radius:50px; box-shadow:0 4px 30px rgba(20,241,149,0.4); transition:transform .35s cubic-bezier(.4,0,.2,1); z-index:9999; }
-    .toast.show { transform:translateX(-50%) translateY(0); }
+    h1 { font-family: 'Bebas Neue'; font-size: 3rem; letter-spacing: 2px; line-height: 1; margin-bottom: 6px; }
+    h1 span { background: linear-gradient(90deg, var(--green), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .subtitle { color: var(--muted); font-size: .85rem; margin-bottom: 36px; letter-spacing: .5px; }
+    .divider { height: 1px; background: var(--border); margin: 28px 0; }
+    label { display: block; font-size: .7rem; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+
+    .input-wrap { position: relative; margin-bottom: 20px; }
+    .input-wrap .prefix { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); font-family: 'Bebas Neue'; font-size: 1.4rem; color: var(--green); pointer-events: none; }
+    input[type="number"] { width: 100%; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 10px; color: #fff; font-family: 'Bebas Neue'; font-size: 1.8rem; padding: 16px 16px 16px 38px; outline: none; transition: border-color .25s, box-shadow .25s; -moz-appearance: textfield; }
+    input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
+    input[type="number"]:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(20,241,149,0.08); }
+
+    /* Progress */
+    .preview-block { margin-bottom: 24px; }
+    .preview-label { display: flex; justify-content: space-between; align-items: center; font-size: .7rem; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
+    .preview-label span { color: var(--green); font-family: 'Bebas Neue'; font-size: 1rem; letter-spacing: 1px; }
+    .bar-track { height: 6px; background: rgba(255,255,255,0.08); border-radius: 50px; overflow: hidden; }
+    .bar-fill { height: 100%; background: linear-gradient(90deg, var(--green), var(--purple)); border-radius: 50px; box-shadow: 0 0 10px rgba(20,241,149,0.4); transition: width .4s cubic-bezier(.4,0,.2,1); width: 0%; }
+    .goal-labels { display: flex; justify-content: space-between; font-family: 'Bebas Neue'; font-size: .7rem; color: var(--muted); letter-spacing: 1px; margin-top: 6px; }
+
+    /* Stats */
+    .stats-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 8px; }
+    .stat-box { background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+    .stat-box .s-label { font-size: .6rem; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+    .stat-box .s-value { font-family: 'Bebas Neue'; font-size: 1.3rem; color: var(--green); }
+    .auto-note { font-size: .68rem; color: var(--muted); letter-spacing: 1px; margin-top: 10px; padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; background: rgba(20,241,149,0.03); }
+    .auto-note span { color: var(--green); }
+
+    /* Buttons */
+    .btn-save { width: 100%; padding: 16px; background: linear-gradient(90deg, var(--green), #0fd87f); border: none; border-radius: 10px; font-family: 'Bebas Neue'; font-size: 1.2rem; letter-spacing: 3px; color: #000; cursor: pointer; transition: opacity .2s, transform .15s, box-shadow .2s; box-shadow: 0 0 20px rgba(20,241,149,0.2); margin-bottom: 10px; }
+    .btn-save:hover { opacity: .9; transform: translateY(-1px); box-shadow: 0 4px 24px rgba(20,241,149,0.35); }
+    .btn-save:active { transform: scale(.98); }
+    .btn-back { display: block; text-align: center; text-decoration: none; color: var(--muted); font-size: .75rem; letter-spacing: 2px; transition: color .2s; margin-top: 8px; }
+    .btn-back:hover { color: #fff; }
+    .toast { position: fixed; top: 30px; left: 50%; transform: translateX(-50%) translateY(-80px); background: var(--green); color: #000; font-family: 'Bebas Neue'; font-size: 1rem; letter-spacing: 3px; padding: 12px 28px; border-radius: 50px; box-shadow: 0 4px 30px rgba(20,241,149,0.4); transition: transform .35s cubic-bezier(.4,0,.2,1); z-index: 9999; }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
     /* Gate */
-    #gate { position:fixed; inset:0; z-index:9998; background:var(--bg); display:flex; align-items:center; justify-content:center; }
-    .gate-card { width:min(380px,90%); background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:40px 36px; text-align:center; }
-    .gate-icon { font-size:2.5rem; margin-bottom:16px; }
-    .gate-card h2 { font-family:'Bebas Neue'; font-size:2rem; margin-bottom:6px; }
-    .gate-card p { color:var(--muted); font-size:.82rem; margin-bottom:24px; }
-    .gate-input { width:100%; background:rgba(255,255,255,0.04); border:1px solid var(--border); border-radius:10px; color:#fff; font-family:'Outfit'; font-size:1rem; padding:13px 16px; outline:none; margin-bottom:12px; text-align:center; letter-spacing:2px; transition:border-color .25s; }
-    .gate-input:focus { border-color:var(--green); }
-    .gate-input::placeholder { letter-spacing:1px; opacity:.4; }
-    .gate-btn { width:100%; padding:13px; background:linear-gradient(90deg,var(--green),#0fd87f); border:none; border-radius:10px; font-family:'Bebas Neue'; font-size:1.1rem; letter-spacing:3px; color:#000; cursor:pointer; transition:opacity .2s; }
-    .gate-btn:hover { opacity:.9; }
-    .gate-btn:disabled { opacity:.5; cursor:not-allowed; }
-    .gate-error { color:#ff5050; font-size:.75rem; margin-top:10px; min-height:1.2em; }
-    .gate-warn  { color:rgba(255,165,0,0.85); font-size:.72rem; margin-top:6px; min-height:1em; }
+    #gate { position: fixed; inset: 0; z-index: 9998; background: var(--bg); display: flex; align-items: center; justify-content: center; }
+    .gate-card { width: min(380px, 90%); background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 40px 36px; text-align: center; }
+    .gate-icon { font-size: 2.5rem; margin-bottom: 16px; }
+    .gate-card h2 { font-family: 'Bebas Neue'; font-size: 2rem; margin-bottom: 6px; }
+    .gate-card p { color: var(--muted); font-size: .82rem; margin-bottom: 24px; }
+    .gate-input { width: 100%; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 10px; color: #fff; font-family: 'Outfit'; font-size: 1rem; padding: 13px 16px; outline: none; margin-bottom: 12px; text-align: center; letter-spacing: 2px; transition: border-color .25s; }
+    .gate-input:focus { border-color: var(--green); }
+    .gate-input::placeholder { letter-spacing: 1px; opacity: .4; }
+    .gate-btn { width: 100%; padding: 13px; background: linear-gradient(90deg, var(--green), #0fd87f); border: none; border-radius: 10px; font-family: 'Bebas Neue'; font-size: 1.1rem; letter-spacing: 3px; color: #000; cursor: pointer; transition: opacity .2s; }
+    .gate-btn:hover { opacity: .9; }
+    .gate-btn:disabled { opacity: .5; cursor: not-allowed; }
+    .gate-error { color: #ff5050; font-size: .75rem; margin-top: 10px; min-height: 1.2em; }
+    .gate-warn  { color: rgba(255,165,0,0.85); font-size: .72rem; margin-top: 6px; min-height: 1em; }
   </style>
 </head>
 <body>
+<div class="orb1"></div>
 <div class="orb2"></div>
 
 <!-- ── LOGIN GATE ── -->
@@ -80,10 +114,10 @@
   <div class="gate-card">
     <div class="gate-icon">🔐</div>
     <h2>Admin <span style="background:linear-gradient(90deg,#14F195,#9945FF);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Access</span></h2>
-    <p>Identifiants requis</p>
-    <input class="gate-input" type="text"     id="user-input" placeholder="Nom d'utilisateur" autocomplete="off" spellcheck="false">
-    <input class="gate-input" type="password" id="pwd-input"  placeholder="Mot de passe"       autocomplete="off">
-    <button class="gate-btn" id="login-btn" onclick="checkCreds()">Connexion</button>
+    <p>Enter your credentials to continue</p>
+    <input class="gate-input" type="text"     id="user-input" placeholder="Username" autocomplete="off" spellcheck="false">
+    <input class="gate-input" type="password" id="pwd-input"  placeholder="Password" autocomplete="off">
+    <button class="gate-btn" id="login-btn" onclick="checkCreds()">Login</button>
     <p class="gate-error" id="gate-error"></p>
     <p class="gate-warn"  id="gate-warn"></p>
   </div>
@@ -93,47 +127,44 @@
 <div class="card">
   <div class="top-badge"><span class="dot"></span> Admin Panel</div>
   <h1>$UNICEF <span>Dashboard</span></h1>
-  <p class="subtitle">Mets à jour les stats — les changements s'appliquent en direct sur le site</p>
+  <p class="subtitle">Update the donation amount — stats update automatically on the site</p>
+
   <div class="divider"></div>
 
-  <label>Total des dons récoltés</label>
+  <label>Total Donations Raised</label>
   <div class="input-wrap">
     <span class="prefix">$</span>
     <input type="number" id="amount-input" min="0" step="0.01" placeholder="0.00">
   </div>
 
   <div class="preview-block">
-    <div class="preview-label">Progression vers $100k <span id="pct-label">0%</span></div>
+    <div class="preview-label">Progress toward $100k <span id="pct-label">0%</span></div>
     <div class="bar-track"><div class="bar-fill" id="bar-fill"></div></div>
     <div class="goal-labels"><span>$0</span><span>$25k</span><span>$50k</span><span>$75k</span><span>$100k</span></div>
   </div>
 
+  <label>Live Stats Preview</label>
   <div class="stats-row">
-    <div class="stat-box"><div class="s-label">Vaccins Polio</div><div class="s-value" id="stat-vaccines">—</div></div>
-    <div class="stat-box"><div class="s-label">Jours de nourriture</div><div class="s-value" id="stat-food">—</div></div>
-    <div class="stat-box"><div class="s-label">Kits eau potable</div><div class="s-value" id="stat-water">—</div></div>
-    <div class="stat-box"><div class="s-label">% de l'objectif</div><div class="s-value" id="stat-pct">—</div></div>
+    <div class="stat-box"><div class="s-label">Polio Vaccines</div><div class="s-value" id="stat-vaccines">—</div></div>
+    <div class="stat-box"><div class="s-label">Days of Food</div><div class="s-value" id="stat-food">—</div></div>
+    <div class="stat-box"><div class="s-label">Clean Water Kits</div><div class="s-value" id="stat-water">—</div></div>
+    <div class="stat-box"><div class="s-label">% of Goal</div><div class="s-value" id="stat-pct">—</div></div>
   </div>
+  <p class="auto-note">⚡ These stats are <span>auto-generated</span> from the amount above — no manual input needed</p>
 
   <div class="divider"></div>
 
-  <label style="margin-bottom:14px;">Phrases "...represents"</label>
-  <div class="represents-list" id="represents-list"></div>
-  <button class="btn-add-item" onclick="addRepresentItem()">+ Ajouter une phrase</button>
-
-  <div class="divider"></div>
-  <button class="btn-save" onclick="saveAll()">💾 &nbsp;Sauvegarder</button>
-  <a href="index.html" class="btn-back">← retour au site</a>
+  <button class="btn-save" onclick="saveAll()">💾 &nbsp;Save Changes</button>
+  <a href="index.html" class="btn-back">← back to main site</a>
 </div>
 
-<div class="toast" id="toast">SAUVEGARDÉ ✓</div>
+<div class="toast" id="toast">SAVED ✓</div>
 
 <script>
-  // ── CREDENTIALS — SHA-256 hashes only, aucun mot de passe en clair ──
+  // ── HASHED CREDENTIALS (SHA-256) — no plaintext in source ────────
   const HASH_USER = "9db955bc5af848209fc3b60ea02de9062e68c1c76927d62077a93a4eafc690b3";
   const HASH_PASS = "8880ad4a09aae87264c42db9b095b07716152aebac743249e3beeb8f0f7bbd84";
 
-  // Anti brute-force : 5 essais max, puis blocage 5 min (sessionStorage)
   let attempts    = parseInt(sessionStorage.getItem('adm_try')    || '0');
   let lockedUntil = parseInt(sessionStorage.getItem('adm_locked') || '0');
 
@@ -146,10 +177,9 @@
     const now = Date.now();
     if (now < lockedUntil) {
       const mins = Math.ceil((lockedUntil - now) / 60000);
-      document.getElementById('gate-error').textContent = `Bloqué. Réessaie dans ${mins} min.`;
+      document.getElementById('gate-error').textContent = `Too many attempts. Try again in ${mins} min.`;
       return;
     }
-
     const btn = document.getElementById('login-btn');
     btn.disabled = true; btn.textContent = '...';
 
@@ -170,14 +200,14 @@
       if (attempts >= 5) {
         lockedUntil = Date.now() + 5 * 60 * 1000;
         sessionStorage.setItem('adm_locked', lockedUntil);
-        document.getElementById('gate-error').textContent = 'Trop de tentatives — bloqué 5 min.';
+        document.getElementById('gate-error').textContent = 'Account locked for 5 minutes.';
         document.getElementById('gate-warn').textContent  = '';
       } else {
         const left = 5 - attempts;
-        document.getElementById('gate-error').textContent = 'Identifiants incorrects.';
-        document.getElementById('gate-warn').textContent  = `${left} tentative${left > 1 ? 's' : ''} restante${left > 1 ? 's' : ''}.`;
+        document.getElementById('gate-error').textContent = 'Incorrect credentials.';
+        document.getElementById('gate-warn').textContent  = `${left} attempt${left > 1 ? 's' : ''} remaining.`;
       }
-      btn.disabled = false; btn.textContent = 'Connexion';
+      btn.disabled = false; btn.textContent = 'Login';
     }
   }
 
@@ -185,22 +215,7 @@
     document.getElementById(id).addEventListener('keydown', e => { if (e.key === 'Enter') checkCreds(); })
   );
 
-  // ── DEFAULTS ──────────────────────────────────────────────────────
-  const DEFAULT_AMOUNT  = 20931.49;
-  const DEFAULT_PHRASES = [
-    "42,600 polio vaccines",
-    "8,500 days of essential food",
-    "12,400 clean water kits",
-    "a second chance for thousands"
-  ];
-
-  function getStored() {
-    return {
-      amount:  parseFloat(localStorage.getItem('unicef_amount')) || DEFAULT_AMOUNT,
-      phrases: JSON.parse(localStorage.getItem('unicef_phrases') || 'null') || DEFAULT_PHRASES
-    };
-  }
-
+  // ── STATS AUTO-COMPUTED FROM AMOUNT ──────────────────────────────
   function computeStats(amt) {
     return {
       vaccines: Math.floor(amt / 0.491),
@@ -208,6 +223,17 @@
       water:    Math.floor(amt / 1.686),
       pct:      Math.min((amt / 100000) * 100, 100)
     };
+  }
+
+  // Auto-generate phrases from amount (used by index.html)
+  function buildPhrases(amt) {
+    const s = computeStats(amt);
+    return [
+      s.vaccines.toLocaleString() + " polio vaccines",
+      s.food.toLocaleString()     + " days of essential food",
+      s.water.toLocaleString()    + " clean water kits",
+      "a second chance for thousands"
+    ];
   }
 
   function updatePreview(amt) {
@@ -221,30 +247,21 @@
     document.getElementById('stat-pct').textContent      = p + '%';
   }
 
-  function addRepresentItem(val = '') {
-    const div = document.createElement('div');
-    div.className = 'represent-item';
-    div.innerHTML = `
-      <input type="text" placeholder='ex: "42,600 polio vaccines"' value="${val.replace(/"/g,'&quot;')}">
-      <button class="btn-remove" onclick="this.parentElement.remove()">×</button>`;
-    document.getElementById('represents-list').appendChild(div);
-  }
-
   function saveAll() {
-    const amt     = parseFloat(document.getElementById('amount-input').value) || 0;
-    const phrases = Array.from(document.querySelectorAll('.represent-item input'))
-                         .map(i => i.value.trim()).filter(Boolean);
-    localStorage.setItem('unicef_amount',  amt);
-    localStorage.setItem('unicef_phrases', JSON.stringify(phrases));
+    const amt = parseFloat(document.getElementById('amount-input').value) || 0;
+    // Save amount
+    localStorage.setItem('unicef_amount', amt);
+    // Auto-generate and save phrases based on amount
+    localStorage.setItem('unicef_phrases', JSON.stringify(buildPhrases(amt)));
+
     const t = document.getElementById('toast');
     t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2500);
   }
 
   function init() {
-    const { amount, phrases } = getStored();
-    document.getElementById('amount-input').value = amount;
-    updatePreview(amount);
-    phrases.forEach(p => addRepresentItem(p));
+    const stored = parseFloat(localStorage.getItem('unicef_amount')) || 20931.49;
+    document.getElementById('amount-input').value = stored;
+    updatePreview(stored);
     document.getElementById('amount-input').addEventListener('input', function() {
       updatePreview(parseFloat(this.value) || 0);
     });
