@@ -5,7 +5,7 @@ export default async function handler(req, res) {
 
   // 🔴 IMPORTANT: Mets ton vrai mot de passe d'admin en clair ici !
   // Personne ne peut voir ce fichier, il est exécuté côté serveur.
-  const ADMIN_PASSWORD = "ton_mot_de_passe_secret"; 
+  const ADMIN_PASSWORD = "thefag"; 
 
   if (password !== ADMIN_PASSWORD) {
     return res.status(401).json({ error: 'Mot de passe incorrect' });
