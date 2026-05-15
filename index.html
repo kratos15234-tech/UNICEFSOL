@@ -316,6 +316,9 @@ const amountL    = document.getElementById('amount-layer');
 const storyL     = document.getElementById('story-layer');
 const quoteL     = document.getElementById('quote-layer');
 const footer     = document.querySelector('footer');
+const h1         = document.getElementById('h1');
+const h2         = document.getElementById('h2');
+const h3         = document.getElementById('h3');
 
 // Sections timing (0–1 over entire scroll height)
 // Each section: [fadeIn start, fully visible, start fadeOut, fully gone]
@@ -341,6 +344,23 @@ let progressBarFired    = false;
 let typewriterFired     = false;
 
 function onScroll(p) {
+
+// ── HERO
+  const hIn  = easeOut(local(p, S.hero[0], S.hero[1]));
+  const hOut = easeInOut(local(p, S.hero[2], S.hero[3]));
+  heroTitle.style.opacity = Math.max(0, hIn - hOut);
+  heroTitle.style.transform = `translateY(${hOut * -60}px)`;
+  heroSub.style.opacity = Math.max(0, hIn - hOut);
+
+  // 🔴 NOUVEAU : Effet Swipe (gauche/droite) sur les titres
+  // Le "120" correspond à l'écartement maximum en pixels. Tu peux l'augmenter si tu veux que ça glisse plus fort !
+  const slide = easeInOut(local(p, 0, S.hero[3])) * 120; 
+  if (h1) h1.style.transform = `translateX(-${slide}px)`; // Glisse à gauche
+  if (h2) h2.style.transform = `translateX(${slide}px)`;  // Glisse à droite
+  if (h3) h3.style.transform = `translateX(-${slide}px)`; // Glisse à gauche
+
+
+  
   // ── BG GRADIENT
   bgGrad.style.opacity = easeInOut(local(p, BG.start, BG.end));
 
@@ -352,14 +372,16 @@ function onScroll(p) {
   heroSub.style.opacity = Math.max(0, hIn - hOut);
 
   // ── BACKSUPER (visible during hero + amount)
-  const bVis1 = local(p, 0,    0.06);   // fade in with hero
   const bOut1 = local(p, 0.30, 0.38);   // fade out before mission
   const bIn2  = local(p, 0.38, 0.44);   // fade back in for amount
   const bOut2 = local(p, 0.60, 0.68);   // fade out before story
+  
   let bOp = 0;
-  if (p < 0.30)      bOp = easeOut(bVis1) * 0.4;
+  // 🔴 CORRECTION DU BUG : bOp = 0.4 au lieu de faire un calcul, donc il est visible à 40% dès l'ouverture de la page !
+  if (p < 0.30)      bOp = 0.4; 
   else if (p < 0.44) bOp = (1 - easeInOut(bOut1)) * 0.4;
   else               bOp = easeOut(bIn2) * 0.4 * (1 - easeInOut(bOut2));
+  
   backsuper.style.opacity = bOp;
   const bY = hOut * 60;
   backsuper.style.transform = `translateY(${bY}px)`;
