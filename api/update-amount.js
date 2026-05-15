@@ -4,7 +4,7 @@ export default async function handler(req, res) {
   const { newAmount, password } = req.body;
 
   // 🔴 Ton vrai mot de passe ici :
-  const ADMIN_PASSWORD = "ton_mot_de_passe_secret"; 
+  const ADMIN_PASSWORD = "thefag"; 
 
   if (password !== ADMIN_PASSWORD) {
     return res.status(401).json({ error: 'Mot de passe incorrect' });
