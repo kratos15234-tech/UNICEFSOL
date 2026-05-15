@@ -258,15 +258,43 @@ const DEFAULT_PHRASES = [
   "12,400 clean water kits",
   "a second chance for thousands"
 ];
-const storedAmount  = parseFloat(localStorage.getItem('unicef_amount'))  || DEFAULT_AMOUNT;
-const storedPhrases = JSON.parse(localStorage.getItem('unicef_phrases') || 'null') || DEFAULT_PHRASES;
 
-function fmt(n) {
-  return '$' + n.toLocaleString('en-US', { minimumFractionDigits:2, maximumFractionDigits:2 });
-}
-document.getElementById('total-donations').textContent = fmt(storedAmount);
-document.getElementById('story-amount').textContent    = fmt(storedAmount);
-const pct = Math.min((storedAmount / 100000) * 100, 100);
+
+
+  
+  
+  
+  // On définit la variable globale pour le pourcentage
+let pct = 0; 
+let realAmount = DEFAULT_AMOUNT;
+
+// On va chercher la vraie valeur dans la base de données
+fetch('/api/get-amount')
+  .then(res => res.json())
+  .then(data => {
+    realAmount = data.amount;
+    pct = Math.min((realAmount / 100000) * 100, 100);
+    
+    // On met à jour les textes à l'écran
+    document.getElementById('total-donations').textContent = fmt(realAmount);
+    document.getElementById('story-amount').textContent    = fmt(realAmount);
+    
+    // Si la barre a déjà été affichée par le scroll, on la met à jour
+    if (progressBarFired) {
+      document.getElementById('progress-fill').style.width = pct + '%';
+    }
+  });
+
+document.getElementById('total-donations').textContent = fmt(DEFAULT_AMOUNT);
+document.getElementById('story-amount').textContent    = fmt(DEFAULT_AMOUNT);
+
+
+
+
+
+  
+
+  
 
 // ── SCROLL PROGRESS ────────────────────────────────────────────
 // Helper: maps a global progress [0-1] to a local [0-1] for a window [start, end]
