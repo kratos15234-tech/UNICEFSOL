@@ -321,7 +321,6 @@ const h2         = document.getElementById('h2');
 const h3         = document.getElementById('h3');
 
 // Sections timing (0–1 over entire scroll height)
-// Each section: [fadeIn start, fully visible, start fadeOut, fully gone]
 const S = {
   hero:    [0,     0,     0.10,  0.18],
   mission: [0.12,  0.20,  0.32,  0.40],
@@ -333,12 +332,6 @@ const S = {
 // Background gradient timing
 const BG = { start: 0.05, end: 0.30 };
 
-// Parallax config (y offset in vh units)
-const PAR = {
-  back:  { showAt: 0, hideAt: 0.38, slideOutAt: 0.32, reShowAt: 0.40, reHideAt: 0.66 },
-  front: { showAt: 0, hideAt: 0.18, reShowAt: 0.62, reHideAt: 0.90 },
-};
-
 let missionCounterFired = false;
 let progressBarFired    = false;
 let typewriterFired     = false;
@@ -347,50 +340,50 @@ function onScroll(p) {
   // ── BG GRADIENT
   bgGrad.style.opacity = easeInOut(local(p, BG.start, BG.end));
 
-  // ── HERO
+  // ── 1. HERO (Titre + Animation Swipe Gauche/Droite)
   const hIn  = easeOut(local(p, S.hero[0], S.hero[1]));
   const hOut = easeInOut(local(p, S.hero[2], S.hero[3]));
+  
+  // Fait monter et disparaître tout le bloc titre ensemble
   heroTitle.style.opacity = Math.max(0, hIn - hOut);
-  // On combine le translateY vertical avec le translateX horizontal (swipe)
-  const slide = easeInOut(local(p, 0, S.hero[3])) * 120; 
-  
-  if (h1) h1.style.transform = `translateY(${hOut * -60}px) translateX(-${slide}px)`; // Haut + Gauche
-  if (h2) h2.style.transform = `translateY(${hOut * -60}px) translateX(${slide}px)`;  // Haut + Droite
-  if (h3) h3.style.transform = `translateY(${hOut * -60}px) translateX(-${slide}px)`; // Haut + Gauche
-  
+  heroTitle.style.transform = `translateY(${hOut * -60}px)`;
   heroSub.style.opacity = Math.max(0, hIn - hOut);
 
-  // ── BACKSUPER (visible during hero + amount)
-  const bOut1 = local(p, 0.30, 0.38);   // fade out before mission
-  const bIn2  = local(p, 0.38, 0.44);   // fade back in for amount
-  const bOut2 = local(p, 0.60, 0.68);   // fade out before story
-  
+  // Fait glisser chaque ligne individuellement sur les côtés
+  const slide = easeInOut(local(p, 0, S.hero[3])) * 140; // 140 = force du glissement
+  if (h1) h1.style.transform = `translateX(-${slide}px)`; // Glisse à gauche
+  if (h2) h2.style.transform = `translateX(${slide}px)`;  // Glisse à droite
+  if (h3) h3.style.transform = `translateX(-${slide}px)`; // Glisse à gauche
+
+  // ── BACKSUPER (Apparaît au début, disparaît, revient pour Amount)
   let bOp = 0;
-  if (p < 0.30)      bOp = 0.4; 
-  else if (p < 0.44) bOp = (1 - easeInOut(bOut1)) * 0.4;
-  else               bOp = easeOut(bIn2) * 0.4 * (1 - easeInOut(bOut2));
+  if (p < 0.06)      bOp = easeOut(local(p, 0, 0.06)) * 0.4;
+  else if (p < 0.30) bOp = 0.4; 
+  else if (p < 0.38) bOp = (1 - easeInOut(local(p, 0.30, 0.38))) * 0.4; // Disparaît pour mission
+  else if (p < 0.44) bOp = easeOut(local(p, 0.38, 0.44)) * 0.4; // Revient pour Amount
+  else if (p < 0.60) bOp = 0.4;
+  else               bOp = (1 - easeInOut(local(p, 0.60, 0.68))) * 0.4; // Disparaît pour de bon
   
   backsuper.style.opacity = bOp;
-  const bY = hOut * 60;
-  backsuper.style.transform = `translateY(${bY}px)`;
+  backsuper.style.transform = `translateY(${hOut * 60}px)`;
 
-  // ── FRONTSUPER (visible during hero + story)
-  const fOut1 = local(p, 0.14, 0.22);
-  const fIn2  = local(p, 0.60, 0.68);
-  const fOut2 = local(p, 0.84, 0.92);
+  // ── FRONTSUPER (Apparaît au début, disparaît, revient pour Story)
   let fOp = 0;
   if (p < 0.14)      fOp = 0.6;
-  else if (p < 0.60) fOp = (1 - easeInOut(fOut1)) * 0.6;
-  else               fOp = easeOut(fIn2) * 0.6 * (1 - easeInOut(fOut2));
+  else if (p < 0.22) fOp = (1 - easeInOut(local(p, 0.14, 0.22))) * 0.6; // Disparaît
+  else if (p < 0.60) fOp = 0; // Reste caché
+  else if (p < 0.68) fOp = easeOut(local(p, 0.60, 0.68)) * 0.6; // Revient pour Story
+  else if (p < 0.84) fOp = 0.6;
+  else               fOp = (1 - easeInOut(local(p, 0.84, 0.92))) * 0.6; // Disparaît
+  
   frontsuper.style.opacity = fOp;
 
-  // ── MISSION
+  // ── 2. MISSION
   const mIn  = easeOut(local(p, S.mission[0], S.mission[1]));
   const mOut = easeInOut(local(p, S.mission[2], S.mission[3]));
   mission.style.opacity   = Math.max(0, mIn - mOut);
   mission.style.transform = `translateY(${(1 - mIn) * 30 + mOut * -50}px)`;
 
-  // fire % counter once
   if (p >= S.mission[0] + 0.03 && !missionCounterFired) {
     missionCounterFired = true;
     let o = { v: 0 };
@@ -398,31 +391,29 @@ function onScroll(p) {
       onUpdate: () => document.getElementById('mpct').innerText = Math.ceil(o.v) + '%' });
   }
 
-  // ── AMOUNT
+  // ── 3. AMOUNT (Stats)
   const aIn  = easeOut(local(p, S.amount[0], S.amount[1]));
   const aOut = easeInOut(local(p, S.amount[2], S.amount[3]));
   amountL.style.opacity   = Math.max(0, aIn - aOut);
   amountL.style.transform = `translateY(${(1 - aIn) * 30 + aOut * -50}px)`;
 
-  // fire progress bar once
   if (p >= S.amount[0] + 0.03 && !progressBarFired) {
     progressBarFired = true;
     document.getElementById('progress-fill').style.width = pct + '%';
   }
 
-  // ── STORY
+  // ── 4. STORY (Represents)
   const sIn  = easeOut(local(p, S.story[0], S.story[1]));
   const sOut = easeInOut(local(p, S.story[2], S.story[3]));
   storyL.style.opacity   = Math.max(0, sIn - sOut);
   storyL.style.transform = `translateY(${(1 - sIn) * 30 + sOut * -50}px)`;
 
-  // fire typewriter once
   if (p >= S.story[0] + 0.03 && !typewriterFired) {
     typewriterFired = true;
     startTypewriter();
   }
 
-  // ── QUOTE
+  // ── 5. QUOTE
   const qIn  = easeOut(local(p, S.quote[0], S.quote[1]));
   const qOut = easeInOut(local(p, S.quote[2], S.quote[3]));
   quoteL.style.opacity   = Math.max(0, qIn - qOut);
