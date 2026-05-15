@@ -3,9 +3,8 @@ export default async function handler(req, res) {
 
   const { newAmount, password } = req.body;
 
-  // 🔴 IMPORTANT: Mets ton vrai mot de passe d'admin en clair ici !
-  // Personne ne peut voir ce fichier, il est exécuté côté serveur.
-  const ADMIN_PASSWORD = "thefag"; 
+  // 🔴 Ton vrai mot de passe ici :
+  const ADMIN_PASSWORD = "ton_mot_de_passe_secret"; 
 
   if (password !== ADMIN_PASSWORD) {
     return res.status(401).json({ error: 'Mot de passe incorrect' });
@@ -14,12 +13,16 @@ export default async function handler(req, res) {
   const url = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
   const token = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
 
+  if (!url || !token) {
+    return res.status(500).json({ error: 'Variables de base de données introuvables sur Vercel' });
+  }
+
   try {
     await fetch(`${url}/set/unicef_amount/${newAmount}`, {
       headers: { Authorization: `Bearer ${token}` }
     });
     res.status(200).json({ success: true, newAmount });
   } catch (error) {
-    res.status(500).json({ error: 'Erreur lors de la sauvegarde' });
+    res.status(500).json({ error: 'Erreur lors de la sauvegarde sur la DB' });
   }
 }
