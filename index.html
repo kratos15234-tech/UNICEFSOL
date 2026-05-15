@@ -247,6 +247,9 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  
+
 <script>
 gsap.registerPlugin(ScrollTrigger);
 
@@ -259,40 +262,44 @@ const DEFAULT_PHRASES = [
   "a second chance for thousands"
 ];
 
+// 🔴 1. LA FONCTION MANQUANTE POUR LE FORMATAGE DES DOLLARS
+function fmt(n) {
+  return '$' + n.toLocaleString('en-US', { minimumFractionDigits:2, maximumFractionDigits:2 });
+}
 
+// 🔴 2. LA VARIABLE MANQUANTE POUR L'ANIMATION DE TEXTE
+const storedPhrases = JSON.parse(localStorage.getItem('unicef_phrases') || 'null') || DEFAULT_PHRASES;
 
-  
-  
-  
-  // On définit la variable globale pour le pourcentage
+// Variables globales
 let pct = 0; 
 let realAmount = DEFAULT_AMOUNT;
+
+// On affiche le montant par défaut en attendant la réponse du serveur
+document.getElementById('total-donations').textContent = fmt(DEFAULT_AMOUNT);
+document.getElementById('story-amount').textContent    = fmt(DEFAULT_AMOUNT);
 
 // On va chercher la vraie valeur dans la base de données
 fetch('/api/get-amount')
   .then(res => res.json())
   .then(data => {
-    realAmount = data.amount;
-    pct = Math.min((realAmount / 100000) * 100, 100);
-    
-    // On met à jour les textes à l'écran
-    document.getElementById('total-donations').textContent = fmt(realAmount);
-    document.getElementById('story-amount').textContent    = fmt(realAmount);
-    
-    // Si la barre a déjà été affichée par le scroll, on la met à jour
-    if (progressBarFired) {
-      document.getElementById('progress-fill').style.width = pct + '%';
+    if(data && data.amount) {
+      realAmount = data.amount;
+      pct = Math.min((realAmount / 100000) * 100, 100);
+      
+      // On met à jour les textes à l'écran avec le vrai montant
+      document.getElementById('total-donations').textContent = fmt(realAmount);
+      document.getElementById('story-amount').textContent    = fmt(realAmount);
+      
+      // Si la barre a déjà été affichée par le scroll, on la met à jour
+      if (progressBarFired) {
+        document.getElementById('progress-fill').style.width = pct + '%';
+      }
     }
-  });
-
-document.getElementById('total-donations').textContent = fmt(DEFAULT_AMOUNT);
-document.getElementById('story-amount').textContent    = fmt(DEFAULT_AMOUNT);
+  })
+  .catch(err => console.error("Erreur de chargement du montant:", err));
 
 
-
-
-
-  
+    
 
   
 
