@@ -4,10 +4,10 @@ export default async function handler(req, res) {
   const { newAmount, password } = req.body;
 
   // 🔴 IMPORTANT : N'oublie pas de remettre ton vrai mot de passe ici !
-  const ADMIN_PASSWORD = "ton_mot_de_passe_secret"; 
+  const ADMIN_PASSWORD = "thefag"; 
 
   if (password !== ADMIN_PASSWORD) {
-    return res.status(401).json({ error: 'thefag' });
+    return res.status(401).json({ error: 'mot de passe incorrect' });
   }
 
   // On utilise TES noms de variables personnalisés
