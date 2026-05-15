@@ -140,6 +140,8 @@
   const HASH_USER = "9db955bc5af848209fc3b60ea02de9062e68c1c76927d62077a93a4eafc690b3";
   const HASH_PASS = "8880ad4a09aae87264c42db9b095b07716152aebac743249e3beeb8f0f7bbd84";
 
+  let currentPassword = '';
+
   let attempts    = parseInt(sessionStorage.getItem('adm_try')    || '0');
   let lockedUntil = parseInt(sessionStorage.getItem('adm_locked') || '0');
 
@@ -163,6 +165,8 @@
       sha256(document.getElementById('pwd-input').value)
     ]);
 
+currentPassword = document.getElementById('pwd-input').value;
+    
     if (hu === HASH_USER && hp === HASH_PASS) {
       sessionStorage.removeItem('adm_try');
       sessionStorage.removeItem('adm_locked');
@@ -216,22 +220,46 @@
     document.getElementById('pct-label').textContent = p + '%';
   }
 
-  function saveAll() {
-    const amt = parseFloat(document.getElementById('amount-input').value) || 0;
-    localStorage.setItem('unicef_amount', amt);
-    localStorage.setItem('unicef_phrases', JSON.stringify(buildPhrases(amt)));
-    const t = document.getElementById('toast');
-    t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2500);
-  }
+  async function saveAll() {
+  const amt = parseFloat(document.getElementById('amount-input').value) || 0;
+  const btn = document.querySelector('.btn-save');
+  const originalText = btn.innerHTML;
+  btn.textContent = '...Sauvegarde...';
 
-  function init() {
-    const stored = parseFloat(localStorage.getItem('unicef_amount')) || 20931.49;
-    document.getElementById('amount-input').value = stored;
-    updatePreview(stored);
-    document.getElementById('amount-input').addEventListener('input', function () {
-      updatePreview(parseFloat(this.value) || 0);
+  try {
+    const response = await fetch('/api/update-amount', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ newAmount: amt, password: currentPassword })
     });
+
+    if (response.ok) {
+      localStorage.setItem('unicef_phrases', JSON.stringify(buildPhrases(amt))); // Garde ça local si tu veux
+      const t = document.getElementById('toast');
+      t.classList.add('show'); 
+      setTimeout(() => t.classList.remove('show'), 2500);
+    } else {
+      alert("Erreur : Non autorisé ou problème serveur.");
+    }
+  } catch (e) {
+    alert("Erreur de connexion.");
   }
+  
+  btn.innerHTML = originalText;
+}
+
+
+  async function init() {
+  const res = await fetch('/api/get-amount');
+  const data = await res.json();
+  const stored = data.amount;
+  
+  document.getElementById('amount-input').value = stored;
+  updatePreview(stored);
+  document.getElementById('amount-input').addEventListener('input', function () {
+    updatePreview(parseFloat(this.value) || 0);
+  });
+}
 </script>
 </body>
 </html>
