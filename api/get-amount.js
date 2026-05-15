@@ -1,12 +1,11 @@
 export default async function handler(req, res) {
-  // On récupère les liens de la base de données
-  const url = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
-  const token = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
+  // On utilise TES noms de variables personnalisés
+  const url = process.env.UNICEF_KV_REST_API_URL;
+  const token = process.env.UNICEF_KV_REST_API_TOKEN;
 
-  // Si Vercel n'a pas injecté les liens, on le signale !
   if (!url || !token) {
     console.error("ERREUR: URL ou Token manquant.");
-    return res.status(200).json({ amount: 20931.49 }); // On renvoie le montant par défaut pour ne pas tout casser
+    return res.status(200).json({ amount: 20931.49 }); 
   }
 
   try {
