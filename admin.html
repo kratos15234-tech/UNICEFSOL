@@ -250,15 +250,15 @@ currentPassword = document.getElementById('pwd-input').value;
 
 
   async function init() {
-  const res = await fetch('/api/get-amount');
-  const data = await res.json();
-  const stored = data.amount;
-  
-  document.getElementById('amount-input').value = stored;
-  updatePreview(stored);
-  document.getElementById('amount-input').addEventListener('input', function () {
-    updatePreview(parseFloat(this.value) || 0);
-  });
+  try {
+    const res = await fetch('/api/get-amount');
+    const data = await res.json();
+    
+    // On affiche la valeur reçue du serveur
+    document.getElementById('amount-input').value = data.amount || 20931.49;
+  } catch (e) {
+    console.error("Impossible de lire le montant actuel", e);
+  }
 }
 </script>
 </body>
