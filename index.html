@@ -1,280 +1,463 @@
-Voici mon site web est ce que tu peux faire en sorte que l'expérience utilisateur quand ill scroll down est 100% meilleur sans changer le contenu <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>$unicef — charity token</title>
-  <link rel="icon" type="image/png" href="logo.png">
-  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;600&display=swap" rel="stylesheet">
-  <style>
-    *{box-sizing:border-box;margin:0;padding:0}
-    ::-webkit-scrollbar { width: 0; }
-    body { font-family:'Outfit',sans-serif; color:#fff; overflow-x:hidden; background:#9945FF; }
-    
-    #bg-container, #bg-gradient-final, #particles { position:fixed; inset:0; z-index:-1; }
-    #bg-gradient-final { background:linear-gradient(135deg, #9945FF, #14F195); opacity:0; }
-    
-    /* ── HEADER ── */
-    header {
-      position:fixed; width:100%; display:flex;
-      justify-content:space-between; align-items:center;
-      padding:30px 50px; z-index:100;
-    }
-    .logo-area { display:flex; align-items:center; gap:12px; font-family:'Bebas Neue'; font-size:2rem; }
-    .nav-btns { display:flex; gap:15px; }
-    .btn {
-      text-decoration:none; color:#fff; font-family:'Bebas Neue'; font-size:1.1rem;
-      padding:8px 20px; border:1px solid rgba(255,255,255,.3); border-radius:50px; transition:.3s;
-    }
-    .btn-buy { background:#14F195; color:#000; border:none; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>$unicef — charity token</title>
+  <link rel="icon" type="image/png" href="logo.png">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;600&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    ::-webkit-scrollbar{width:0}
+    body{font-family:'Outfit',sans-serif;color:#fff;overflow-x:hidden;background:#9945FF}
 
-    /* ── PIN / SCROLL SCENE ── */
-    #pin-wrap { position:relative; height:900vh; }
-    #pin-scene { position:sticky; top:0; height:100vh; overflow:hidden; }
+    /* ── FIXED BG ── */
+    #bg-solid   { position:fixed;inset:0;z-index:-2;background:#9945FF; }
+    #bg-gradient{ position:fixed;inset:0;z-index:-1;background:linear-gradient(135deg,#9945FF,#14F195);opacity:0; }
+    canvas#particles{ position:fixed;inset:0;z-index:0;pointer-events:none; }
 
-    /* ── SUPER LAYERS ── */
-    #backsuper, #frontsuper {
-      position:absolute; bottom:0; width:100%; height:100vh;
-      background-size:cover; background-position:center center;
-      mix-blend-mode:screen; pointer-events:none; will-change:transform, opacity;
-    }
-    #backsuper  { background-image:url('backsuper.png');  z-index:1; opacity:0.4; }
-    #frontsuper { background-image:url('frontsuper.png'); z-index:5; opacity:0.6; }
+    /* ── HEADER ── */
+    header{
+      position:fixed;width:100%;display:flex;
+      justify-content:space-between;align-items:center;
+      padding:30px 50px;z-index:100;
+    }
+    .logo-area{display:flex;align-items:center;gap:12px;font-family:'Bebas Neue';font-size:2rem;}
+    .nav-btns{display:flex;gap:15px;}
+    .btn{
+      text-decoration:none;color:#fff;font-family:'Bebas Neue';font-size:1.1rem;
+      padding:8px 20px;border:1px solid rgba(255,255,255,.3);border-radius:50px;transition:.3s;
+    }
+    .btn-buy{background:#14F195;color:#000;border:none;}
 
-    /* ── LAYERS ── */
-    .layer {
-      position:absolute; inset:0; display:flex; flex-direction:column;
-      align-items:center; justify-content:center; text-align:center;
-      padding:0 10%; opacity:0; z-index:10;
-    }
-    .bebas { font-family:'Bebas Neue'; }
-    .amount-header { font-size:clamp(5rem,15vw,10rem); }
-    #dynamic-text {
-      font-size:clamp(2.5rem,6vw,4.5rem); color:#14F195; min-height:1.2em;
-      text-transform:lowercase; letter-spacing:2px;
-    }
+    /* ── SCROLL CONTAINER ── */
+    #pin-wrap{position:relative;height:1000vh;}
+    #pin-scene{position:sticky;top:0;height:100vh;overflow:hidden;}
 
-    /* ── MISSION ── */
-    #mission-content { gap:0; padding:0 8%; justify-content: center; margin-top: -5vh; }
-    .mission-pct-wrap { position:relative; display:flex; align-items:center; justify-content:center; width:100%; }
-    .mission-pct-bg {
-      font-family:'Bebas Neue'; font-size: clamp(8rem, 22vw, 17rem); line-height:.82;
-      color: transparent; -webkit-text-stroke: 1.5px rgba(255,255,255,0.12);
-      letter-spacing: -4px; user-select:none; pointer-events:none; position:relative;
-    }
-    #mpct {
-      font-family:'Bebas Neue'; font-size: clamp(8rem, 22vw, 17rem); line-height:.82;
-      position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
-      background: linear-gradient(160deg, #fff 0%, #14F195 60%, #9945FF 100%);
-      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-      background-clip: text; letter-spacing:-4px; filter: drop-shadow(0 0 40px rgba(20,241,149,0.35));
-    }
+    /* ── PARALLAX LAYERS ── */
+    #backsuper,#frontsuper{
+      position:absolute;inset:0;
+      background-size:cover;background-position:center bottom;
+      mix-blend-mode:screen;pointer-events:none;will-change:transform,opacity;
+    }
+    #backsuper { background-image:url('backsuper.png'); z-index:1; }
+    #frontsuper{ background-image:url('frontsuper.png');z-index:5; }
 
-    .mission-tag { display:inline-flex; align-items:center; gap:10px; margin-top: -8px; position:relative; z-index:2; }
-    .mission-tag-line { width: clamp(30px, 5vw, 60px); height:1px; background: linear-gradient(90deg, transparent, #14F195); }
-    .mission-tag-line.right { background: linear-gradient(90deg, #14F195, transparent); }
-    .mission-tag-text { font-family:'Outfit'; font-weight:600; font-size: clamp(.6rem, 1.4vw, .85rem); letter-spacing: 4px; color:#14F195; }
-    .mission-subtitle { font-family:'Outfit'; font-weight:300; font-size: clamp(.75rem, 1.6vw, 1rem); letter-spacing: 2px; color:rgba(255,255,255,0.5); margin-top: 18px; max-width: 500px; line-height: 1.8; }
+    /* ── CONTENT LAYERS ── */
+    .layer{
+      position:absolute;inset:0;
+      display:flex;flex-direction:column;
+      align-items:center;justify-content:center;
+      text-align:center;padding:0 10%;
+      z-index:10;pointer-events:none;
+      will-change:transform,opacity;
+    }
+    .bebas{font-family:'Bebas Neue';}
 
-    .mission-ca-row { display:flex; align-items:center; gap:12px; margin-top: 28px; }
-    .ca-display {
-      font-family:monospace; background:rgba(20,241,149,0.04); border:1px solid rgba(20,241,149,0.2);
-      padding:10px 18px; border-radius:8px; font-size: clamp(.55rem, 1.1vw, .75rem);
-      color:rgba(255,255,255,0.55); cursor:pointer; transition:.3s; word-break:break-all; letter-spacing:.5px;
-    }
-    .ca-display:hover { border-color:rgba(20,241,149,0.6); color:#14F195; background:rgba(20,241,149,0.08); }
+    /* hero */
+    #hero-title .line{
+      display:block;font-family:'Bebas Neue';
+      font-size:clamp(4.5rem,13vw,9.5rem);line-height:.88;
+      will-change:transform,opacity;
+    }
+    #hero-sub{
+      font-family:'Bebas Neue';letter-spacing:10px;
+      font-size:clamp(.7rem,1.5vw,1rem);
+      margin-top:28px;opacity:0;
+      will-change:transform,opacity;
+    }
 
-    footer { position:fixed; bottom:12px; width:100%; text-align:center; font-size:.65rem; opacity:0; z-index:100; letter-spacing:1px; }
+    /* mission */
+    #mission-content{gap:0;padding:0 8%;}
+    .mission-pct-wrap{position:relative;display:flex;align-items:center;justify-content:center;width:100%;}
+    .mission-pct-bg{
+      font-family:'Bebas Neue';font-size:clamp(8rem,22vw,17rem);line-height:.82;
+      color:transparent;-webkit-text-stroke:1.5px rgba(255,255,255,0.1);
+      letter-spacing:-4px;user-select:none;
+    }
+    #mpct{
+      font-family:'Bebas Neue';font-size:clamp(8rem,22vw,17rem);line-height:.82;
+      position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+      background:linear-gradient(160deg,#fff 0%,#14F195 60%,#9945FF 100%);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+      letter-spacing:-4px;filter:drop-shadow(0 0 40px rgba(20,241,149,0.35));
+    }
+    .mission-tag{display:inline-flex;align-items:center;gap:10px;margin-top:-8px;z-index:2;}
+    .mission-tag-line{width:clamp(30px,5vw,60px);height:1px;background:linear-gradient(90deg,transparent,#14F195);}
+    .mission-tag-line.right{background:linear-gradient(90deg,#14F195,transparent);}
+    .mission-tag-text{font-family:'Outfit';font-weight:600;font-size:clamp(.6rem,1.4vw,.85rem);letter-spacing:4px;color:#14F195;}
+    .mission-subtitle{font-family:'Outfit';font-weight:300;font-size:clamp(.75rem,1.6vw,1rem);letter-spacing:2px;color:rgba(255,255,255,0.5);margin-top:18px;max-width:500px;line-height:1.8;}
+    .ca-display{
+      font-family:monospace;background:rgba(20,241,149,0.04);border:1px solid rgba(20,241,149,0.2);
+      padding:10px 18px;border-radius:8px;font-size:clamp(.55rem,1.1vw,.75rem);
+      color:rgba(255,255,255,0.55);cursor:pointer;transition:.3s;word-break:break-all;
+      letter-spacing:.5px;margin-top:28px;pointer-events:all;
+    }
+    .ca-display:hover{border-color:rgba(20,241,149,0.6);color:#14F195;background:rgba(20,241,149,0.08);}
 
-   @media (max-width: 768px) {
-      header { padding:16px 20px; }
-      
-      #frontsuper, #backsuper {
-        width: 100%;
-        left: 0;
-        right: 0;
-        background-repeat: no-repeat;
-        background-position: right bottom; 
-        background-size: auto 80%; 
-      }
+    /* amount */
+    #amount-layer .amount-label{letter-spacing:8px;opacity:.55;font-size:.75rem;margin-bottom:16px;}
+    #total-donations{font-family:'Bebas Neue';font-size:clamp(4.5rem,13vw,9rem);line-height:1;}
+    .progress-wrap{width:min(560px,85vw);margin-top:36px;}
+    .progress-track{
+      position:relative;height:6px;background:rgba(255,255,255,0.12);
+      border-radius:50px;
+    }
+    #progress-fill{
+      position:absolute;left:0;top:0;height:100%;width:0%;
+      background:linear-gradient(90deg,#14F195,#9945FF);border-radius:50px;
+      box-shadow:0 0 12px rgba(20,241,149,0.5);
+      transition:width 1.8s cubic-bezier(.22,1,.36,1);
+    }
+    .progress-marker{
+      position:absolute;top:50%;transform:translate(-50%,-50%);
+      width:9px;height:9px;background:#fff;border-radius:50%;
+      border:2px solid rgba(20,241,149,0.5);z-index:2;
+    }
+    .goal-labels{
+      display:flex;justify-content:space-between;margin-top:10px;
+      font-family:'Bebas Neue';font-size:.8rem;opacity:.45;letter-spacing:1px;
+      position:relative;
+    }
+    .goal-labels span{position:absolute;transform:translateX(-50%);}
 
-      #frontsuper { 
-        background-size: auto 75%;
-        z-index: 5; 
-      } 
-      #backsuper { 
-        background-size: auto 90%;
-        z-index: 1; 
-      }
+    /* story */
+    #story-layer .story-intro{
+      font-family:'Bebas Neue';font-size:clamp(2.5rem,7vw,4.5rem);
+      opacity:.65;margin-bottom:16px;line-height:1.1;
+    }
+    #story-layer .story-intro .accent{
+      background:linear-gradient(90deg,#14F195,#9945FF);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    }
+    #dynamic-text{
+      font-family:'Bebas Neue';
+      font-size:clamp(2.8rem,7vw,5rem);color:#14F195;
+      min-height:1.2em;letter-spacing:2px;line-height:1.1;
+    }
+    #cursor{display:inline-block;width:3px;height:.85em;background:#14F195;margin-left:4px;vertical-align:middle;animation:blink .7s infinite;}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
 
-      .layer { padding: 0 6%; }
-    }
-    
-  </style>
+    /* quote */
+    #quote-layer h2{
+      font-family:'Bebas Neue';font-size:clamp(3.5rem,9vw,6.5rem);line-height:1.05;
+    }
+    #quote-layer .accent{
+      background:linear-gradient(90deg,#14F195,#9945FF);
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    }
+
+    footer{
+      position:fixed;bottom:12px;width:100%;text-align:center;
+      font-size:.62rem;opacity:0;z-index:100;letter-spacing:1px;line-height:1.8;
+    }
+
+    @media(max-width:768px){
+      header{padding:16px 20px;}
+      #backsuper,#frontsuper{background-position:right bottom;background-size:auto 80%;}
+      #frontsuper{background-size:auto 75%;}
+      #backsuper {background-size:auto 90%;}
+      .layer{padding:0 6%;}
+    }
+  </style>
 </head>
 <body>
 
-<header>
-  <div class="logo-area"><img src="logo.png" height="40"><span>unicef</span></div>
-  <div class="nav-btns">
-    <a href="https://x.com/i/communities/2011296092843831350" target="_blank" class="btn community-btn">community</a>
-    <a href="https://pump.fun/coin/3t4GiENDepWKkGicwDoMz2V2fWDZXHLAoJ3ZrpZQpump" target="_blank" class="btn btn-buy">buy $unicef</a>
-  </div>
-</header>
-
-<div id="bg-container"><div id="bg-gradient-final"></div></div>
+<div id="bg-solid"></div>
+<div id="bg-gradient"></div>
 <canvas id="particles"></canvas>
 
+<header>
+  <div class="logo-area"><img src="logo.png" height="40"><span>unicef</span></div>
+  <div class="nav-btns">
+    <a href="https://x.com/i/communities/2011296092843831350" target="_blank" class="btn">community</a>
+    <a href="https://pump.fun/coin/3t4GiENDepWKkGicwDoMz2V2fWDZXHLAoJ3ZrpZQpump" target="_blank" class="btn btn-buy">buy $unicef</a>
+  </div>
+</header>
+
 <div id="pin-wrap">
-  <div id="pin-scene">
-    <div id="backsuper"></div><div id="frontsuper"></div>
+  <div id="pin-scene">
 
-    <div id="hero-title" class="layer" style="opacity:1">
-      <span class="bebas" style="font-size:clamp(5rem,15vw,10rem); line-height:.85;">every trade for every <span style="background:linear-gradient(90deg,#14F195,#9945FF);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">child,</span></span>
-      <span class="bebas" style="font-size:clamp(5rem,15vw,10rem); line-height:.85;">every <span style="background:linear-gradient(90deg,#9945FF,#14F195);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">right.</span></span>
-      <p class="bebas" style="letter-spacing:10px; margin-top:30px; opacity:0.8;">children around the world</p>
-    </div>
+    <div id="backsuper"></div>
+    <div id="frontsuper"></div>
 
-    <div id="mission-content" class="layer">
-      <div class="mission-pct-wrap">
-        <span class="mission-pct-bg">100%</span>
-        <span id="mpct">0%</span>
-      </div>
-      <div class="mission-tag">
-        <span class="mission-tag-line"></span>
-        <span class="mission-tag-text">of all fees going directly to unicef</span>
-        <span class="mission-tag-line right"></span>
-      </div>
-      <p class="mission-subtitle">every buy &amp; every sell — every movement of the token<br>directly protects children around the world</p>
-      <div class="mission-ca-row">
-        <div class="ca-display" id="ca-text">3t4GiENDepWKkGicwDoMz2V2fWDZXHLAoJ3ZrpZQpump</div>
-      </div>
-    </div>
+    <!-- 1. HERO -->
+    <div id="hero-title" class="layer" style="opacity:1;">
+      <div>
+        <span class="line" id="h1">every trade for every</span>
+        <span class="line" id="h2" style="background:linear-gradient(90deg,#14F195,#9945FF);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">child,</span>
+        <span class="line" id="h3">every</span>
+        <span class="line" id="h4" style="background:linear-gradient(90deg,#9945FF,#14F195);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">right.</span>
+      </div>
+      <p id="hero-sub" class="bebas">children around the world</p>
+    </div>
 
-    <div id="amount-layer" class="layer">
-        <p style="letter-spacing:8px; opacity:.6; margin-bottom:20px; font-size:.8rem;">total donations generated</p>
-        <h2 class="bebas amount-header" id="total-donations">$0.00</h2>
-        <div style="width:min(600px,85vw); margin-top:40px;">
-          <div style="position:relative; height:6px; background:rgba(255,255,255,0.12); border-radius:50px; overflow:visible;">
-            <div id="progress-bar" style="position:absolute; left:0; top:0; height:100%; width:0%; background:linear-gradient(90deg,#14F195,#9945FF); border-radius:50px; box-shadow:0 0 12px rgba(20,241,149,0.5); transition:width 1.5s cubic-bezier(.4,0,.2,1);"></div>
-            <!-- goal markers -->
-            <div style="position:absolute; left:25%; top:50%; transform:translate(-50%,-50%); width:10px; height:10px; background:#fff; border-radius:50%; border:2px solid rgba(20,241,149,0.6); z-index:2;"></div>
-            <div style="position:absolute; left:50%; top:50%; transform:translate(-50%,-50%); width:10px; height:10px; background:#fff; border-radius:50%; border:2px solid rgba(20,241,149,0.6); z-index:2;"></div>
-            <div style="position:absolute; left:75%; top:50%; transform:translate(-50%,-50%); width:10px; height:10px; background:#fff; border-radius:50%; border:2px solid rgba(20,241,149,0.6); z-index:2;"></div>
-            <div style="position:absolute; left:100%; top:50%; transform:translate(-50%,-50%); width:10px; height:10px; background:#fff; border-radius:50%; border:2px solid rgba(20,241,149,0.6); z-index:2;"></div>
-          </div>
-          <div style="display:flex; justify-content:space-between; margin-top:10px; font-family:'Bebas Neue'; font-size:.85rem; opacity:0.55; letter-spacing:1px; position:relative;">
-            <span style="position:absolute; left:25%; transform:translateX(-50%);">$25k</span>
-            <span style="position:absolute; left:50%; transform:translateX(-50%);">$50k</span>
-            <span style="position:absolute; left:75%; transform:translateX(-50%);">$75k</span>
-            <span style="position:absolute; left:100%; transform:translateX(-50%);">$100k</span>
-            <span style="visibility:hidden;">placeholder</span>
-          </div>
-        </div>
-    </div>
+    <!-- 2. MISSION -->
+    <div id="mission-content" class="layer" style="opacity:0;">
+      <div class="mission-pct-wrap">
+        <span class="mission-pct-bg">100%</span>
+        <span id="mpct">0%</span>
+      </div>
+      <div class="mission-tag">
+        <span class="mission-tag-line"></span>
+        <span class="mission-tag-text">of all fees going directly to unicef</span>
+        <span class="mission-tag-line right"></span>
+      </div>
+      <p class="mission-subtitle">every buy &amp; every sell — every movement of the token<br>directly protects children around the world</p>
+      <div class="ca-display" id="ca-text">3t4GiENDepWKkGicwDoMz2V2fWDZXHLAoJ3ZrpZQpump</div>
+    </div>
 
-    <div id="story-layer" class="layer">
-      <h2 class="bebas" style="font-size:clamp(3rem,8vw,5rem); opacity:0.7; margin-bottom:20px;"><span id="story-amount">$0.00</span> <span style="background:linear-gradient(90deg,#14F195,#9945FF);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">represents...</span></h2>
-      <div id="dynamic-text" class="bebas"></div>
-    </div>
+    <!-- 3. AMOUNT -->
+    <div id="amount-layer" class="layer" style="opacity:0;">
+      <p class="amount-label bebas">total donations generated</p>
+      <h2 id="total-donations">$0.00</h2>
+      <div class="progress-wrap">
+        <div class="progress-track">
+          <div id="progress-fill"></div>
+          <div class="progress-marker" style="left:25%"></div>
+          <div class="progress-marker" style="left:50%"></div>
+          <div class="progress-marker" style="left:75%"></div>
+          <div class="progress-marker" style="left:100%"></div>
+        </div>
+        <div class="goal-labels" style="height:20px;">
+          <span style="left:25%">$25k</span>
+          <span style="left:50%">$50k</span>
+          <span style="left:75%">$75k</span>
+          <span style="left:100%">$100k</span>
+        </div>
+      </div>
+    </div>
 
-    <div id="quote-layer" class="layer">
-      <h2 class="bebas" style="font-size:clamp(4rem,10vw,7rem); line-height:1;">trading crypto can<br><span style="background:linear-gradient(90deg,#14F195,#9945FF);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">save a life.</span></h2>
-    </div>
-  </div>
+    <!-- 4. STORY -->
+    <div id="story-layer" class="layer" style="opacity:0;">
+      <p class="story-intro"><span id="story-amount">$0.00</span> <span class="accent">represents...</span></p>
+      <div id="dynamic-text"><span id="typewriter-text"></span><span id="cursor"></span></div>
+    </div>
+
+    <!-- 5. QUOTE -->
+    <div id="quote-layer" class="layer" style="opacity:0;">
+      <h2>trading crypto can<br><span class="accent">save a life.</span></h2>
+    </div>
+
+  </div>
 </div>
 
-<footer style="padding:0 20px; line-height:1.7;">community charity project • not financial advice • invest responsibly<br><span style="opacity:0.55;">unicef is an independent community charity token on solana. not affiliated with, endorsed by, or operated by unicef foundation®.<br>powered by @pumpdotfun × @donatedotgg</span></footer>
+<footer>community charity project • not financial advice • invest responsibly<br>
+<span style="opacity:0.5;">unicef is an independent community charity token on solana. not affiliated with, endorsed by, or operated by unicef foundation®.<br>powered by @pumpdotfun × @donatedotgg</span></footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script>
-  // ── READ STORED DATA ──────────────────────────────────────────────
-  const DEFAULT_AMOUNT  = 20931.49;
-  const DEFAULT_PHRASES = [
-    "42,600 polio vaccines",
-    "8,500 days of essential food",
-    "12,400 clean water kits",
-    "a second chance for thousands"
-  ];
+gsap.registerPlugin(ScrollTrigger);
 
-  const storedAmount  = parseFloat(localStorage.getItem('unicef_amount'))  || DEFAULT_AMOUNT;
-  const storedPhrases = JSON.parse(localStorage.getItem('unicef_phrases') || 'null') || DEFAULT_PHRASES;
+// ── READ STORED DATA ───────────────────────────────────────────
+const DEFAULT_AMOUNT  = 20931.49;
+const DEFAULT_PHRASES = [
+  "42,600 polio vaccines",
+  "8,500 days of essential food",
+  "12,400 clean water kits",
+  "a second chance for thousands"
+];
+const storedAmount  = parseFloat(localStorage.getItem('unicef_amount'))  || DEFAULT_AMOUNT;
+const storedPhrases = JSON.parse(localStorage.getItem('unicef_phrases') || 'null') || DEFAULT_PHRASES;
 
-  // Format money
-  function fmt(n) {
-    return '$' + n.toLocaleString('en-US', { minimumFractionDigits:2, maximumFractionDigits:2 });
-  }
+function fmt(n) {
+  return '$' + n.toLocaleString('en-US', { minimumFractionDigits:2, maximumFractionDigits:2 });
+}
+document.getElementById('total-donations').textContent = fmt(storedAmount);
+document.getElementById('story-amount').textContent    = fmt(storedAmount);
+const pct = Math.min((storedAmount / 100000) * 100, 100);
 
-  // ── INJECT VALUES INTO DOM ────────────────────────────────────────
-  document.getElementById('total-donations').textContent = fmt(storedAmount);
-  document.getElementById('story-amount').textContent    = fmt(storedAmount);
+// ── SCROLL PROGRESS ────────────────────────────────────────────
+// Helper: maps a global progress [0-1] to a local [0-1] for a window [start, end]
+function local(p, start, end) {
+  return Math.max(0, Math.min(1, (p - start) / (end - start)));
+}
 
-  // Progress bar
-  const pct = Math.min((storedAmount / 100000) * 100, 100);
-  // Defer width update so transition plays when bar scrolls into view
-  ScrollTrigger && (window._pendingBarPct = pct);
+// ease
+function easeInOut(t) { return t < .5 ? 2*t*t : -1+(4-2*t)*t; }
+function easeOut(t)    { return 1 - Math.pow(1 - t, 3); }
 
-  // ── GSAP SCROLL TIMELINE ──────────────────────────────────────────
-  gsap.registerPlugin(ScrollTrigger);
-  const tl = gsap.timeline({ scrollTrigger:{ trigger:'#pin-wrap', start:'top top', end:'bottom bottom', scrub:1.2 }});
+// Elements
+const bgGrad     = document.getElementById('bg-gradient');
+const backsuper  = document.getElementById('backsuper');
+const frontsuper = document.getElementById('frontsuper');
+const heroTitle  = document.getElementById('hero-title');
+const heroSub    = document.getElementById('hero-sub');
+const mission    = document.getElementById('mission-content');
+const amountL    = document.getElementById('amount-layer');
+const storyL     = document.getElementById('story-layer');
+const quoteL     = document.getElementById('quote-layer');
+const footer     = document.querySelector('footer');
 
-  tl.to('#bg-gradient-final', { opacity:1 }, 0)
-    .to('#hero-title', { opacity:0, y:-50 }, 0.5)
-    .to('#backsuper', { opacity:0, y:'100vh' }, 0.5) 
-    .to('#mission-content', { opacity:1, y:0 }, 0.6)
-    .to('#mission-content', { opacity:0, y:-50 }, 1.5)
-    .to('#frontsuper', { opacity:0, y:'100vh' }, 1.5)
-    .to('#backsuper', { opacity:0.4, y:0 }, 1.6) 
-    .to('#amount-layer', { opacity:1 }, 1.6)
-    .to('#amount-layer', { opacity:0, y:-50 }, 3.2)
-    .to('#backsuper', { opacity:0, y:'100vh' }, 3.2)
-    .to('#frontsuper', { opacity:0.6, y:0 }, 3.3) 
-    .to('#story-layer', { opacity:1 }, 3.3)
-    .to('#story-layer', { opacity:0, y:-50 }, 5.5)
-    .to('#frontsuper', { opacity:0, y:'100vh' }, 5.5) 
-    .to('#quote-layer', { opacity:1 }, 6)
-    .to('footer', { opacity:1 }, 6.5);
+// Sections timing (0–1 over entire scroll height)
+// Each section: [fadeIn start, fully visible, start fadeOut, fully gone]
+const S = {
+  hero:    [0,     0,     0.10,  0.18],
+  mission: [0.12,  0.20,  0.32,  0.40],
+  amount:  [0.36,  0.44,  0.58,  0.66],
+  story:   [0.62,  0.70,  0.82,  0.90],
+  quote:   [0.86,  0.93,  1.0,   1.0 ],
+};
 
-  // Animate progress bar when amount layer enters view
-  ScrollTrigger.create({
-    trigger: '#pin-wrap', start: '16% top',
-    onEnter: () => {
-      document.getElementById('progress-bar').style.width = pct + '%';
-    }
-  });
+// Background gradient timing
+const BG = { start: 0.05, end: 0.30 };
 
-  // ── TYPEWRITER (uses stored phrases) ─────────────────────────────
-  const ph = storedPhrases.length ? storedPhrases : DEFAULT_PHRASES;
-  let cur=0, del=false, tx='', el=document.getElementById('dynamic-text');
-  function loop() {
-    if(!el) return;
-    let f=ph[cur]; tx=del ? f.substring(0,tx.length-1) : f.substring(0,tx.length+1); el.innerHTML=tx;
-    let s=del?50:100; if(!del&&tx===f){s=2000;del=true} else if(del&&tx===''){del=false;cur=(cur+1)%ph.length;s=500}
-    setTimeout(loop,s);
-  }
-  ScrollTrigger.create({ trigger:'#pin-wrap', start:'55% top', onEnter:()=>loop(), once:true });
+// Parallax config (y offset in vh units)
+const PAR = {
+  back:  { showAt: 0, hideAt: 0.38, slideOutAt: 0.32, reShowAt: 0.40, reHideAt: 0.66 },
+  front: { showAt: 0, hideAt: 0.18, reShowAt: 0.62, reHideAt: 0.90 },
+};
 
-  // ── MISSION % COUNTER ─────────────────────────────────────────────
-  ScrollTrigger.create({ trigger:'#pin-wrap', start:'15% top', onEnter:()=>{
-    let o={v:0}; gsap.to(o, { v:100, duration:2, onUpdate:()=>document.getElementById('mpct').innerText=Math.ceil(o.v)+"%" });
-  }});
+let missionCounterFired = false;
+let progressBarFired    = false;
+let typewriterFired     = false;
 
-  // ── COPY CA ───────────────────────────────────────────────────────
-  document.getElementById('ca-text').onclick=function(){
-    navigator.clipboard.writeText(this.innerText); this.innerText="copied!";
-    setTimeout(()=>this.innerText="3t4GiENDepWKkGicwDoMz2V2fWDZXHLAoJ3ZrpZQpump",2000);
-  };
-  
-  // ── PARTICLES ─────────────────────────────────────────────────────
-  const cv=document.getElementById('particles'), cx=cv.getContext('2d');
-  let W,H; rsz=()=>{W=cv.width=innerWidth; H=cv.height=innerHeight}; rsz(); window.onresize=rsz;
-  const pts = Array(80).fill().map(()=>({x:Math.random()*W, y:Math.random()*H, r:Math.random()*1.5, vy:Math.random()*.2+.1, o:Math.random()}));
-  (function anim(){
-    cx.clearRect(0,0,W,H);
-    pts.forEach(p=>{p.y-=p.vy; if(p.y<0)p.y=H; cx.fillStyle=`rgba(255,255,255,${p.o})`; cx.beginPath(); cx.arc(p.x,p.y,p.r,0,7); cx.fill()});
-    requestAnimationFrame(anim);
-  })();
+function onScroll(p) {
+  // ── BG GRADIENT
+  bgGrad.style.opacity = easeInOut(local(p, BG.start, BG.end));
+
+  // ── HERO
+  const hIn  = easeOut(local(p, S.hero[0], S.hero[1]));
+  const hOut = easeInOut(local(p, S.hero[2], S.hero[3]));
+  heroTitle.style.opacity = Math.max(0, hIn - hOut);
+  heroTitle.style.transform = `translateY(${hOut * -60}px)`;
+  heroSub.style.opacity = Math.max(0, hIn - hOut);
+
+  // ── BACKSUPER (visible during hero + amount)
+  const bVis1 = local(p, 0,    0.06);   // fade in with hero
+  const bOut1 = local(p, 0.30, 0.38);   // fade out before mission
+  const bIn2  = local(p, 0.38, 0.44);   // fade back in for amount
+  const bOut2 = local(p, 0.60, 0.68);   // fade out before story
+  let bOp = 0;
+  if (p < 0.30)      bOp = easeOut(bVis1) * 0.4;
+  else if (p < 0.44) bOp = (1 - easeInOut(bOut1)) * 0.4;
+  else               bOp = easeOut(bIn2) * 0.4 * (1 - easeInOut(bOut2));
+  backsuper.style.opacity = bOp;
+  const bY = hOut * 60;
+  backsuper.style.transform = `translateY(${bY}px)`;
+
+  // ── FRONTSUPER (visible during hero + story)
+  const fOut1 = local(p, 0.14, 0.22);
+  const fIn2  = local(p, 0.60, 0.68);
+  const fOut2 = local(p, 0.84, 0.92);
+  let fOp = 0;
+  if (p < 0.14)      fOp = 0.6;
+  else if (p < 0.60) fOp = (1 - easeInOut(fOut1)) * 0.6;
+  else               fOp = easeOut(fIn2) * 0.6 * (1 - easeInOut(fOut2));
+  frontsuper.style.opacity = fOp;
+
+  // ── MISSION
+  const mIn  = easeOut(local(p, S.mission[0], S.mission[1]));
+  const mOut = easeInOut(local(p, S.mission[2], S.mission[3]));
+  mission.style.opacity   = Math.max(0, mIn - mOut);
+  mission.style.transform = `translateY(${(1 - mIn) * 30 + mOut * -50}px)`;
+
+  // fire % counter once
+  if (p >= S.mission[0] + 0.03 && !missionCounterFired) {
+    missionCounterFired = true;
+    let o = { v: 0 };
+    gsap.to(o, { v: 100, duration: 1.8, ease: 'power2.out',
+      onUpdate: () => document.getElementById('mpct').innerText = Math.ceil(o.v) + '%' });
+  }
+
+  // ── AMOUNT
+  const aIn  = easeOut(local(p, S.amount[0], S.amount[1]));
+  const aOut = easeInOut(local(p, S.amount[2], S.amount[3]));
+  amountL.style.opacity   = Math.max(0, aIn - aOut);
+  amountL.style.transform = `translateY(${(1 - aIn) * 30 + aOut * -50}px)`;
+
+  // fire progress bar once
+  if (p >= S.amount[0] + 0.03 && !progressBarFired) {
+    progressBarFired = true;
+    document.getElementById('progress-fill').style.width = pct + '%';
+  }
+
+  // ── STORY
+  const sIn  = easeOut(local(p, S.story[0], S.story[1]));
+  const sOut = easeInOut(local(p, S.story[2], S.story[3]));
+  storyL.style.opacity   = Math.max(0, sIn - sOut);
+  storyL.style.transform = `translateY(${(1 - sIn) * 30 + sOut * -50}px)`;
+
+  // fire typewriter once
+  if (p >= S.story[0] + 0.03 && !typewriterFired) {
+    typewriterFired = true;
+    startTypewriter();
+  }
+
+  // ── QUOTE
+  const qIn  = easeOut(local(p, S.quote[0], S.quote[1]));
+  const qOut = easeInOut(local(p, S.quote[2], S.quote[3]));
+  quoteL.style.opacity   = Math.max(0, qIn - qOut);
+  quoteL.style.transform = `translateY(${(1 - qIn) * 30}px)`;
+
+  // ── FOOTER
+  footer.style.opacity = local(p, 0.92, 1.0);
+}
+
+// ── SCROLLTRIGGER DRIVER ──────────────────────────────────────
+ScrollTrigger.create({
+  trigger: '#pin-wrap',
+  start: 'top top',
+  end: 'bottom bottom',
+  scrub: 1.5,
+  onUpdate: self => onScroll(self.progress)
+});
+
+// Initial call
+onScroll(0);
+
+// Hero subtitle entrance on load
+gsap.to('#hero-sub', { opacity: 0.75, y: 0, duration: 1.2, delay: 0.6, ease: 'power2.out' });
+
+// ── TYPEWRITER ────────────────────────────────────────────────
+const phrases = storedPhrases.length ? storedPhrases : DEFAULT_PHRASES;
+let cur = 0, del = false, tx = '';
+const twEl = document.getElementById('typewriter-text');
+
+function startTypewriter() {
+  function loop() {
+    if (!twEl) return;
+    const f = phrases[cur];
+    tx = del ? f.substring(0, tx.length - 1) : f.substring(0, tx.length + 1);
+    twEl.textContent = tx;
+    let s = del ? 45 : 90;
+    if (!del && tx === f)      { s = 2200; del = true; }
+    else if (del && tx === '') { del = false; cur = (cur + 1) % phrases.length; s = 400; }
+    setTimeout(loop, s);
+  }
+  loop();
+}
+
+// ── COPY CA ───────────────────────────────────────────────────
+document.getElementById('ca-text').onclick = function () {
+  navigator.clipboard.writeText(this.innerText);
+  this.innerText = 'copied!';
+  setTimeout(() => this.innerText = '3t4GiENDepWKkGicwDoMz2V2fWDZXHLAoJ3ZrpZQpump', 2000);
+};
+
+// ── PARTICLES ─────────────────────────────────────────────────
+const cv = document.getElementById('particles');
+const cx = cv.getContext('2d');
+let W, H;
+function rsz() { W = cv.width = innerWidth; H = cv.height = innerHeight; }
+rsz(); window.addEventListener('resize', rsz);
+const pts = Array(80).fill(0).map(() => ({
+  x: Math.random() * innerWidth,
+  y: Math.random() * innerHeight,
+  r: Math.random() * 1.4 + 0.3,
+  vy: Math.random() * 0.25 + 0.08,
+  o: Math.random() * 0.5 + 0.1
+}));
+(function anim() {
+  cx.clearRect(0, 0, W, H);
+  pts.forEach(p => {
+    p.y -= p.vy; if (p.y < 0) p.y = H;
+    cx.fillStyle = `rgba(255,255,255,${p.o})`;
+    cx.beginPath(); cx.arc(p.x, p.y, p.r, 0, Math.PI * 2); cx.fill();
+  });
+  requestAnimationFrame(anim);
+})();
 </script>
 </body>
 </html>
