@@ -7,7 +7,7 @@ export default async function handler(req, res) {
   const ADMIN_PASSWORD = "thefag"; 
 
   if (password !== ADMIN_PASSWORD) {
-    return res.status(401).json({ error: 'mot de passe incorrect' });
+    return res.status(401).json({ error: 'Mot de passe incorrect' });
   }
 
   // On utilise TES noms de variables personnalisés
