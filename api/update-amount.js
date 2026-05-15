@@ -3,15 +3,16 @@ export default async function handler(req, res) {
 
   const { newAmount, password } = req.body;
 
-  // 🔴 Ton vrai mot de passe ici :
-  const ADMIN_PASSWORD = "thefag"; 
+  // 🔴 IMPORTANT : N'oublie pas de remettre ton vrai mot de passe ici !
+  const ADMIN_PASSWORD = "ton_mot_de_passe_secret"; 
 
   if (password !== ADMIN_PASSWORD) {
-    return res.status(401).json({ error: 'Mot de passe incorrect' });
+    return res.status(401).json({ error: 'thefag' });
   }
 
-  const url = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
-  const token = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
+  // On utilise TES noms de variables personnalisés
+  const url = process.env.UNICEF_KV_REST_API_URL;
+  const token = process.env.UNICEF_KV_REST_API_TOKEN;
 
   if (!url || !token) {
     return res.status(500).json({ error: 'Variables de base de données introuvables sur Vercel' });
