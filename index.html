@@ -1,9 +1,7 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
+<!DOCTYPE html><html lang="en"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UNICEFSOL • Chaque Trade Sauve une Vie</title>
+    <title>UNICEFSOL • Every Trade Saves A Life</title>
     <link rel="icon" type="image/png" href="logo.png">
     
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
@@ -19,10 +17,9 @@
             color: #fff;
             overflow-x: hidden;
             background-color: #0b0416;
-            /* Fond radial qui crée une zone claire (blanche) au centre-droit */
             background-image: 
                 radial-gradient(circle at 10% 20%, rgba(153, 69, 255, 0.15) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.9) 0%, transparent 70%); /* Zone blanche renforcée ici */
+                radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.9) 0%, transparent 70%);
             background-attachment: fixed;
         }
 
@@ -30,9 +27,8 @@
             position: fixed;
             inset: 0;
             z-index: -1;
-            /* Remplacer par un gradient correspondant si vous le souhaitez */
             background: linear-gradient(135deg, #180933 0%, #0c1b15 100%);
-            display: none; /* Désactivé pour le moment */
+            display: none;
         }
         canvas#particles { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.6; }
 
@@ -78,11 +74,11 @@
         #pin-wrap { position: relative; height: 750vh; }
         #pin-scene { position: sticky; top: 0; height: 100vh; overflow: hidden; }
 
-        /* ── SUPERS (ARRIÈRE-PLAN ANIMÉ) ── */
+        /* ── SUPERS ── */
         #supers-container {
             position: absolute;
             inset: 0;
-            z-index: 1; /* Derrière tout le contenu */
+            z-index: 1;
             pointer-events: none;
         }
 
@@ -93,32 +89,26 @@
             bottom: -1px;
             top: 0;
             background-repeat: no-repeat;
-            /* "screen" permet aux images claires de ressortir sur le fond sombre, 
-               attention au comportement sur fond blanc */
             mix-blend-mode: screen; 
             pointer-events: none;
             will-change: transform;
         }
         
         #backsuper { 
-            /* Remplacer par l'image de votre arrière-plan 'backsuper.png' */
             background-image: url('backsuper.png'); 
             background-position: left bottom; 
             background-size: contain; 
             z-index: 2;
             transform-origin: bottom left;
-            /* Paramètres initiaux issus de la capture */
             transform: scale(1.23) translateX(-175px);
         }
         
         #frontsuper { 
-            /* Remplacer par l'image de votre premier plan 'frontsuper.png' */
             background-image: url('frontsuper.png'); 
             background-position: right bottom; 
             background-size: contain; 
             z-index: 3;
             transform-origin: bottom right;
-            /* Paramètres initiaux issus de la capture, Y est déjà à 240px */
             transform: scale(1.23) translateX(86px);
         }
 
@@ -232,24 +222,21 @@
         #quote-layer h2 { font-size: clamp(3rem, 7vw, 5.5rem); font-weight: 800; line-height: 1.05; letter-spacing: -2px; }
         #quote-layer .accent { background: linear-gradient(90deg, #14F195, #9945FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        /* ── FOOTER AVEC NOUVELLE COULEUR ── */
+        /* ── FOOTER POSITIONNÉ À LA FIN DU SITE ── */
         footer {
-            position: fixed;
-            bottom: 20px;
+            position: relative;
             width: 100%;
             text-align: center;
             font-size: 0.7rem;
-            z-index: 10; /* Derrière le menu et les textes si besoin */
+            z-index: 10;
             letter-spacing: 0.5px;
             line-height: 1.6;
-            padding: 0 20px;
-            /* Changement de couleur : un violet foncé pour trancher sur le blanc */
+            padding: 40px 20px;
+            margin-top: -100px; /* Permet d'ajuster l'espace avec la fin du pin-wrap */
             color: rgba(48, 14, 82, 0.8); 
-            opacity: 0.9 !important; /* Opacité renforcée */
-            pointer-events: none;
+            background: transparent;
         }
-        /* Style pour les liens dans le footer */
-        footer a { color: rgba(48, 14, 82, 1); text-decoration: none; pointer-events: auto; }
+        footer a { color: rgba(48, 14, 82, 1); text-decoration: none; }
 
         /* ── RESPONSIVE MOBILE ── */
         @media(max-width:768px) {
@@ -270,22 +257,12 @@
         @media(max-width:450px) {
             .btn:not(.btn-buy) { display: none; }
         }
-    </style>
-</head>
-<body>
-
-<div id="bg-gradient"></div>
-<canvas id="particles"></canvas>
-
-<header>
+    </style></head><body><div id="bg-gradient"></div><canvas id="particles"></canvas><header>
     <div class="logo-area"><img src="logo.png" alt="UNICEF Logo"><span>UNICEF</span></div>
     <div class="nav-btns">
-        <a href="https://x.com/i/communities/2011296092843831350" target="_blank" class="btn">Communauté</a>
-        <a href="https://pump.fun/coin/3t4GiENDepWKkGicwDoMz2V2fWDZXHLAoJ3ZrpZQpump" target="_blank" class="btn btn-buy">Acheter $UNICEF</a>
-    </div>
-</header>
-
-<div id="pin-wrap">
+        <a href="https://x.com/i/communities/2011296092843831350" target="_blank" class="btn">Community</a>
+        <a href="https://pump.fun/coin/3t4GiENDepWKkGicwDoMz2V2fWDZXHLAoJ3ZrpZQpump" target="_blank" class="btn btn-buy">Buy $UNICEF</a>
+    </div></header><div id="pin-wrap">
     <div id="pin-scene">
 
         <div id="supers-container">
@@ -295,26 +272,25 @@
 
         <div id="hero-title" class="layer">
             <div>
-                <span class="line">Chaque Trade</span>
-                <span class="line">Pour Chaque</span>
-                <span class="line">Enfant, Chaque</span>
-                <span class="line"><span class="accent">Droit.</span></span>
+                <span class="line">Every Trade</span>
+                <span class="line">Saves A</span>
+                <span class="line"><span class="accent">Child's Life.</span></span>
             </div>
         </div>
 
         <div id="mission-content" class="layer">
             <div class="mission-card">
-                <div class="mission-tag-text">de tous les frais vont directement à l'unicef</div>
+                <div class="mission-tag-text">of all fees go directly to unicef</div>
                 <div class="mission-pct-wrap">
                     <span id="mpct">0%</span>
                 </div>
-                <p class="mission-subtitle">Chaque achat & chaque vente — chaque mouvement du token protège directement les enfants du monde entier.</p>
+                <p class="mission-subtitle">Every buy & every sell — every token movement directly protects children worldwide.</p>
                 <div class="ca-display" id="ca-text">3t4GiENDepWKkGicwDoMz2V2fWDZXHLAoJ3ZrpZQpump</div>
             </div>
         </div>
 
         <div id="amount-layer" class="layer">
-            <p class="amount-label">Total des Dons Générés</p>
+            <p class="amount-label">Total Donations Generated</p>
             <h2 id="total-donations">$0.00</h2>
             <div class="progress-wrap">
                 <div class="progress-track">
@@ -330,51 +306,37 @@
         </div>
 
         <div id="story-layer" class="layer">
-            <p class="story-intro"><span id="story-amount" class="accent">$0.00</span> représente...</p>
+            <p class="story-intro"><span id="story-amount" class="accent">$0.00</span> represents...</p>
             <div id="dynamic-text"><span id="typewriter-text"></span><span id="cursor">|</span></div>
         </div>
 
         <div id="quote-layer" class="layer">
-            <h2>Le trading crypto peut<br><span class="accent">sauver une vie.</span></h2>
+            <h2>Crypto trading can<br><span class="accent">save a life.</span></h2>
         </div>
 
-    </div>
-</div>
-
-<footer>
-    Projet caritatif communautaire • Pas un conseil financier • Investissez de manière responsable<br>
-    <span style="opacity:0.7;">UNICEF est un token caritatif communautaire indépendant sur Solana. Non affilié à, approuvé par, ou opéré par la Fondation UNICEF®.</span>
-</footer>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-
-<script>
+    </div></div><footer>
+    Community Charity Project • Not Financial Advice • Invest Responsibly<br>
+    <span style="opacity:0.7;">UNICEF is an independent community charity token on Solana. Not affiliated with, endorsed by, or operated by the UNICEF® Foundation.</span></footer><script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script><script>
     gsap.registerPlugin(ScrollTrigger);
 
-    // Données par défaut pour les dons
     const DEFAULT_AMOUNT  = 20931.49;
     const DEFAULT_PHRASES = [
-        "42,600 vaccins contre la polio",
-        "8,500 jours de nourriture essentielle",
-        "12,400 kits d'eau propre",
-        "une seconde chance pour des milliers d'enfants"
+        "42,600 polio vaccines",
+        "8,500 days of essential nutrition",
+        "12,400 clean water kits",
+        "a second chance for thousands of children"
     ];
 
-    // Fonction de formatage monétaire
     function fmt(n) {
         return '$' + n.toLocaleString('en-US', { minimumFractionDigits:2, maximumFractionDigits:2 });
     }
 
-    // Récupération des phrases (depuis localStorage si édité)
     const storedPhrases = JSON.parse(localStorage.getItem('unicef_phrases') || 'null') || DEFAULT_PHRASES;
     
-    // Initialisation des valeurs d'affichage
     let realAmount = DEFAULT_AMOUNT;
     document.getElementById('total-donations').textContent = fmt(realAmount);
     document.getElementById('story-amount').textContent    = fmt(realAmount);
 
-    // Tentative de récupération du montant réel depuis une API (à configurer si besoin)
     fetch('/api/get-amount')
         .then(res => res.json())
         .then(data => {
@@ -384,65 +346,58 @@
                 document.getElementById('story-amount').textContent    = fmt(realAmount);
             }
         })
-        .catch(err => console.error("Erreur montant réel:", err));
+        .catch(err => console.error("Real amount error:", err));
 
-    // Éléments DOM pour l'animation
     const backsuper  = document.getElementById('backsuper');
     const frontsuper = document.getElementById('frontsuper');
     const particles  = document.getElementById('particles');
     let tl;
 
-    // --- CONSTRUCTION DE L'ANIMATION GSAP ---
     function buildAnimation() {
         if (tl) {
             tl.scrollTrigger.kill(true);
             tl.kill();
         }
 
-        // --- Paramètres Finaux Figés ---
         const cfg = {
-            scale: 1.23, // Scale final figé
+            scale: 1.23, 
             backXInit: -175,
             backYInit: 0,
             frontXInit: 86,
-            frontYInit: 240, // Y à 240px figé
+            frontYInit: 240, 
             backX: 15,
             frontX: 15,
-            rotate: 3.5 // Rotation finale figée
+            rotate: 3.5 
         };
 
-        // Création de la timeline master ScrollTrigger
         tl = gsap.timeline({
             scrollTrigger: {
                 trigger: "#pin-wrap",
                 start: "top top",
                 end: "bottom bottom",
-                scrub: 1, // scrubbing doux pour le contrôle au scroll
+                scrub: 1, 
                 pin: "#pin-scene",
                 invalidateOnRefresh: true
             }
         });
 
-        // 1. Positionnement Initial des supers (sans animation pour démarrer propre)
         tl.set(backsuper, { x: cfg.backXInit, y: cfg.backYInit, scale: cfg.scale });
         tl.set(frontsuper, { x: cfg.frontXInit, y: cfg.frontYInit, scale: cfg.scale });
 
-        // 2. Animation de Parallaxe multi-axes (X + Rotation) étalée uniformément (duration: 1)
         tl.to(backsuper, {
-            xPercent: -cfg.backX, // Distance de scroll relative
+            xPercent: -cfg.backX, 
             rotation: -cfg.rotate,
             ease: "none",
             duration: 1
-        }, 0); // Démarre au temps 0
+        }, 0); 
 
         tl.to(frontsuper, {
-            xPercent: cfg.frontX, // Distance de scroll relative, opposée
+            xPercent: cfg.frontX, 
             rotation: cfg.rotate,
             ease: "none",
             duration: 1
-        }, 0); // Démarre au temps 0
+        }, 0); 
 
-        // 3. Séquençage des textes et compteurs
         tl.to("#hero-title", { opacity: 0, y: -40, ease: "power2.inOut", duration: 0.1 }, 0.05)
           
           .fromTo("#mission-content", { opacity: 0, y: 40 }, { opacity: 1, y: 0, ease: "power2.out", duration: 0.1 }, 0.15)
@@ -453,7 +408,6 @@
           .to("#mission-content", { opacity: 0, y: -40, ease: "power2.in", duration: 0.1 }, 0.35)
           
           .fromTo("#amount-layer", { opacity: 0, y: 40 }, { opacity: 1, y: 0, ease: "power2.out", duration: 0.1 }, 0.45)
-          // Calcul de la progression (ex: objectif $100k)
           .to("#progress-fill", { width: () => Math.min((realAmount / 100000) * 100, 100) + "%", ease: "power3.out", duration: 0.15 }, 0.48)
           .to("#amount-layer", { opacity: 0, y: -40, ease: "power2.in", duration: 0.1 }, 0.65)
           
@@ -466,10 +420,8 @@
         ScrollTrigger.refresh();
     }
 
-    // Reconstruction de l'animation au chargement
     window.addEventListener('DOMContentLoaded', buildAnimation);
 
-    // -- Fonctions d'exécution asynchrones liées au scroll ---
     let counterFired = false;
     function triggerMissionCounter() {
         if (counterFired) return;
@@ -490,7 +442,6 @@
         startTypewriter();
     }
 
-    // --- CURSEUR CLIGNOTANT POUR LE TYPEWRITER ---
     gsap.fromTo("#cursor", { opacity: 0 }, { opacity: 1, repeat: -1, duration: 0.35, ease: "steps(1)", yoyo: true });
 
     const phrases = storedPhrases.length ? storedPhrases : DEFAULT_PHRASES;
@@ -503,24 +454,22 @@
             const f = phrases[cur];
             tx = del ? f.substring(0, tx.length - 1) : f.substring(0, tx.length + 1);
             twEl.textContent = tx;
-            let s = del ? 30 : 70; // Vitesse effaçage vs écriture
+            let s = del ? 30 : 70; 
             
-            if (!del && tx === f) { s = 2500; del = true; } // Pause à la fin d'une phrase
-            else if (del && tx === '') { del = false; cur = (cur + 1) % phrases.length; s = 300; } // Prochaine phrase
+            if (!del && tx === f) { s = 2500; del = true; } 
+            else if (del && tx === '') { del = false; cur = (cur + 1) % phrases.length; s = 300; } 
             
             setTimeout(loop, s);
         }
         loop();
     }
 
-    // --- COPIER L'ADRESSE DU CONTRAT (CA) ---
     document.getElementById('ca-text').onclick = function () {
         navigator.clipboard.writeText(this.innerText.trim());
-        this.innerText = 'Copié !';
+        this.innerText = 'Copied!';
         setTimeout(() => this.innerText = '3t4GiENDepWKkGicwDoMz2V2fWDZXHLAoJ3ZrpZQpump', 2000);
     };
 
-    // --- SYSTÈME DE PARTICULES (NEIGE QUI MONTE) ---
     const cv = document.getElementById('particles');
     const cx = cv.getContext('2d');
     let W, H;
@@ -529,28 +478,23 @@
     rsz();
     window.addEventListener('resize', rsz);
     
-    // Création des points de neige
     const pts = Array(60).fill(0).map(() => ({
         x: Math.random() * innerWidth,
         y: Math.random() * innerHeight,
-        r: Math.random() * 1.2 + 0.2, // Taille
-        vy: Math.random() * 0.15 + 0.05, // Vitesse verticale
-        o: Math.random() * 0.4 + 0.1 // Opacité
+        r: Math.random() * 1.2 + 0.2, 
+        vy: Math.random() * 0.15 + 0.05, 
+        o: Math.random() * 0.4 + 0.1 
     }));
     
-    // Boucle d'animation des particules
     (function anim() {
         cx.clearRect(0, 0, W, H);
         pts.forEach(p => {
-            p.y -= p.vy; // Remonte
-            if (p.y < 0) p.y = H; // Recommence en bas
+            p.y -= p.vy; 
+            if (p.y < 0) p.y = H; 
             cx.fillStyle = `rgba(255,255,255,${p.o})`;
             cx.beginPath();
             cx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
             cx.fill();
         });
         requestAnimationFrame(anim);
-    })();
-</script>
-</body>
-</html>
+    })();</script></body></html>
