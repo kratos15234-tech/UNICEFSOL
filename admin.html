@@ -15,12 +15,12 @@
     }
     html, body { min-height: 100vh; overflow-y: auto; }
     body {
-      font-family: 'Outfit', sans-serif;
-      background: var(--bg); color: #fff;
-      display: flex; flex-direction: column; align-items: center;
-      justify-content: flex-start; padding: 60px 20px;
-      position: relative;
-    }
+  font-family: 'Outfit', sans-serif;
+  color: #fff;
+  overflow-x: hidden;
+  background: #9945FF;
+  min-height: 100dvh; /* Assure que le body prend tout l'écran dynamique */
+}
     body::before {
       content: ''; position: fixed; inset: 0;
       background-image:
