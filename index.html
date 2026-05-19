@@ -9,17 +9,19 @@
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
         ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #0b0416; }
+        ::-webkit-scrollbar-track { background: #020105; }
         ::-webkit-scrollbar-thumb { background: #14F195; border-radius: 10px; }
         
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             color: #fff;
             overflow-x: hidden;
-            background-color: #0b0416;
+            background-color: #020105;
+            /* Fond Solana : dégradés vifs fusionnés vers un noir profond */
             background-image: 
-                radial-gradient(circle at 10% 20%, rgba(153, 69, 255, 0.15) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.9) 0%, transparent 70%);
+                radial-gradient(circle at 85% 75%, rgba(153, 69, 255, 0.4) 0%, transparent 55%),
+                radial-gradient(circle at 15% 25%, rgba(20, 241, 149, 0.25) 0%, transparent 50%),
+                linear-gradient(180deg, #020105 0%, #090314 50%, #020105 100%);
             background-attachment: fixed;
         }
 
@@ -45,10 +47,10 @@
             align-items: center;
             padding: 16px 32px;
             z-index: 100;
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
             border-radius: 16px;
         }
         .logo-area { display: flex; align-items: center; gap: 12px; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.4rem; letter-spacing: -0.5px; }
@@ -67,8 +69,21 @@
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .btn:hover { background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.3); transform: translateY(-2px); }
-        .btn-buy { background: #14F195; color: #020105; border: none; font-weight: 700; box-shadow: 0 4px 20px rgba(20, 241, 149, 0.25); }
-        .btn-buy:hover { background: #12d885; box-shadow: 0 6px 24px rgba(20, 241, 149, 0.4); transform: translateY(-2px); }
+        
+        /* Bouton d'achat Solana Dégradé ultra-vif */
+        .btn-buy { 
+            background: linear-gradient(90deg, #14F195 0%, #9945FF 100%); 
+            color: #ffffff; 
+            border: none; 
+            font-weight: 700; 
+            text-shadow: 0 1px 4px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 25px rgba(153, 69, 255, 0.45), inset 0 1px 0 rgba(255,255,255,0.3); 
+        }
+        .btn-buy:hover { 
+            background: linear-gradient(90deg, #12d885 0%, #8032e6 100%); 
+            box-shadow: 0 6px 30px rgba(20, 241, 149, 0.5), inset 0 1px 0 rgba(255,255,255,0.4); 
+            transform: translateY(-2px); 
+        }
 
         /* ── STRUCTURE ── */
         #pin-wrap { position: relative; height: 750vh; }
@@ -146,14 +161,14 @@
 
         #mission-content { align-items: center; text-align: center; }
         .mission-card {
-            background: rgba(255, 255, 255, 0.02);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(2, 1, 5, 0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(153, 69, 255, 0.15);
             padding: 60px 40px;
             border-radius: 32px;
             max-width: 750px;
-            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.6), 0 0 40px rgba(153, 69, 255, 0.05);
         }
         .mission-pct-wrap { position: relative; margin-bottom: 20px; }
         #mpct {
@@ -231,12 +246,13 @@
             z-index: 10;
             letter-spacing: 0.5px;
             line-height: 1.6;
-            padding: 40px 20px;
-            margin-top: -100px; /* Permet d'ajuster l'espace avec la fin du pin-wrap */
-            color: rgba(48, 14, 82, 0.8); 
+            padding: 50px 20px;
+            margin-top: -100px;
+            color: rgba(153, 69, 255, 0.6); 
             background: transparent;
         }
-        footer a { color: rgba(48, 14, 82, 1); text-decoration: none; }
+        footer a { color: rgba(20, 241, 149, 0.8); text-decoration: none; }
+        footer a:hover { color: #14F195; }
 
         /* ── RESPONSIVE MOBILE ── */
         @media(max-width:768px) {
