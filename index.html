@@ -87,7 +87,7 @@
         #pin-wrap { position: relative; height: 750vh; }
         #pin-scene { position: sticky; top: 0; height: 100vh; overflow: hidden; }
 
-        /* ── SUPERS (FIXED POSITIONING FOR MOBILE ACCURACY) ── */
+        /* ── SUPERS ── */
         #supers-container {
             position: absolute;
             inset: 0;
@@ -99,27 +99,30 @@
             position: absolute;
             left: 0;
             right: 0;
-            bottom: 0;
+            bottom: -1px;
             top: 0;
             background-repeat: no-repeat;
             mix-blend-mode: screen; 
             pointer-events: none;
             will-change: transform;
-            background-size: contain;
         }
         
         #backsuper { 
             background-image: url('backsuper.png'); 
             background-position: left bottom; 
+            background-size: contain; 
             z-index: 2;
             transform-origin: bottom left;
+            transform: scale(1.23) translateX(-175px);
         }
         
         #frontsuper { 
             background-image: url('frontsuper.png'); 
             background-position: right bottom; 
+            background-size: contain; 
             z-index: 3;
             transform-origin: bottom right;
+            transform: scale(1.23) translateX(86px);
         }
 
         /* ── CONTENUS LAYERS ── */
@@ -246,8 +249,8 @@
             padding: 0 20px;
             color: rgba(153, 69, 255, 0.6); 
             background: transparent;
-            opacity: 0; 
-            pointer-events: none; 
+            opacity: 0; /* Reste caché par défaut */
+            pointer-events: none; /* Désactivé tant qu'il n'est pas visible */
             will-change: opacity;
         }
         footer a { color: rgba(20, 241, 149, 0.8); text-decoration: none; }
@@ -260,20 +263,14 @@
             .nav-btns { gap: 8px; }
             .btn { font-size: 0.8rem; padding: 8px 16px; border-radius: 10px; }
             
-            #backsuper, #frontsuper { 
-                background-size: 100% auto !important;
-                bottom: 0 !important;
-                top: auto !important;
-                height: 40vh !important; /* Force l'illustration à s'afficher en bas sur mobile */
-            }
+            #backsuper { background-position: left bottom !important; background-size: contain !important; }
+            #frontsuper { background-position: right bottom !important; background-size: contain !important; }
 
-            .layer { padding: 0 6%; justify-content: flex-start; padding-top: 140px; }
+            .layer { padding: 0 6%; }
             #hero-title { align-items: center; text-align: center; }
-            #hero-title .line { line-height: 1.15; margin-bottom: 12px; }
-            .mission-card { padding: 30px 20px; border-radius: 24px; }
+            .mission-card { padding: 40px 24px; border-radius: 24px; }
             .ca-display { font-size: 0.7rem; padding: 10px 16px; word-break: break-all; }
             #total-donations { font-size: clamp(3rem, 12vw, 5rem); }
-            footer { bottom: 10px; font-size: 0.6rem; }
         }
         @media(max-width:450px) {
             .btn:not(.btn-buy) { display: none; }
@@ -380,16 +377,15 @@
             tl.kill();
         }
 
-        const isMobile = window.innerWidth <= 768;
-
-        // Configuration responsive adaptative
         const cfg = {
-            scale: isMobile ? 1.1 : 1.23, 
-            backXInit: isMobile ? "-20%" : "-175px",
-            frontXInit: isMobile ? "10%" : "86px",
-            backX: isMobile ? 10 : 15,
-            frontX: isMobile ? 10 : 15,
-            rotate: isMobile ? 1.5 : 3.5 
+            scale: 1.23, 
+            backXInit: -175,
+            backYInit: 0,
+            frontXInit: 86,
+            frontYInit: 240, 
+            backX: 15,
+            frontX: 15,
+            rotate: 3.5 
         };
 
         tl = gsap.timeline({
@@ -403,11 +399,9 @@
             }
         });
 
-        // Positionnement initial propre
-        tl.set(backsuper, { x: cfg.backXInit, scale: cfg.scale, y: 0 });
-        tl.set(frontsuper, { x: cfg.frontXInit, scale: cfg.scale, y: 0 });
+        tl.set(backsuper, { x: cfg.backXInit, y: cfg.backYInit, scale: cfg.scale });
+        tl.set(frontsuper, { x: cfg.frontXInit, y: cfg.frontYInit, scale: cfg.scale });
 
-        // Animation parallaxe fluide
         tl.to(backsuper, {
             xPercent: -cfg.backX, 
             rotation: -cfg.rotate,
@@ -439,6 +433,7 @@
           .to({}, { onStart: () => triggerTypewriter() }, 0.75)
           .to("#story-layer", { opacity: 0, y: -40, ease: "power2.in", duration: 0.1 }, 0.88)
           
+          // Entrée synchrone de l'écran final ET du footer (opacity 0 -> 1)
           .fromTo("#quote-layer", { opacity: 0, y: 40 }, { opacity: 1, y: 0, ease: "power2.out", duration: 0.1 }, 0.92)
           .fromTo("#main-footer", { opacity: 0, pointerEvents: "none" }, { opacity: 1, pointerEvents: "auto", ease: "power2.out", duration: 0.1 }, 0.92);
 
@@ -446,7 +441,6 @@
     }
 
     window.addEventListener('DOMContentLoaded', buildAnimation);
-    window.addEventListener('resize', buildAnimation);
 
     let counterFired = false;
     function triggerMissionCounter() {
