@@ -1,7 +1,7 @@
 <!DOCTYPE html><html lang="en"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UNICEFSOL</title>
+    <title>UNICEFSOL • Every Trade Saves A Life</title>
     <link rel="icon" type="image/png" href="logo.png">
     
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
@@ -356,7 +356,7 @@
     }
 
     let realAmount = DEFAULT_AMOUNT;
-    let mobCfg = { containerScale: 1.00, containerX: 0, containerY: 0, backX: 0, frontX: 0 };
+    let mobCfg = { containerScale: 1.00, containerX: 0, containerY: 0, backX: 0, backY: 0, frontX: 0, frontY: 0 };
 
     const container  = document.getElementById('supers-container');
     const backsuper  = document.getElementById('backsuper');
@@ -364,7 +364,6 @@
     const particles  = document.getElementById('particles');
     let tl;
 
-    // LECTURE DYNAMIQUE DE TOUTES LES DONNÉES DEPUIS L'API UNIQUE
     fetch('/api/get-amount')
         .then(res => res.json())
         .then(data => {
@@ -374,12 +373,11 @@
                     document.getElementById('total-donations').textContent = fmt(realAmount);
                     document.getElementById('story-amount').textContent    = fmt(realAmount);
                 }
-                // Récupère la mise en page trouvée via l'admin
                 if(data.mobileLayout) {
                     mobCfg = data.mobileLayout;
                 }
             }
-            buildAnimation(); // Lance la timeline une fois les variables chargées
+            buildAnimation(); 
         })
         .catch(err => {
             console.error("Data load error:", err);
@@ -394,7 +392,6 @@
 
         const isMobile = window.innerWidth <= 768;
 
-        // Application des styles du conteneur mobile récupéré de la DB
         if(isMobile) {
             gsap.set(container, {
                 x: mobCfg.containerX ?? 0,
@@ -408,9 +405,9 @@
         const cfg = isMobile ? {
             scale: 1, 
             backXInit: mobCfg.backX ?? 0,
-            backYInit: 0,
+            backYInit: mobCfg.backY ?? 0, // Applique la translation Y du Back Layer
             frontXInit: mobCfg.frontX ?? 0,
-            frontYInit: 0,
+            frontYInit: mobCfg.frontY ?? 0, // Applique la translation Y du Front Layer
             backScrollX: 10,
             frontScrollX: 10,
             rotate: 2
@@ -500,7 +497,6 @@
 
     gsap.fromTo("#cursor", { opacity: 0 }, { opacity: 1, repeat: -1, duration: 0.35, ease: "steps(1)", yoyo: true });
 
-    // Génération à la volée des phrases en anglais synchronisées sur la somme
     function getPhrases() {
         const stored = JSON.parse(localStorage.getItem('unicef_phrases'));
         if(stored && stored.length) return stored;
