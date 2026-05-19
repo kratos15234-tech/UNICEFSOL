@@ -179,4 +179,397 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       letter-spacing: -6px;
-      filter: drop-shadow(0 0 50px rgba(20,
+      filter: drop-shadow(0 0 50px rgba(20, 241, 149, 0.2));
+    }
+    .mission-tag-text {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(0.9rem, 1.5vw, 1.2rem);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: #14F195;
+      margin-bottom: 16px;
+    }
+    .mission-subtitle {
+      font-size: clamp(1rem, 1.2vw, 1.25rem);
+      font-weight: 300;
+      color: rgba(255, 255, 255, 0.7);
+      line-height: 1.6;
+      max-width: 580px;
+      margin: 0 auto;
+    }
+    
+    .ca-display {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Space Grotesk', sans-serif;
+      background: rgba(20, 241, 149, 0.06);
+      border: 1px solid rgba(20, 241, 149, 0.25);
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      color: #14F195;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-top: 32px;
+      pointer-events: all;
+      font-weight: 500;
+    }
+    .ca-display:hover { background: rgba(20, 241, 149, 0.12); border-color: #14F195; transform: scale(1.02); }
+
+    #amount-layer { align-items: flex-start; text-align: left; }
+    .amount-label { text-transform: uppercase; letter-spacing: 4px; font-size: 0.85rem; color: #9945FF; font-weight: 700; margin-bottom: 8px; }
+    #total-donations { font-family: 'Space Grotesk', sans-serif; font-size: clamp(4rem, 10vw, 7.5rem); font-weight: 700; letter-spacing: -3px; line-height: 1; }
+    .progress-wrap { width: 100%; max-width: 600px; margin-top: 40px; }
+    .progress-track { position: relative; height: 8px; background: rgba(255, 255, 255, 0.08); border-radius: 50px; }
+    #progress-fill { position: absolute; left: 0; top: 0; height: 100%; width: 0%; background: linear-gradient(90deg, #14F195, #9945FF); border-radius: 50px; box-shadow: 0 0 20px rgba(20, 241, 149, 0.6); }
+    .goal-labels { display: flex; justify-content: space-between; margin-top: 14px; font-family: 'Space Grotesk', sans-serif; font-size: 0.9rem; color: rgba(255,255,255,0.4); }
+
+    #story-layer { align-items: center; text-align: center; }
+    .story-intro { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 400; margin-bottom: 24px; color: rgba(255,255,255,0.6); }
+    .story-intro .accent { color: #fff; font-weight: 700; }
+    #dynamic-text { font-family: 'Space Grotesk', sans-serif; font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 700; color: #14F195; min-height: 1.2em; }
+    #cursor { display: inline-block; width: 4px; height: 0.8em; background: #14F195; margin-left: 8px; vertical-align: middle; }
+
+    #quote-layer { align-items: center; text-align: center; }
+    #quote-layer h2 { font-size: clamp(3rem, 7vw, 5.5rem); font-weight: 800; line-height: 1.05; letter-spacing: -2px; }
+    #quote-layer .accent { background: linear-gradient(90deg, #14F195, #9945FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+    footer {
+      position: fixed;
+      bottom: 20px;
+      width: 100%;
+      text-align: center;
+      font-size: 0.7rem;
+      z-index: 90;
+      letter-spacing: 0.5px;
+      line-height: 1.6;
+      padding: 0 20px;
+      color: rgba(255, 255, 255, 0.4);
+      pointer-events: none;
+    }
+
+    /* ── RESPONSIVE MOBILE ── */
+    @media(max-width:768px) {
+      header { width: 92%; padding: 12px 20px; top: 12px; }
+      #dev-control-panel { display: none; }
+      .logo-area { font-size: 1.1rem; }
+      .logo-area img { height: 24px; }
+      .btn { font-size: 0.8rem; padding: 8px 16px; border-radius: 10px; }
+      
+      #backsuper { background-position: left bottom !important; background-size: contain !important; }
+      #frontsuper { background-position: right bottom !important; background-size: contain !important; }
+
+      .layer { padding: 0 6%; }
+      #hero-title { align-items: center; text-align: center; }
+      .mission-card { padding: 40px 24px; border-radius: 24px; }
+      .ca-display { font-size: 0.7rem; padding: 10px 16px; word-break: break-all; }
+      #total-donations { font-size: clamp(3rem, 12vw, 5rem); }
+    }
+    @media(max-width:450px) {
+      .btn:not(.btn-buy) { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="bg-gradient"></div>
+<canvas id="particles"></canvas>
+
+<div id="dev-control-panel">
+  <h3>⚡ Config Supers</h3>
+  
+  <div class="ctrl-group">
+    <label><span>Initial Scale (Anti-trou)</span><span id="v-scale">1.20</span></label>
+    <input type="range" id="c-scale" min="1.00" max="1.50" step="0.01" value="1.20">
+  </div>
+  
+  <div class="ctrl-group">
+    <label><span>Back Initial X (px)</span><span id="v-backXInit">-200px</span></label>
+    <input type="range" id="c-backXInit" min="-600" max="400" step="5" value="-200">
+  </div>
+
+  <div class="ctrl-group">
+    <label><span>Back Initial Y (px)</span><span id="v-backYInit">0px</span></label>
+    <input type="range" id="c-backYInit" min="-1000" max="1000" step="5" value="0">
+  </div>
+
+  <div class="ctrl-group">
+    <label><span>Front Initial X (px)</span><span id="v-frontXInit">5px</span></label>
+    <input type="range" id="c-frontXInit" min="-400" max="400" step="1" value="5">
+  </div>
+
+  <div class="ctrl-group">
+    <label><span>Front Initial Y (px)</span><span id="v-frontYInit">0px</span></label>
+    <input type="range" id="c-frontYInit" min="-1000" max="1000" step="5" value="0">
+  </div>
+  
+  <div class="ctrl-group">
+    <label><span>Back Scroll Dist (xPercent)</span><span id="v-backX">15</span></label>
+    <input type="range" id="c-backX" min="0" max="50" step="1" value="15">
+  </div>
+
+  <div class="ctrl-group">
+    <label><span>Front Scroll Dist (xPercent)</span><span id="v-frontX">15</span></label>
+    <input type="range" id="c-frontX" min="0" max="50" step="1" value="15">
+  </div>
+
+  <div class="ctrl-group">
+    <label><span>Max Rotate Angle (deg)</span><span id="v-rotate">5.0</span></label>
+    <input type="range" id="c-rotate" min="0.0" max="15.0" step="0.1" value="5.0">
+  </div>
+</div>
+
+<header>
+  <div class="logo-area"><img src="logo.png" height="32"><span>UNICEF</span></div>
+  <div class="nav-btns">
+    <a href="https://x.com/i/communities/2011296092843831350" target="_blank" class="btn">Community</a>
+    <a href="https://pump.fun/coin/3t4GiENDepWKkGicwDoMz2V2fWDZXHLAoJ3ZrpZQpump" target="_blank" class="btn btn-buy">Buy $UNICEF</a>
+  </div>
+</header>
+
+<div id="pin-wrap">
+  <div id="pin-scene">
+
+    <div id="backsuper"></div>
+    <div id="frontsuper"></div>
+
+    <div id="hero-title" class="layer">
+      <div>
+        <span class="line">Every Trade</span>
+        <span class="line">For Every</span>
+        <span class="line">Child, Every</span>
+        <span class="line"><span class="accent">Right.</span></span>
+      </div>
+    </div>
+
+    <div id="mission-content" class="layer">
+      <div class="mission-card">
+        <div class="mission-tag-text">of all fees going directly to unicef</div>
+        <div class="mission-pct-wrap">
+          <span id="mpct">0%</span>
+        </div>
+        <p class="mission-subtitle">Every buy &amp; every sell — every movement of the token directly protects children around the world.</p>
+        <div class="ca-display" id="ca-text">3t4GiENDepWKkGicwDoMz2V2fWDZXHLAoJ3ZrpZQpump</div>
+      </div>
+    </div>
+
+    <div id="amount-layer" class="layer">
+      <p class="amount-label">Total Donations Generated</p>
+      <h2 id="total-donations">$0.00</h2>
+      <div class="progress-wrap">
+        <div class="progress-track">
+          <div id="progress-fill"></div>
+        </div>
+        <div class="goal-labels">
+          <span>$25k</span>
+          <span>$50k</span>
+          <span>$75k</span>
+          <span>$100k</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="story-layer" class="layer">
+      <p class="story-intro"><span id="story-amount" class="accent">$0.00</span> représente...</p>
+      <div id="dynamic-text"><span id="typewriter-text"></span><span id="cursor">|</span></div>
+    </div>
+
+    <div id="quote-layer" class="layer">
+      <h2>Trading crypto can<br><span class="accent">save a life.</span></h2>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  Community charity project • Not financial advice • Invest responsibly<br>
+  <span style="opacity:0.6;">UNICEF is an independent community charity token on Solana. Not affiliated with, endorsed by, or operated by UNICEF Foundation®.<br>Powered by @pumpdotfun × @donatedotgg</span>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+const DEFAULT_AMOUNT  = 20931.49;
+const DEFAULT_PHRASES = [
+  "42,600 polio vaccines",
+  "8,500 days of essential food",
+  "12,400 clean water kits",
+  "a second chance for thousands"
+];
+
+function fmt(n) {
+  return '$' + n.toLocaleString('en-US', { minimumFractionDigits:2, maximumFractionDigits:2 });
+}
+
+const storedPhrases = JSON.parse(localStorage.getItem('unicef_phrases') || 'null') || DEFAULT_PHRASES;
+let pct = Math.min((DEFAULT_AMOUNT / 100000) * 100, 100);
+let realAmount = DEFAULT_AMOUNT;
+
+document.getElementById('total-donations').textContent = fmt(DEFAULT_AMOUNT);
+document.getElementById('story-amount').textContent    = fmt(DEFAULT_AMOUNT);
+
+fetch('/api/get-amount')
+  .then(res => res.json())
+  .then(data => {
+    if(data && data.amount) {
+      realAmount = data.amount;
+      pct = Math.min((realAmount / 100000) * 100, 100);
+      document.getElementById('total-donations').textContent = fmt(realAmount);
+      document.getElementById('story-amount').textContent    = fmt(realAmount);
+    }
+  })
+  .catch(err => console.error("Erreur montant:", err));
+
+const backsuper  = document.getElementById('backsuper');
+const frontsuper = document.getElementById('frontsuper');
+let tl;
+
+function buildAnimation() {
+  if (tl) {
+    tl.scrollTrigger.kill(true);
+    tl.kill();
+  }
+
+  const cfg = {
+    scale: parseFloat(document.getElementById('c-scale').value),
+    backXInit: parseInt(document.getElementById('c-backXInit').value),
+    backYInit: parseInt(document.getElementById('c-backYInit').value),
+    frontXInit: parseInt(document.getElementById('c-frontXInit').value),
+    frontYInit: parseInt(document.getElementById('c-frontYInit').value),
+    backX: parseInt(document.getElementById('c-backX').value),
+    frontX: parseInt(document.getElementById('c-frontX').value),
+    rotate: parseFloat(document.getElementById('c-rotate').value),
+  };
+
+  document.getElementById('v-scale').innerText = cfg.scale.toFixed(2);
+  document.getElementById('v-backXInit').innerText = cfg.backXInit + 'px';
+  document.getElementById('v-backYInit').innerText = cfg.backYInit + 'px';
+  document.getElementById('v-frontXInit').innerText = cfg.frontXInit + 'px';
+  document.getElementById('v-frontYInit').innerText = cfg.frontYInit + 'px';
+  document.getElementById('v-backX').innerText = cfg.backX;
+  document.getElementById('v-frontX').innerText = cfg.frontX;
+  document.getElementById('v-rotate').innerText = cfg.rotate.toFixed(1);
+
+  tl = gsap.timeline({
+    scrollTrigger: {
+      trigger: "#pin-wrap",
+      start: "top top",
+      end: "bottom bottom",
+      scrub: 1,
+      pin: "#pin-scene",
+      invalidateOnRefresh: true
+    }
+  });
+
+  // Injection multi-axes complète avec les positions de départ X et Y débridées
+  tl.fromTo(backsuper, 
+    { x: cfg.backXInit, y: cfg.backYInit, xPercent: 0, rotation: 0, scale: cfg.scale },
+    { x: cfg.backXInit, y: cfg.backYInit, xPercent: -cfg.backX, rotation: -cfg.rotate, scale: cfg.scale, ease: "none", duration: 1 }, 
+    0
+  );
+
+  tl.fromTo(frontsuper, 
+    { x: cfg.frontXInit, y: cfg.frontYInit, xPercent: 0, rotation: 0, scale: cfg.scale },
+    { x: cfg.frontXInit, y: cfg.frontYInit, xPercent: cfg.frontX, rotation: cfg.rotate, scale: cfg.scale, ease: "none", duration: 1 }, 
+    0
+  );
+
+  tl.to("#hero-title", { opacity: 0, y: -40, ease: "power2.inOut", duration: 0.1 }, 0.05)
+    .fromTo("#mission-content", { opacity: 0, y: 40 }, { opacity: 1, y: 0, ease: "power2.out", duration: 0.1 }, 0.15)
+    .to({}, { 
+      onStart: () => triggerMissionCounter(),
+      onReverseComplete: () => { document.getElementById('mpct').innerText = "0%"; }
+    }, 0.18)
+    .to("#mission-content", { opacity: 0, y: -40, ease: "power2.in", duration: 0.1 }, 0.35)
+    .fromTo("#amount-layer", { opacity: 0, y: 40 }, { opacity: 1, y: 0, ease: "power2.out", duration: 0.1 }, 0.45)
+    .to("#progress-fill", { width: () => pct + "%", ease: "power3.out", duration: 0.15 }, 0.48)
+    .to("#amount-layer", { opacity: 0, y: -40, ease: "power2.in", duration: 0.1 }, 0.65)
+    .fromTo("#story-layer", { opacity: 0, y: 40 }, { opacity: 1, y: 0, ease: "power2.out", duration: 0.1 }, 0.72)
+    .to({}, { onStart: () => triggerTypewriter() }, 0.75)
+    .to("#story-layer", { opacity: 0, y: -40, ease: "power2.in", duration: 0.1 }, 0.88)
+    .fromTo("#quote-layer", { opacity: 0, y: 40 }, { opacity: 1, y: 0, ease: "power2.out", duration: 0.1 }, 0.92);
+
+  ScrollTrigger.refresh();
+}
+
+document.querySelectorAll('#dev-control-panel input').forEach(input => {
+  input.addEventListener('input', buildAnimation);
+});
+
+window.addEventListener('DOMContentLoaded', buildAnimation);
+
+let counterFired = false;
+function triggerMissionCounter() {
+  if (counterFired) return;
+  counterFired = true;
+  let o = { v: 0 };
+  gsap.to(o, {
+    v: 100,
+    duration: 1.5,
+    ease: "power2.out",
+    onUpdate: () => { document.getElementById('mpct').innerText = Math.ceil(o.v) + '%'; }
+  });
+}
+
+let typewriterFired = false;
+function triggerTypewriter() {
+  if (typewriterFired) return;
+  typewriterFired = true;
+  startTypewriter();
+}
+
+gsap.fromTo("#cursor", { opacity: 0 }, { opacity: 1, repeat: -1, duration: 0.35, ease: "steps(1)", yoyo: true });
+
+const phrases = storedPhrases.length ? storedPhrases : DEFAULT_PHRASES;
+let cur = 0, del = false, tx = '';
+const twEl = document.getElementById('typewriter-text');
+
+function startTypewriter() {
+  function loop() {
+    if (!twEl) return;
+    const f = phrases[cur];
+    tx = del ? f.substring(0, tx.length - 1) : f.substring(0, tx.length + 1);
+    twEl.textContent = tx;
+    let s = del ? 30 : 70;
+    if (!del && tx === f)      { s = 2500; del = true; }
+    else if (del && tx === '') { del = false; cur = (cur + 1) % phrases.length; s = 300; }
+    setTimeout(loop, s);
+  }
+  loop();
+}
+
+document.getElementById('ca-text').onclick = function () {
+  navigator.clipboard.writeText(this.innerText.trim());
+  this.innerText = 'Copied!';
+  setTimeout(() => this.innerText = '3t4GiENDepWKkGicwDoMz2V2fWDZXHLAoJ3ZrpZQpump', 2000);
+};
+
+const cv = document.getElementById('particles');
+const cx = cv.getContext('2d');
+let W, H;
+function rsz() { W = cv.width = innerWidth; H = cv.height = innerHeight; }
+rsz(); window.addEventListener('resize', rsz);
+const pts = Array(60).fill(0).map(() => ({
+  x: Math.random() * innerWidth,
+  y: Math.random() * innerHeight,
+  r: Math.random() * 1.2 + 0.2,
+  vy: Math.random() * 0.15 + 0.05,
+  o: Math.random() * 0.4 + 0.1
+}));
+(function anim() {
+  cx.clearRect(0, 0, W, H);
+  pts.forEach(p => {
+    p.y -= p.vy; if (p.y < 0) p.y = H;
+    cx.fillStyle = `rgba(255,255,255,${p.o})`;
+    cx.beginPath(); cx.arc(p.x, p.y, p.r, 0, Math.PI * 2); cx.fill();
+  });
+  requestAnimationFrame(anim);
+})();
+</script>
+</body>
+</html>
