@@ -153,59 +153,47 @@
       font-size:.62rem;opacity:0;z-index:100;letter-spacing:1px;line-height:1.8;
     }
 
+    /* ── MOBILE ── */
+    @media(max-width:768px){
+      header{padding:14px 16px;}
+      .logo-area{font-size:1.4rem;}
+      .logo-area img{height:28px;}
+      .btn{font-size:.85rem;padding:7px 14px;}
 
+      /* MODIFICATION ICI : Cadrage forcé à droite sur mobile */
+      #backsuper,#frontsuper{
+        background-position: right bottom; /* Commence par le côté droit */
+        background-size: cover;            /* Remplit tout l'écran en hauteur sans déformer */
+        background-repeat: no-repeat;
+      }
 
-@media(max-width:768px){
-  header { padding:14px 16px; }
-  .logo-area { font-size:1.4rem; }
-  .logo-area img { height:28px; }
-  .btn { font-size:.85rem; padding:7px 14px; }
+      .layer{padding:0 5%;justify-content:center;}
 
-  /* ── CORRECTION DES IMAGES DE FOND ── */
-  #backsuper, #frontsuper {
-    background-position: center bottom;
-    background-size: cover; /* Revenir à cover pour remplir tout l'espace disponible */
-    height: 100%;
-    width: 100%;
-  }
+      /* Hero : texte un peu plus petit sur mobile */
+      #hero-title .line{
+        font-size:clamp(3rem,11vw,5rem);
+      }
 
-  /* ── CORRECTION DE L'ALIGNEMENT DU TEXTE ── */
-  .layer {
-    padding: 0 8%;
-    /* Si le texte est trop bas sur les sapins, on le remonte un peu */
-    justify-content: flex-start; 
-    padding-top: 25vh; /* Aligne le contenu dans le tiers supérieur de l'écran mobile */
-  }
+      /* Mission : pourcentage plus petit */
+      .mission-pct-bg,#mpct{
+        font-size:clamp(5rem,20vw,10rem);
+      }
+      .mission-tag-text{font-size:.65rem;letter-spacing:2px;}
+      .mission-subtitle{font-size:.8rem;letter-spacing:1px;}
+      .ca-display{font-size:.6rem;padding:8px 12px;margin-top:16px;}
 
-  /* Pour éviter que le compteur chevauche les arbres du premier plan */
-  .progress-wrap {
-    margin-top: 25px;
-    z-index: 10; /* Passe au-dessus des éléments */
-  }
-      /* Hero : texte un peu plus petit sur mobile */
-      #hero-title .line{
-        font-size:clamp(3rem,11vw,5rem);
-      }
+      /* Amount */
+      #total-donations{font-size:clamp(3rem,12vw,5rem);}
+      #amount-layer .amount-label{font-size:.65rem;letter-spacing:4px;}
+      .progress-wrap{margin-top:20px;}
 
-      /* Mission : pourcentage plus petit */
-      .mission-pct-bg,#mpct{
-        font-size:clamp(5rem,20vw,10rem);
-      }
-      .mission-tag-text{font-size:.65rem;letter-spacing:2px;}
-      .mission-subtitle{font-size:.8rem;letter-spacing:1px;}
-      .ca-display{font-size:.6rem;padding:8px 12px;margin-top:16px;}
+      /* Story */
+      #story-layer .story-intro{font-size:clamp(1.8rem,7vw,3rem);}
+      #dynamic-text{font-size:clamp(2rem,7vw,3.5rem);}
 
-      /* Amount */
-      #total-donations{font-size:clamp(3rem,12vw,5rem);}
-      #amount-layer .amount-label{font-size:.65rem;letter-spacing:4px;}
-
-      /* Story */
-      #story-layer .story-intro{font-size:clamp(1.8rem,7vw,3rem);}
-      #dynamic-text{font-size:clamp(2rem,7vw,3.5rem);}
-
-      /* Quote */
-      #quote-layer h2{font-size:clamp(2.5rem,9vw,4rem);}
-    }
+      /* Quote */
+      #quote-layer h2{font-size:clamp(2.5rem,9vw,4rem);}
+    }
 
     @media(max-width:400px){
       .btn:not(.btn-buy){display:none;}
