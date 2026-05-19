@@ -93,6 +93,7 @@
             inset: 0;
             z-index: 1;
             pointer-events: none;
+            transform-origin: bottom center;
         }
 
         #backsuper, #frontsuper {
@@ -255,7 +256,7 @@
         footer a { color: rgba(20, 241, 149, 0.8); text-decoration: none; }
         footer a:hover { color: #14F195; }
 
-        /* ── PANNEAU DE CONFIGURATION MOBILE ÉPHÉMÈRE ── */
+        /* ── PANNEAU DE CONFIGURATION MOBILE AJUSTÉ POUR LE CONTENEUR GLOBAL ── */
         #mobile-editor {
             display: none;
             position: fixed;
@@ -265,28 +266,29 @@
             background: rgba(2, 1, 5, 0.95);
             border: 2px solid #14F195;
             border-radius: 16px;
-            padding: 15px;
+            padding: 12px;
             z-index: 9999;
             font-family: monospace;
             font-size: 0.75rem;
             color: #fff;
             box-shadow: 0 0 20px rgba(20, 241, 149, 0.3);
         }
-        #mobile-editor h4 { color: #14F195; margin-bottom: 8px; text-transform: uppercase; text-align: center; }
-        .ctrl-row { display: flex; flex-direction: column; margin-bottom: 8px; }
-        .ctrl-row label { display: flex; justify-content: space-between; margin-bottom: 2px; color: #9945FF; }
+        #mobile-editor h4 { color: #14F195; margin-bottom: 6px; text-transform: uppercase; text-align: center; }
+        .ctrl-group { border: 1px solid rgba(255,255,255,0.1); padding: 8px; border-radius: 8px; margin-bottom: 6px; }
+        .ctrl-group-title { color: #14F195; font-weight: bold; margin-bottom: 4px; font-size: 0.7rem; text-transform: uppercase;}
+        .ctrl-row { display: flex; flex-direction: column; margin-bottom: 4px; }
+        .ctrl-row label { display: flex; justify-content: space-between; margin-bottom: 1px; color: #c1b3df; }
         .ctrl-row input { width: 100%; accent-color: #14F195; }
 
         /* ── RESPONSIVE MOBILE ── */
         @media(max-width:768px) {
-            #mobile-editor { display: block; } /* Affiché uniquement sur mobile */
+            #mobile-editor { display: block; } 
             
             header { width: 92%; padding: 12px 20px; top: 12px; }
             .logo-area { font-size: 1.1rem; }
             .nav-btns { gap: 8px; }
             .btn { font-size: 0.8rem; padding: 8px 16px; border-radius: 10px; }
             
-            /* C'est ICI que vous changerez les valeurs par défaut une fois trouvées avec les sliders */
             #backsuper { 
                 background-position: center bottom !important; 
                 background-size: contain !important; 
@@ -313,26 +315,34 @@
     </div></header>
 
     <div id="mobile-editor">
-        <h4>Mobile Supers Config</h4>
-        <div class="ctrl-row">
-            <label><span>Global Scale:</span><span id="v-scale">1.50</span></label>
-            <input type="range" id="s-scale" min="0.5" max="3" step="0.05" value="1.50">
+        <h4>Mobile Containers & Supers</h4>
+        
+        <div class="ctrl-group">
+            <div class="ctrl-group-title">1. Global Container</div>
+            <div class="ctrl-row">
+                <label><span>Container Scale:</span><span id="v-cscale">1.00</span></label>
+                <input type="range" id="s-cscale" min="0.5" max="2.5" step="0.05" value="1.00">
+            </div>
+            <div class="ctrl-row">
+                <label><span>Container X:</span><span id="v-cx">0</span></label>
+                <input type="range" id="s-cx" min="-300" max="300" step="2" value="0">
+            </div>
+            <div class="ctrl-row">
+                <label><span>Container Y:</span><span id="v-cy">0</span></label>
+                <input type="range" id="s-cy" min="-300" max="500" step="2" value="0">
+            </div>
         </div>
-        <div class="ctrl-row">
-            <label><span>Back X (Init):</span><span id="v-bx">0</span></label>
-            <input type="range" id="s-bx" min="-400" max="400" step="5" value="0">
-        </div>
-        <div class="ctrl-row">
-            <label><span>Back Y (Init):</span><span id="v-by">0</span></label>
-            <input type="range" id="s-by" min="-200" max="600" step="5" value="0">
-        </div>
-        <div class="ctrl-row">
-            <label><span>Front X (Init):</span><span id="v-fx">0</span></label>
-            <input type="range" id="s-fx" min="-400" max="400" step="5" value="0">
-        </div>
-        <div class="ctrl-row">
-            <label><span>Front Y (Init):</span><span id="v-fy">0</span></label>
-            <input type="range" id="s-fy" min="-200" max="600" step="5" value="0">
+
+        <div class="ctrl-group">
+            <div class="ctrl-group-title">2. Individual Layers (Inside)</div>
+            <div class="ctrl-row">
+                <label><span>Back Layer X:</span><span id="v-bx">0</span></label>
+                <input type="range" id="s-bx" min="-400" max="400" step="5" value="0">
+            </div>
+            <div class="ctrl-row">
+                <label><span>Front Layer X:</span><span id="v-fx">0</span></label>
+                <input type="range" id="s-fx" min="-400" max="400" step="5" value="0">
+            </div>
         </div>
     </div>
 
@@ -422,18 +432,19 @@
         })
         .catch(err => console.error("Real amount error:", err));
 
+    const container  = document.getElementById('supers-container');
     const backsuper  = document.getElementById('backsuper');
     const frontsuper = document.getElementById('frontsuper');
     const particles  = document.getElementById('particles');
     let tl;
 
-    // Configuration initiale Mobile dynamique (gérée par le menu)
+    // Structure de configuration mobile dynamique étendue
     let mobCfg = {
-        scale: 1.50,
+        containerScale: 1.00,
+        containerX: 0,
+        containerY: 0,
         backX: 0,
-        backY: 0,
-        frontX: 0,
-        frontY: 0
+        frontX: 0
     };
 
     function buildAnimation() {
@@ -442,21 +453,29 @@
             tl.kill();
         }
 
-        // On vérifie si l'appareil est un mobile
         const isMobile = window.innerWidth <= 768;
 
-        // Configuration finale différenciée sans impacter le Web d'un poil !
+        // On applique d'abord la position fixe sur le conteneur parent si on est sur mobile
+        if(isMobile) {
+            gsap.set(container, {
+                x: mobCfg.containerX,
+                y: mobCfg.containerY,
+                scale: mobCfg.containerScale
+            });
+        } else {
+            gsap.set(container, { x: 0, y: 0, scale: 1 });
+        }
+
         const cfg = isMobile ? {
-            scale: mobCfg.scale,
+            scale: 1, // Fixé à 1 à l'intérieur, car géré par le conteneur global au-dessus
             backXInit: mobCfg.backX,
-            backYInit: mobCfg.backY,
+            backYInit: 0,
             frontXInit: mobCfg.frontX,
-            frontYInit: mobCfg.frontY,
+            frontYInit: 0,
             backScrollX: 10,
             frontScrollX: 10,
             rotate: 2
         } : {
-            // Vos paramètres Web initiaux, strictement intouchés
             scale: 1.23, 
             backXInit: -175,
             backYInit: 0,
@@ -518,37 +537,37 @@
         ScrollTrigger.refresh();
     }
 
-    // ── GESTION DES SLIDERS EN TEMPS RÉEL (MOBILE UNIQUEMENT) ──
+    // CONTRÔLES MOBILES ÉTENDUS
     if(window.innerWidth <= 768) {
         const inputs = {
-            scale: document.getElementById('s-scale'),
+            cscale: document.getElementById('s-cscale'),
+            cx: document.getElementById('s-cx'),
+            cy: document.getElementById('s-cy'),
             bx: document.getElementById('s-bx'),
-            by: document.getElementById('s-by'),
-            fx: document.getElementById('s-fx'),
-            fy: document.getElementById('s-fy')
+            fx: document.getElementById('s-fx')
         };
         const views = {
-            scale: document.getElementById('v-scale'),
+            cscale: document.getElementById('v-cscale'),
+            cx: document.getElementById('v-cx'),
+            cy: document.getElementById('v-cy'),
             bx: document.getElementById('v-bx'),
-            by: document.getElementById('v-by'),
-            fx: document.getElementById('v-fx'),
-            fy: document.getElementById('v-fy')
+            fx: document.getElementById('v-fx')
         };
 
         function updateFromSliders() {
-            mobCfg.scale = parseFloat(inputs.scale.value);
+            mobCfg.containerScale = parseFloat(inputs.cscale.value);
+            mobCfg.containerX = parseInt(inputs.cx.value);
+            mobCfg.containerY = parseInt(inputs.cy.value);
             mobCfg.backX = parseInt(inputs.bx.value);
-            mobCfg.backY = parseInt(inputs.by.value);
             mobCfg.frontX = parseInt(inputs.fx.value);
-            mobCfg.frontY = parseInt(inputs.fy.value);
 
-            views.scale.innerText = mobCfg.scale.toFixed(2);
+            views.cscale.innerText = mobCfg.containerScale.toFixed(2);
+            views.cx.innerText = mobCfg.containerX + "px";
+            views.cy.innerText = mobCfg.containerY + "px";
             views.bx.innerText = mobCfg.backX;
-            views.by.innerText = mobCfg.backY;
             views.fx.innerText = mobCfg.frontX;
-            views.fy.innerText = mobCfg.frontY;
 
-            buildAnimation(); // Reconstruit instantanément la timeline avec les nouvelles coordonnées
+            buildAnimation();
         }
 
         Object.values(inputs).forEach(input => input.addEventListener('input', updateFromSliders));
