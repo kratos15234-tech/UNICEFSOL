@@ -437,17 +437,17 @@ function onScroll(p) {
   footer.style.opacity = local(p, 0.92, 1.0);
 }
 
-// ── SCROLLTRIGGER ─────────────────────────────────────────────
-ScrollTrigger.create({
-  trigger: '#pin-wrap',
-  start: 'top top',
-  end: 'bottom bottom',
-  scrub: 1.5,
-  onUpdate: self => onScroll(self.progress)
-});
+// ── SCROLL NATIF — sans scrub lag ─────────────────────────────
+function getProgress() {
+  const wrap = document.getElementById('pin-wrap');
+  const totalScroll = wrap.offsetHeight - window.innerHeight;
+  return Math.max(0, Math.min(1, window.scrollY / totalScroll));
+}
 
-// Appel initial APRÈS que GSAP est prêt — on utilise un RAF pour être sûr
-requestAnimationFrame(() => onScroll(0));
+window.addEventListener('scroll', () => onScroll(getProgress()), { passive: true });
+
+// Double RAF pour être sûr que le layout est calculé
+requestAnimationFrame(() => requestAnimationFrame(() => onScroll(0)));
 
 // Hero subtitle entrance
 gsap.set('#hero-sub', { opacity: 0, y: 10 });
