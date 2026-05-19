@@ -70,11 +70,53 @@
     .btn-buy { background: #14F195; color: #020105; border: none; font-weight: 700; box-shadow: 0 4px 20px rgba(20, 241, 149, 0.25); }
     .btn-buy:hover { background: #12d885; box-shadow: 0 6px 24px rgba(20, 241, 149, 0.4); transform: translateY(-2px); }
 
+    /* ── PANNEAU DE CONTRÔLE INTERACTIF DRAGGABLE ── */
+    #dev-control-panel {
+      position: fixed;
+      top: 100px;
+      right: 20px;
+      width: 320px;
+      background: rgba(11, 4, 22, 0.95);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(153, 69, 255, 0.4);
+      border-radius: 16px;
+      padding: 0 20px 20px 20px;
+      z-index: 99999;
+      font-family: 'Space Grotesk', sans-serif;
+      box-shadow: 0 30px 60px rgba(0,0,0,0.8), inset 0 0 15px rgba(153, 69, 255, 0.2);
+      user-select: none;
+    }
+    .panel-handle {
+      padding: 15px 0;
+      margin-bottom: 10px;
+      cursor: move;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .panel-handle h3 { font-size: 0.9rem; color: #14F195; text-transform: uppercase; letter-spacing: 1px; margin: 0; }
+    .panel-handle .drag-icon { font-size: 0.7rem; color: rgba(255,255,255,0.4); background: rgba(255,255,255,0.05); padding: 4px 8px; border-radius: 4px; }
+    
+    .ctrl-group { margin-bottom: 14px; }
+    .ctrl-group label { display: flex; justify-content: space-between; font-size: 0.75rem; color: rgba(255,255,255,0.7); margin-bottom: 4px; }
+    .ctrl-group label span:last-child { color: #9945FF; font-weight: bold; }
+    .ctrl-group input[type="range"] { width: 100%; -webkit-appearance: none; background: rgba(255,255,255,0.1); height: 6px; border-radius: 3px; outline: none; }
+    .ctrl-group input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%; background: #14F195; cursor: pointer; box-shadow: 0 0 8px #14F195; }
+
     /* ── STRUCTURE ── */
     #pin-wrap { position: relative; height: 750vh; }
     #pin-scene { position: sticky; top: 0; height: 100vh; overflow: hidden; }
 
-    /* ── SUPERS ── */
+    /* ── ISOLATION DES SUPERS (Résout le bug d'empilement du mix-blend-mode) ── */
+    #supers-container {
+      position: absolute;
+      inset: 0;
+      z-index: 1; /* Reste sous le contenu textuel et le footer */
+      pointer-events: none;
+    }
+
     #backsuper, #frontsuper {
       position: absolute;
       left: 0;
@@ -91,7 +133,7 @@
       background-image: url('backsuper.png'); 
       background-position: left bottom; 
       background-size: contain; 
-      z-index: 1;
+      z-index: 2;
       transform-origin: bottom left;
     }
     
@@ -99,7 +141,7 @@
       background-image: url('frontsuper.png'); 
       background-position: right bottom; 
       background-size: contain; 
-      z-index: 5;
+      z-index: 3;
       transform-origin: bottom right;
     }
 
@@ -213,25 +255,27 @@
     #quote-layer h2 { font-size: clamp(3rem, 7vw, 5.5rem); font-weight: 800; line-height: 1.05; letter-spacing: -2px; }
     #quote-layer .accent { background: linear-gradient(90deg, #14F195, #9945FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-    /* ── FOOTER AU PREMIER PLAN MASQUÉ INITIALEMENT ── */
+    /* ── FOOTER SÉCURISÉ TOUT EN HAUT DE L'EMPILLEMENT ── */
     footer {
       position: fixed;
       bottom: 20px;
       width: 100%;
       text-align: center;
       font-size: 0.7rem;
-      z-index: 150; /* Passe au-dessus de tout le monde */
+      z-index: 9999; /* Devant le supers-container et les layers */
       letter-spacing: 0.5px;
       line-height: 1.6;
       padding: 0 20px;
       color: rgba(255, 255, 255, 0.4);
-      opacity: 0; /* Géré nativement par la timeline GSAP à la fin */
+      opacity: 0;
+      pointer-events: none;
     }
     footer a { color: rgba(255, 255, 255, 0.6); text-decoration: none; pointer-events: auto; }
 
     /* ── RESPONSIVE MOBILE ── */
     @media(max-width:768px) {
       header { width: 92%; padding: 12px 20px; top: 12px; }
+      #dev-control-panel { display: none; }
       .logo-area { font-size: 1.1rem; }
       .logo-area img { height: 24px; }
       .btn { font-size: 0.8rem; padding: 8px 16px; border-radius: 10px; }
@@ -255,6 +299,54 @@
 <div id="bg-gradient"></div>
 <canvas id="particles"></canvas>
 
+<div id="dev-control-panel">
+  <div class="panel-handle">
+    <h3>⚡ Config Supers</h3>
+    <span class="drag-index" style="display:none;"></span>
+    <span class="drag-icon">↕ Drag Me</span>
+  </div>
+  
+  <div class="ctrl-group">
+    <label><span>Initial Scale (Anti-trou)</span><span id="v-scale">1.20</span></label>
+    <input type="range" id="c-scale" min="1.00" max="1.50" step="0.01" value="1.20">
+  </div>
+  
+  <div class="ctrl-group">
+    <label><span>Back Initial X (px)</span><span id="v-backXInit">-200px</span></label>
+    <input type="range" id="c-backXInit" min="-600" max="400" step="5" value="-200">
+  </div>
+
+  <div class="ctrl-group">
+    <label><span>Back Initial Y (px)</span><span id="v-backYInit">0px</span></label>
+    <input type="range" id="c-backYInit" min="-1000" max="1000" step="5" value="0">
+  </div>
+
+  <div class="ctrl-group">
+    <label><span>Front Initial X (px)</span><span id="v-frontXInit">5px</span></label>
+    <input type="range" id="c-frontXInit" min="-400" max="400" step="1" value="5">
+  </div>
+
+  <div class="ctrl-group">
+    <label><span>Front Initial Y (px)</span><span id="v-frontYInit">240px</span></label>
+    <input type="range" id="c-frontYInit" min="-1000" max="1000" step="5" value="240">
+  </div>
+  
+  <div class="ctrl-group">
+    <label><span>Back Scroll Dist (xPercent)</span><span id="v-backX">15</span></label>
+    <input type="range" id="c-backX" min="0" max="50" step="1" value="15">
+  </div>
+
+  <div class="ctrl-group">
+    <label><span>Front Scroll Dist (xPercent)</span><span id="v-frontX">15</span></label>
+    <input type="range" id="c-frontX" min="0" max="50" step="1" value="15">
+  </div>
+
+  <div class="ctrl-group">
+    <label><span>Max Rotate Angle (deg)</span><span id="v-rotate">3.5</span></label>
+    <input type="range" id="c-rotate" min="0.0" max="15.0" step="0.1" value="3.5">
+  </div>
+</div>
+
 <header>
   <div class="logo-area"><img src="logo.png" height="32"><span>UNICEF</span></div>
   <div class="nav-btns">
@@ -266,8 +358,10 @@
 <div id="pin-wrap">
   <div id="pin-scene">
 
-    <div id="backsuper"></div>
-    <div id="frontsuper"></div>
+    <div id="supers-container">
+      <div id="backsuper"></div>
+      <div id="frontsuper"></div>
+    </div>
 
     <div id="hero-title" class="layer">
       <div>
@@ -361,21 +455,35 @@ fetch('/api/get-amount')
 
 const backsuper  = document.getElementById('backsuper');
 const frontsuper = document.getElementById('frontsuper');
+let tl;
 
-function initAnimations() {
-  // INJECTION DIRECTE DES VALEURS DU CONFIGURATEUR
+function buildAnimation() {
+  if (tl) {
+    tl.scrollTrigger.kill(true);
+    tl.kill();
+  }
+
   const cfg = {
-    scale: 1.20,
-    backXInit: -200,
-    backYInit: 0,
-    frontXInit: 5,
-    frontYInit: 240,
-    backX: 15,
-    frontX: 15,
-    rotate: 3.5
+    scale: parseFloat(document.getElementById('c-scale').value),
+    backXInit: parseInt(document.getElementById('c-backXInit').value),
+    backYInit: parseInt(document.getElementById('c-backYInit').value),
+    frontXInit: parseInt(document.getElementById('c-frontXInit').value),
+    frontYInit: parseInt(document.getElementById('c-frontYInit').value),
+    backX: parseInt(document.getElementById('c-backX').value),
+    frontX: parseInt(document.getElementById('c-frontX').value),
+    rotate: parseFloat(document.getElementById('c-rotate').value),
   };
 
-  const tl = gsap.timeline({
+  document.getElementById('v-scale').innerText = cfg.scale.toFixed(2);
+  document.getElementById('v-backXInit').innerText = cfg.backXInit + 'px';
+  document.getElementById('v-backYInit').innerText = cfg.backYInit + 'px';
+  document.getElementById('v-frontXInit').innerText = cfg.frontXInit + 'px';
+  document.getElementById('v-frontYInit').innerText = cfg.frontYInit + 'px';
+  document.getElementById('v-backX').innerText = cfg.backX;
+  document.getElementById('v-frontX').innerText = cfg.frontX;
+  document.getElementById('v-rotate').innerText = cfg.rotate.toFixed(1);
+
+  tl = gsap.timeline({
     scrollTrigger: {
       trigger: "#pin-wrap",
       start: "top top",
@@ -386,7 +494,6 @@ function initAnimations() {
     }
   });
 
-  // Animation de fond parallaxe étalée uniformément de 0 à 1 (début à fin absolue du scroll)
   tl.fromTo(backsuper, 
     { x: cfg.backXInit, y: cfg.backYInit, xPercent: 0, rotation: 0, scale: cfg.scale },
     { x: cfg.backXInit, y: cfg.backYInit, xPercent: -cfg.backX, rotation: -cfg.rotate, scale: cfg.scale, ease: "none", duration: 1 }, 
@@ -399,30 +506,69 @@ function initAnimations() {
     0
   );
 
-  // Séquençage temporel fluide des blocs HTML de contenu
   tl.to("#hero-title", { opacity: 0, y: -40, ease: "power2.inOut", duration: 0.1 }, 0.05)
-    
     .fromTo("#mission-content", { opacity: 0, y: 40 }, { opacity: 1, y: 0, ease: "power2.out", duration: 0.1 }, 0.15)
     .to({}, { 
       onStart: () => triggerMissionCounter(),
       onReverseComplete: () => { document.getElementById('mpct').innerText = "0%"; }
     }, 0.18)
     .to("#mission-content", { opacity: 0, y: -40, ease: "power2.in", duration: 0.1 }, 0.35)
-    
     .fromTo("#amount-layer", { opacity: 0, y: 40 }, { opacity: 1, y: 0, ease: "power2.out", duration: 0.1 }, 0.45)
     .to("#progress-fill", { width: () => pct + "%", ease: "power3.out", duration: 0.15 }, 0.48)
     .to("#amount-layer", { opacity: 0, y: -40, ease: "power2.in", duration: 0.1 }, 0.65)
-    
     .fromTo("#story-layer", { opacity: 0, y: 40 }, { opacity: 1, y: 0, ease: "power2.out", duration: 0.1 }, 0.72)
     .to({}, { onStart: () => triggerTypewriter() }, 0.75)
     .to("#story-layer", { opacity: 0, y: -40, ease: "power2.in", duration: 0.1 }, 0.88)
     
-    // Étape finale : Apparition conjointe du dernier calque textuel et du Footer
+    // Le footer apparaît simultanément avec la dernière phrase à la toute fin du scroll
     .fromTo("#quote-layer", { opacity: 0, y: 40 }, { opacity: 1, y: 0, ease: "power2.out", duration: 0.1 }, 0.92)
     .to("#main-footer", { opacity: 1, ease: "power2.out", duration: 0.08 }, 0.92);
+
+  ScrollTrigger.refresh();
 }
 
-window.addEventListener('DOMContentLoaded', initAnimations);
+document.querySelectorAll('#dev-control-panel input').forEach(input => {
+  input.addEventListener('input', buildAnimation);
+});
+
+window.addEventListener('DOMContentLoaded', buildAnimation);
+
+// ENGINE DE DRAG DE SURFACE POUR LE PANNEAU (SANS BIBLIOTHÈQUE EXTERNE)
+(function setupDraggablePanel() {
+  const panel = document.getElementById('dev-control-panel');
+  const handle = panel.querySelector('.panel-handle');
+  let isDragging = false;
+  let startX, startY, initialLeft, initialTop;
+
+  handle.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    startX = e.clientX;
+    startY = e.clientY;
+    const rect = panel.getBoundingClientRect();
+    initialLeft = rect.left;
+    initialTop = rect.top;
+    
+    // Switch de styles temporaires pour éviter les glitchs visuels au drag
+    panel.style.right = 'auto';
+    panel.style.bottom = 'auto';
+    document.addEventListener('mousemove', onMouseMove);
+    document.addEventListener('mouseup', onMouseUp);
+  });
+
+  function onMouseMove(e) {
+    if (!isDragging) return;
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+    panel.style.left = (initialLeft + dx) + 'px';
+    panel.style.top = (initialTop + dy) + 'px';
+  }
+
+  function onMouseUp() {
+    isDragging = false;
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+  }
+})();
 
 let counterFired = false;
 function triggerMissionCounter() {
@@ -470,7 +616,6 @@ document.getElementById('ca-text').onclick = function () {
   setTimeout(() => this.innerText = '3t4GiENDepWKkGicwDoMz2V2fWDZXHLAoJ3ZrpZQpump', 2000);
 };
 
-// PARTICLES
 const cv = document.getElementById('particles');
 const cx = cv.getContext('2d');
 let W, H;
