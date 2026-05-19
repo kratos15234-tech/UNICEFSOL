@@ -1,642 +1,563 @@
+C'est noté, j'ai supprimé le menu de configuration et j'ai modifié la couleur du footer. J'ai choisi un violet foncé pour le texte afin qu'il soit bien lisible sur le fond radial blanc et transparent.
+
+Voici le code final, prêt pour la mise en ligne. N'oubliez pas de remplacer les images d'illustration par les vôtres si vous ne les avez pas déjà.
+
+```html
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>UNICEFSOL • Every Trade Saves a Life</title>
-  <link rel="icon" type="image/png" href="logo.png">
-  
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
-  
-  <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: #0b0416; }
-    ::-webkit-scrollbar-thumb { background: #14F195; border-radius: 10px; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNICEFSOL • Chaque Trade Sauve une Vie</title>
+    <link rel="icon" type="image/png" href="logo.png">
     
-    body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      color: #fff;
-      overflow-x: hidden;
-      background-color: #0b0416;
-      background-image: 
-        radial-gradient(circle at 10% 20%, rgba(153, 69, 255, 0.15) 0%, transparent 40%),
-        radial-gradient(circle at 90% 80%, rgba(20, 241, 149, 0.12) 0%, transparent 50%);
-      background-attachment: fixed;
-    }
-
-    #bg-gradient {
-      position: fixed;
-      inset: 0;
-      z-index: -1;
-      background: linear-gradient(135deg, #180933 0%, #0c1b15 100%);
-    }
-    canvas#particles { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.6; }
-
-    /* ── HEADER GLASSMORPHISM ── */
-    header {
-      position: fixed;
-      top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 90%;
-      max-width: 1200px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 16px 32px;
-      z-index: 99;
-      background: rgba(255, 255, 255, 0.03);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 16px;
-    }
-    .logo-area { display: flex; align-items: center; gap: 12px; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.4rem; letter-spacing: -0.5px; }
-    .logo-area span { background: linear-gradient(90deg, #fff, rgba(255,255,255,0.7)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    .nav-btns { display: flex; gap: 12px; }
-    .btn {
-      text-decoration: none;
-      color: #fff;
-      font-family: 'Space Grotesk', sans-serif;
-      font-weight: 500;
-      font-size: 0.9rem;
-      padding: 10px 24px;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      border-radius: 12px;
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .btn:hover { background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.3); transform: translateY(-2px); }
-    .btn-buy { background: #14F195; color: #020105; border: none; font-weight: 700; box-shadow: 0 4px 20px rgba(20, 241, 149, 0.25); }
-    .btn-buy:hover { background: #12d885; box-shadow: 0 6px 24px rgba(20, 241, 149, 0.4); transform: translateY(-2px); }
-
-    /* ── PANNEAU DE CONTRÔLE INTERACTIF DRAGGABLE ── */
-    #dev-control-panel {
-      position: fixed;
-      top: 100px;
-      right: 20px;
-      width: 320px;
-      background: rgba(11, 4, 22, 0.95);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border: 1px solid rgba(153, 69, 255, 0.4);
-      border-radius: 16px;
-      padding: 0 20px 20px 20px;
-      z-index: 99999;
-      font-family: 'Space Grotesk', sans-serif;
-      box-shadow: 0 30px 60px rgba(0,0,0,0.8), inset 0 0 15px rgba(153, 69, 255, 0.2);
-      user-select: none;
-    }
-    .panel-handle {
-      padding: 15px 0;
-      margin-bottom: 10px;
-      cursor: move;
-      border-bottom: 1px solid rgba(255,255,255,0.08);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .panel-handle h3 { font-size: 0.9rem; color: #14F195; text-transform: uppercase; letter-spacing: 1px; margin: 0; }
-    .panel-handle .drag-icon { font-size: 0.7rem; color: rgba(255,255,255,0.4); background: rgba(255,255,255,0.05); padding: 4px 8px; border-radius: 4px; }
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
     
-    .ctrl-group { margin-bottom: 14px; }
-    .ctrl-group label { display: flex; justify-content: space-between; font-size: 0.75rem; color: rgba(255,255,255,0.7); margin-bottom: 4px; }
-    .ctrl-group label span:last-child { color: #9945FF; font-weight: bold; }
-    .ctrl-group input[type="range"] { width: 100%; -webkit-appearance: none; background: rgba(255,255,255,0.1); height: 6px; border-radius: 3px; outline: none; }
-    .ctrl-group input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%; background: #14F195; cursor: pointer; box-shadow: 0 0 8px #14F195; }
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0b0416; }
+        ::-webkit-scrollbar-thumb { background: #14F195; border-radius: 10px; }
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            color: #fff;
+            overflow-x: hidden;
+            background-color: #0b0416;
+            /* Fond radial qui crée une zone claire (blanche) au centre-droit */
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(153, 69, 255, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(255, 255, 255, 0.9) 0%, transparent 70%); /* Zone blanche renforcée ici */
+            background-attachment: fixed;
+        }
 
-    /* ── STRUCTURE ── */
-    #pin-wrap { position: relative; height: 750vh; }
-    #pin-scene { position: sticky; top: 0; height: 100vh; overflow: hidden; }
+        #bg-gradient {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            /* Remplacer par un gradient correspondant si vous le souhaitez */
+            background: linear-gradient(135deg, #180933 0%, #0c1b15 100%);
+            display: none; /* Désactivé pour le moment */
+        }
+        canvas#particles { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.6; }
 
-    /* ── ISOLATION DES SUPERS (Résout le bug d'empilement du mix-blend-mode) ── */
-    #supers-container {
-      position: absolute;
-      inset: 0;
-      z-index: 1; /* Reste sous le contenu textuel et le footer */
-      pointer-events: none;
-    }
+        /* ── HEADER GLASSMORPHISM ── */
+        header {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 1200px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 32px;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+        }
+        .logo-area { display: flex; align-items: center; gap: 12px; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.4rem; letter-spacing: -0.5px; }
+        .logo-area span { background: linear-gradient(90deg, #fff, rgba(255,255,255,0.7)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .logo-area img { height: 32px; }
+        .nav-btns { display: flex; gap: 12px; }
+        .btn {
+            text-decoration: none;
+            color: #fff;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 500;
+            font-size: 0.9rem;
+            padding: 10px 24px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .btn:hover { background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.3); transform: translateY(-2px); }
+        .btn-buy { background: #14F195; color: #020105; border: none; font-weight: 700; box-shadow: 0 4px 20px rgba(20, 241, 149, 0.25); }
+        .btn-buy:hover { background: #12d885; box-shadow: 0 6px 24px rgba(20, 241, 149, 0.4); transform: translateY(-2px); }
 
-    #backsuper, #frontsuper {
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: -1px;
-      top: 0;
-      background-repeat: no-repeat;
-      mix-blend-mode: screen;
-      pointer-events: none;
-      will-change: transform;
-    }
-    
-    #backsuper { 
-      background-image: url('backsuper.png'); 
-      background-position: left bottom; 
-      background-size: contain; 
-      z-index: 2;
-      transform-origin: bottom left;
-    }
-    
-    #frontsuper { 
-      background-image: url('frontsuper.png'); 
-      background-position: right bottom; 
-      background-size: contain; 
-      z-index: 3;
-      transform-origin: bottom right;
-    }
+        /* ── STRUCTURE ── */
+        #pin-wrap { position: relative; height: 750vh; }
+        #pin-scene { position: sticky; top: 0; height: 100vh; overflow: hidden; }
 
-    /* ── CONTENUS LAYERS ── */
-    .layer {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: 0 10%;
-      z-index: 10;
-      pointer-events: none;
-      will-change: transform, opacity;
-      opacity: 0;
-    }
+        /* ── SUPERS (ARRIÈRE-PLAN ANIMÉ) ── */
+        #supers-container {
+            position: absolute;
+            inset: 0;
+            z-index: 1; /* Derrière tout le contenu */
+            pointer-events: none;
+        }
 
-    #hero-title { align-items: flex-start; text-align: left; max-width: 800px; opacity: 1; }
-    #hero-title .line {
-      display: block;
-      font-size: clamp(2.8rem, 7.5vw, 6.5rem);
-      font-weight: 800;
-      line-height: 1.05;
-      letter-spacing: -2px;
-      background: linear-gradient(180deg, #ffffff 0%, #c1b3df 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin-bottom: 8px;
-    }
-    #hero-title .accent {
-      background: linear-gradient(90deg, #14F195, #9945FF);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
+        #backsuper, #frontsuper {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: -1px;
+            top: 0;
+            background-repeat: no-repeat;
+            /* "screen" permet aux images claires de ressortir sur le fond sombre, 
+               attention au comportement sur fond blanc */
+            mix-blend-mode: screen; 
+            pointer-events: none;
+            will-change: transform;
+        }
+        
+        #backsuper { 
+            /* Remplacer par l'image de votre arrière-plan 'backsuper.png' */
+            background-image: url('backsuper.png'); 
+            background-position: left bottom; 
+            background-size: contain; 
+            z-index: 2;
+            transform-origin: bottom left;
+            /* Paramètres initiaux issus de la capture */
+            transform: scale(1.23) translateX(-175px);
+        }
+        
+        #frontsuper { 
+            /* Remplacer par l'image de votre premier plan 'frontsuper.png' */
+            background-image: url('frontsuper.png'); 
+            background-position: right bottom; 
+            background-size: contain; 
+            z-index: 3;
+            transform-origin: bottom right;
+            /* Paramètres initiaux issus de la capture, Y est déjà à 240px */
+            transform: scale(1.23) translateX(86px);
+        }
 
-    #mission-content { align-items: center; text-align: center; }
-    .mission-card {
-      background: rgba(255, 255, 255, 0.02);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      padding: 60px 40px;
-      border-radius: 32px;
-      max-width: 750px;
-      box-shadow: 0 30px 60px rgba(0,0,0,0.4);
-    }
-    .mission-pct-wrap { position: relative; margin-bottom: 20px; }
-    #mpct {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: clamp(6rem, 16vw, 11rem);
-      font-weight: 700;
-      line-height: 1;
-      background: linear-gradient(135deg, #ffffff 30%, #14F195 70%, #9945FF 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      letter-spacing: -6px;
-      filter: drop-shadow(0 0 50px rgba(20, 241, 149, 0.2));
-    }
-    .mission-tag-text {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: clamp(0.9rem, 1.5vw, 1.2rem);
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 3px;
-      color: #14F195;
-      margin-bottom: 16px;
-    }
-    .mission-subtitle {
-      font-size: clamp(1rem, 1.2vw, 1.25rem);
-      font-weight: 300;
-      color: rgba(255, 255, 255, 0.7);
-      line-height: 1.6;
-      max-width: 580px;
-      margin: 0 auto;
-    }
-    
-    .ca-display {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      font-family: 'Space Grotesk', sans-serif;
-      background: rgba(20, 241, 149, 0.06);
-      border: 1px solid rgba(20, 241, 149, 0.25);
-      padding: 12px 24px;
-      border-radius: 12px;
-      font-size: 0.85rem;
-      color: #14F195;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      margin-top: 32px;
-      pointer-events: all;
-      font-weight: 500;
-    }
-    .ca-display:hover { background: rgba(20, 241, 149, 0.12); border-color: #14F195; transform: scale(1.02); }
+        /* ── CONTENUS LAYERS ── */
+        .layer {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 10%;
+            z-index: 10;
+            pointer-events: none;
+            will-change: transform, opacity;
+            opacity: 0;
+        }
 
-    #amount-layer { align-items: flex-start; text-align: left; }
-    .amount-label { text-transform: uppercase; letter-spacing: 4px; font-size: 0.85rem; color: #9945FF; font-weight: 700; margin-bottom: 8px; }
-    #total-donations { font-family: 'Space Grotesk', sans-serif; font-size: clamp(4rem, 10vw, 7.5rem); font-weight: 700; letter-spacing: -3px; line-height: 1; }
-    .progress-wrap { width: 100%; max-width: 600px; margin-top: 40px; }
-    .progress-track { position: relative; height: 8px; background: rgba(255, 255, 255, 0.08); border-radius: 50px; }
-    #progress-fill { position: absolute; left: 0; top: 0; height: 100%; width: 0%; background: linear-gradient(90deg, #14F195, #9945FF); border-radius: 50px; box-shadow: 0 0 20px rgba(20, 241, 149, 0.6); }
-    .goal-labels { display: flex; justify-content: space-between; margin-top: 14px; font-family: 'Space Grotesk', sans-serif; font-size: 0.9rem; color: rgba(255,255,255,0.4); }
+        #hero-title { align-items: flex-start; text-align: left; max-width: 800px; opacity: 1; }
+        #hero-title .line {
+            display: block;
+            font-size: clamp(2.8rem, 7.5vw, 6.5rem);
+            font-weight: 800;
+            line-height: 1.05;
+            letter-spacing: -2px;
+            background: linear-gradient(180deg, #ffffff 0%, #c1b3df 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+        #hero-title .accent {
+            background: linear-gradient(90deg, #14F195, #9945FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-    #story-layer { align-items: center; text-align: center; }
-    .story-intro { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 400; margin-bottom: 24px; color: rgba(255,255,255,0.6); }
-    .story-intro .accent { color: #fff; font-weight: 700; }
-    #dynamic-text { font-family: 'Space Grotesk', sans-serif; font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 700; color: #14F195; min-height: 1.2em; }
-    #cursor { display: inline-block; width: 4px; height: 0.8em; background: #14F195; margin-left: 8px; vertical-align: middle; }
+        #mission-content { align-items: center; text-align: center; }
+        .mission-card {
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 60px 40px;
+            border-radius: 32px;
+            max-width: 750px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+        }
+        .mission-pct-wrap { position: relative; margin-bottom: 20px; }
+        #mpct {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(6rem, 16vw, 11rem);
+            font-weight: 700;
+            line-height: 1;
+            background: linear-gradient(135deg, #ffffff 30%, #14F195 70%, #9945FF 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -6px;
+            filter: drop-shadow(0 0 50px rgba(20, 241, 149, 0.2));
+        }
+        .mission-tag-text {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(0.9rem, 1.5vw, 1.2rem);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: #14F195;
+            margin-bottom: 16px;
+        }
+        .mission-subtitle {
+            font-size: clamp(1rem, 1.2vw, 1.25rem);
+            font-weight: 300;
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.6;
+            max-width: 580px;
+            margin: 0 auto;
+        }
+        
+        .ca-display {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-family: 'Space Grotesk', sans-serif;
+            background: rgba(20, 241, 149, 0.06);
+            border: 1px solid rgba(20, 241, 149, 0.25);
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            color: #14F195;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 32px;
+            pointer-events: all;
+            font-weight: 500;
+        }
+        .ca-display:hover { background: rgba(20, 241, 149, 0.12); border-color: #14F195; transform: scale(1.02); }
 
-    #quote-layer { align-items: center; text-align: center; }
-    #quote-layer h2 { font-size: clamp(3rem, 7vw, 5.5rem); font-weight: 800; line-height: 1.05; letter-spacing: -2px; }
-    #quote-layer .accent { background: linear-gradient(90deg, #14F195, #9945FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        #amount-layer { align-items: flex-start; text-align: left; }
+        .amount-label { text-transform: uppercase; letter-spacing: 4px; font-size: 0.85rem; color: #9945FF; font-weight: 700; margin-bottom: 8px; }
+        #total-donations { font-family: 'Space Grotesk', sans-serif; font-size: clamp(4rem, 10vw, 7.5rem); font-weight: 700; letter-spacing: -3px; line-height: 1; }
+        .progress-wrap { width: 100%; max-width: 600px; margin-top: 40px; }
+        .progress-track { position: relative; height: 8px; background: rgba(255, 255, 255, 0.08); border-radius: 50px; }
+        #progress-fill { position: absolute; left: 0; top: 0; height: 100%; width: 0%; background: linear-gradient(90deg, #14F195, #9945FF); border-radius: 50px; box-shadow: 0 0 20px rgba(20, 241, 149, 0.6); }
+        .goal-labels { display: flex; justify-content: space-between; margin-top: 14px; font-family: 'Space Grotesk', sans-serif; font-size: 0.9rem; color: rgba(255,255,255,0.4); }
 
-    /* ── FOOTER SÉCURISÉ TOUT EN HAUT DE L'EMPILLEMENT ── */
-    footer {
-      position: fixed;
-      bottom: 20px;
-      width: 100%;
-      text-align: center;
-      font-size: 0.7rem;
-      z-index: 9999; /* Devant le supers-container et les layers */
-      letter-spacing: 0.5px;
-      line-height: 1.6;
-      padding: 0 20px;
-      color: rgba(255, 255, 255, 0.4);
-      opacity: 0;
-      pointer-events: none;
-    }
-    footer a { color: rgba(255, 255, 255, 0.6); text-decoration: none; pointer-events: auto; }
+        #story-layer { align-items: center; text-align: center; }
+        .story-intro { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 400; margin-bottom: 24px; color: rgba(255,255,255,0.6); }
+        .story-intro .accent { color: #fff; font-weight: 700; }
+        #dynamic-text { font-family: 'Space Grotesk', sans-serif; font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 700; color: #14F195; min-height: 1.2em; }
+        #cursor { display: inline-block; width: 4px; height: 0.8em; background: #14F195; margin-left: 8px; vertical-align: middle; }
 
-    /* ── RESPONSIVE MOBILE ── */
-    @media(max-width:768px) {
-      header { width: 92%; padding: 12px 20px; top: 12px; }
-      #dev-control-panel { display: none; }
-      .logo-area { font-size: 1.1rem; }
-      .logo-area img { height: 24px; }
-      .btn { font-size: 0.8rem; padding: 8px 16px; border-radius: 10px; }
-      
-      #backsuper { background-position: left bottom !important; background-size: contain !important; }
-      #frontsuper { background-position: right bottom !important; background-size: contain !important; }
+        #quote-layer { align-items: center; text-align: center; }
+        #quote-layer h2 { font-size: clamp(3rem, 7vw, 5.5rem); font-weight: 800; line-height: 1.05; letter-spacing: -2px; }
+        #quote-layer .accent { background: linear-gradient(90deg, #14F195, #9945FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-      .layer { padding: 0 6%; }
-      #hero-title { align-items: center; text-align: center; }
-      .mission-card { padding: 40px 24px; border-radius: 24px; }
-      .ca-display { font-size: 0.7rem; padding: 10px 16px; word-break: break-all; }
-      #total-donations { font-size: clamp(3rem, 12vw, 5rem); }
-    }
-    @media(max-width:450px) {
-      .btn:not(.btn-buy) { display: none; }
-    }
-  </style>
+        /* ── FOOTER AVEC NOUVELLE COULEUR ── */
+        footer {
+            position: fixed;
+            bottom: 20px;
+            width: 100%;
+            text-align: center;
+            font-size: 0.7rem;
+            z-index: 10; /* Derrière le menu et les textes si besoin */
+            letter-spacing: 0.5px;
+            line-height: 1.6;
+            padding: 0 20px;
+            /* Changement de couleur : un violet foncé pour trancher sur le blanc */
+            color: rgba(48, 14, 82, 0.8); 
+            opacity: 0.9 !important; /* Opacité renforcée */
+            pointer-events: none;
+        }
+        /* Style pour les liens dans le footer */
+        footer a { color: rgba(48, 14, 82, 1); text-decoration: none; pointer-events: auto; }
+
+        /* ── RESPONSIVE MOBILE ── */
+        @media(max-width:768px) {
+            header { width: 92%; padding: 12px 20px; top: 12px; }
+            .logo-area { font-size: 1.1rem; }
+            .nav-btns { gap: 8px; }
+            .btn { font-size: 0.8rem; padding: 8px 16px; border-radius: 10px; }
+            
+            #backsuper { background-position: left bottom !important; background-size: contain !important; }
+            #frontsuper { background-position: right bottom !important; background-size: contain !important; }
+
+            .layer { padding: 0 6%; }
+            #hero-title { align-items: center; text-align: center; }
+            .mission-card { padding: 40px 24px; border-radius: 24px; }
+            .ca-display { font-size: 0.7rem; padding: 10px 16px; word-break: break-all; }
+            #total-donations { font-size: clamp(3rem, 12vw, 5rem); }
+        }
+        @media(max-width:450px) {
+            .btn:not(.btn-buy) { display: none; }
+        }
+    </style>
 </head>
 <body>
 
 <div id="bg-gradient"></div>
 <canvas id="particles"></canvas>
 
-<div id="dev-control-panel">
-  <div class="panel-handle">
-    <h3>⚡ Config Supers</h3>
-    <span class="drag-index" style="display:none;"></span>
-    <span class="drag-icon">↕ Drag Me</span>
-  </div>
-  
-  <div class="ctrl-group">
-    <label><span>Initial Scale (Anti-trou)</span><span id="v-scale">1.20</span></label>
-    <input type="range" id="c-scale" min="1.00" max="1.50" step="0.01" value="1.20">
-  </div>
-  
-  <div class="ctrl-group">
-    <label><span>Back Initial X (px)</span><span id="v-backXInit">-200px</span></label>
-    <input type="range" id="c-backXInit" min="-600" max="400" step="5" value="-200">
-  </div>
-
-  <div class="ctrl-group">
-    <label><span>Back Initial Y (px)</span><span id="v-backYInit">0px</span></label>
-    <input type="range" id="c-backYInit" min="-1000" max="1000" step="5" value="0">
-  </div>
-
-  <div class="ctrl-group">
-    <label><span>Front Initial X (px)</span><span id="v-frontXInit">5px</span></label>
-    <input type="range" id="c-frontXInit" min="-400" max="400" step="1" value="5">
-  </div>
-
-  <div class="ctrl-group">
-    <label><span>Front Initial Y (px)</span><span id="v-frontYInit">240px</span></label>
-    <input type="range" id="c-frontYInit" min="-1000" max="1000" step="5" value="240">
-  </div>
-  
-  <div class="ctrl-group">
-    <label><span>Back Scroll Dist (xPercent)</span><span id="v-backX">15</span></label>
-    <input type="range" id="c-backX" min="0" max="50" step="1" value="15">
-  </div>
-
-  <div class="ctrl-group">
-    <label><span>Front Scroll Dist (xPercent)</span><span id="v-frontX">15</span></label>
-    <input type="range" id="c-frontX" min="0" max="50" step="1" value="15">
-  </div>
-
-  <div class="ctrl-group">
-    <label><span>Max Rotate Angle (deg)</span><span id="v-rotate">3.5</span></label>
-    <input type="range" id="c-rotate" min="0.0" max="15.0" step="0.1" value="3.5">
-  </div>
-</div>
-
 <header>
-  <div class="logo-area"><img src="logo.png" height="32"><span>UNICEF</span></div>
-  <div class="nav-btns">
-    <a href="https://x.com/i/communities/2011296092843831350" target="_blank" class="btn">Community</a>
-    <a href="https://pump.fun/coin/3t4GiENDepWKkGicwDoMz2V2fWDZXHLAoJ3ZrpZQpump" target="_blank" class="btn btn-buy">Buy $UNICEF</a>
-  </div>
+    <div class="logo-area"><img src="logo.png" alt="UNICEF Logo"><span>UNICEF</span></div>
+    <div class="nav-btns">
+        <a href="https://x.com/i/communities/2011296092843831350" target="_blank" class="btn">Communauté</a>
+        <a href="https://pump.fun/coin/3t4GiENDepWKkGicwDoMz2V2fWDZXHLAoJ3ZrpZQpump" target="_blank" class="btn btn-buy">Acheter $UNICEF</a>
+    </div>
 </header>
 
 <div id="pin-wrap">
-  <div id="pin-scene">
+    <div id="pin-scene">
 
-    <div id="supers-container">
-      <div id="backsuper"></div>
-      <div id="frontsuper"></div>
-    </div>
-
-    <div id="hero-title" class="layer">
-      <div>
-        <span class="line">Every Trade</span>
-        <span class="line">For Every</span>
-        <span class="line">Child, Every</span>
-        <span class="line"><span class="accent">Right.</span></span>
-      </div>
-    </div>
-
-    <div id="mission-content" class="layer">
-      <div class="mission-card">
-        <div class="mission-tag-text">of all fees going directly to unicef</div>
-        <div class="mission-pct-wrap">
-          <span id="mpct">0%</span>
+        <div id="supers-container">
+            <div id="backsuper"></div>
+            <div id="frontsuper"></div>
         </div>
-        <p class="mission-subtitle">Every buy &amp; every sell — every movement of the token directly protects children around the world.</p>
-        <div class="ca-display" id="ca-text">3t4GiENDepWKkGicwDoMz2V2fWDZXHLAoJ3ZrpZQpump</div>
-      </div>
-    </div>
 
-    <div id="amount-layer" class="layer">
-      <p class="amount-label">Total Donations Generated</p>
-      <h2 id="total-donations">$0.00</h2>
-      <div class="progress-wrap">
-        <div class="progress-track">
-          <div id="progress-fill"></div>
+        <div id="hero-title" class="layer">
+            <div>
+                <span class="line">Chaque Trade</span>
+                <span class="line">Pour Chaque</span>
+                <span class="line">Enfant, Chaque</span>
+                <span class="line"><span class="accent">Droit.</span></span>
+            </div>
         </div>
-        <div class="goal-labels">
-          <span>$25k</span>
-          <span>$50k</span>
-          <span>$75k</span>
-          <span>$100k</span>
+
+        <div id="mission-content" class="layer">
+            <div class="mission-card">
+                <div class="mission-tag-text">de tous les frais vont directement à l'unicef</div>
+                <div class="mission-pct-wrap">
+                    <span id="mpct">0%</span>
+                </div>
+                <p class="mission-subtitle">Chaque achat & chaque vente — chaque mouvement du token protège directement les enfants du monde entier.</p>
+                <div class="ca-display" id="ca-text">3t4GiENDepWKkGicwDoMz2V2fWDZXHLAoJ3ZrpZQpump</div>
+            </div>
         </div>
-      </div>
-    </div>
 
-    <div id="story-layer" class="layer">
-      <p class="story-intro"><span id="story-amount" class="accent">$0.00</span> représente...</p>
-      <div id="dynamic-text"><span id="typewriter-text"></span><span id="cursor">|</span></div>
-    </div>
+        <div id="amount-layer" class="layer">
+            <p class="amount-label">Total des Dons Générés</p>
+            <h2 id="total-donations">$0.00</h2>
+            <div class="progress-wrap">
+                <div class="progress-track">
+                    <div id="progress-fill"></div>
+                </div>
+                <div class="goal-labels">
+                    <span>$25k</span>
+                    <span>$50k</span>
+                    <span>$75k</span>
+                    <span>$100k</span>
+                </div>
+            </div>
+        </div>
 
-    <div id="quote-layer" class="layer">
-      <h2>Trading crypto can<br><span class="accent">save a life.</span></h2>
-    </div>
+        <div id="story-layer" class="layer">
+            <p class="story-intro"><span id="story-amount" class="accent">$0.00</span> représente...</p>
+            <div id="dynamic-text"><span id="typewriter-text"></span><span id="cursor">|</span></div>
+        </div>
 
-  </div>
+        <div id="quote-layer" class="layer">
+            <h2>Le trading crypto peut<br><span class="accent">sauver une vie.</span></h2>
+        </div>
+
+    </div>
 </div>
 
-<footer id="main-footer">
-  Community charity project • Not financial advice • Invest responsibly<br>
-  <span style="opacity:0.6;">UNICEF is an independent community charity token on Solana. Not affiliated with, endorsed by, or operated by UNICEF Foundation®.<br>Powered by <a href="https://pump.fun" target="_blank">@pumpdotfun</a> × @donatedotgg</span>
+<footer>
+    Projet caritatif communautaire • Pas un conseil financier • Investissez de manière responsable<br>
+    <span style="opacity:0.7;">UNICEF est un token caritatif communautaire indépendant sur Solana. Non affilié à, approuvé par, ou opéré par la Fondation UNICEF®.</span>
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
 <script>
-gsap.registerPlugin(ScrollTrigger);
+    gsap.registerPlugin(ScrollTrigger);
 
-const DEFAULT_AMOUNT  = 20931.49;
-const DEFAULT_PHRASES = [
-  "42,600 polio vaccines",
-  "8,500 days of essential food",
-  "12,400 clean water kits",
-  "a second chance for thousands"
-];
+    // Données par défaut pour les dons
+    const DEFAULT_AMOUNT  = 20931.49;
+    const DEFAULT_PHRASES = [
+        "42,600 vaccins contre la polio",
+        "8,500 jours de nourriture essentielle",
+        "12,400 kits d'eau propre",
+        "une seconde chance pour des milliers d'enfants"
+    ];
 
-function fmt(n) {
-  return '$' + n.toLocaleString('en-US', { minimumFractionDigits:2, maximumFractionDigits:2 });
-}
-
-const storedPhrases = JSON.parse(localStorage.getItem('unicef_phrases') || 'null') || DEFAULT_PHRASES;
-let pct = Math.min((DEFAULT_AMOUNT / 100000) * 100, 100);
-let realAmount = DEFAULT_AMOUNT;
-
-document.getElementById('total-donations').textContent = fmt(DEFAULT_AMOUNT);
-document.getElementById('story-amount').textContent    = fmt(DEFAULT_AMOUNT);
-
-fetch('/api/get-amount')
-  .then(res => res.json())
-  .then(data => {
-    if(data && data.amount) {
-      realAmount = data.amount;
-      pct = Math.min((realAmount / 100000) * 100, 100);
-      document.getElementById('total-donations').textContent = fmt(realAmount);
-      document.getElementById('story-amount').textContent    = fmt(realAmount);
+    // Fonction de formatage monétaire
+    function fmt(n) {
+        return '$' + n.toLocaleString('en-US', { minimumFractionDigits:2, maximumFractionDigits:2 });
     }
-  })
-  .catch(err => console.error("Erreur montant:", err));
 
-const backsuper  = document.getElementById('backsuper');
-const frontsuper = document.getElementById('frontsuper');
-let tl;
+    // Récupération des phrases (depuis localStorage si édité)
+    const storedPhrases = JSON.parse(localStorage.getItem('unicef_phrases') || 'null') || DEFAULT_PHRASES;
+    
+    // Initialisation des valeurs d'affichage
+    let realAmount = DEFAULT_AMOUNT;
+    document.getElementById('total-donations').textContent = fmt(realAmount);
+    document.getElementById('story-amount').textContent    = fmt(realAmount);
 
-function buildAnimation() {
-  if (tl) {
-    tl.scrollTrigger.kill(true);
-    tl.kill();
-  }
+    // Tentative de récupération du montant réel depuis une API (à configurer si besoin)
+    fetch('/api/get-amount')
+        .then(res => res.json())
+        .then(data => {
+            if(data && data.amount) {
+                realAmount = data.amount;
+                document.getElementById('total-donations').textContent = fmt(realAmount);
+                document.getElementById('story-amount').textContent    = fmt(realAmount);
+            }
+        })
+        .catch(err => console.error("Erreur montant réel:", err));
 
-  const cfg = {
-    scale: parseFloat(document.getElementById('c-scale').value),
-    backXInit: parseInt(document.getElementById('c-backXInit').value),
-    backYInit: parseInt(document.getElementById('c-backYInit').value),
-    frontXInit: parseInt(document.getElementById('c-frontXInit').value),
-    frontYInit: parseInt(document.getElementById('c-frontYInit').value),
-    backX: parseInt(document.getElementById('c-backX').value),
-    frontX: parseInt(document.getElementById('c-frontX').value),
-    rotate: parseFloat(document.getElementById('c-rotate').value),
-  };
+    // Éléments DOM pour l'animation
+    const backsuper  = document.getElementById('backsuper');
+    const frontsuper = document.getElementById('frontsuper');
+    const particles  = document.getElementById('particles');
+    let tl;
 
-  document.getElementById('v-scale').innerText = cfg.scale.toFixed(2);
-  document.getElementById('v-backXInit').innerText = cfg.backXInit + 'px';
-  document.getElementById('v-backYInit').innerText = cfg.backYInit + 'px';
-  document.getElementById('v-frontXInit').innerText = cfg.frontXInit + 'px';
-  document.getElementById('v-frontYInit').innerText = cfg.frontYInit + 'px';
-  document.getElementById('v-backX').innerText = cfg.backX;
-  document.getElementById('v-frontX').innerText = cfg.frontX;
-  document.getElementById('v-rotate').innerText = cfg.rotate.toFixed(1);
+    // --- CONSTRUCTION DE L'ANIMATION GSAP ---
+    function buildAnimation() {
+        if (tl) {
+            tl.scrollTrigger.kill(true);
+            tl.kill();
+        }
 
-  tl = gsap.timeline({
-    scrollTrigger: {
-      trigger: "#pin-wrap",
-      start: "top top",
-      end: "bottom bottom",
-      scrub: 1,
-      pin: "#pin-scene",
-      invalidateOnRefresh: true
+        // --- Paramètres Finaux Figés ---
+        const cfg = {
+            scale: 1.23, // Scale final figé
+            backXInit: -175,
+            backYInit: 0,
+            frontXInit: 86,
+            frontYInit: 240, // Y à 240px figé
+            backX: 15,
+            frontX: 15,
+            rotate: 3.5 // Rotation finale figée
+        };
+
+        // Création de la timeline master ScrollTrigger
+        tl = gsap.timeline({
+            scrollTrigger: {
+                trigger: "#pin-wrap",
+                start: "top top",
+                end: "bottom bottom",
+                scrub: 1, // scrubbing doux pour le contrôle au scroll
+                pin: "#pin-scene",
+                invalidateOnRefresh: true
+            }
+        });
+
+        // 1. Positionnement Initial des supers (sans animation pour démarrer propre)
+        tl.set(backsuper, { x: cfg.backXInit, y: cfg.backYInit, scale: cfg.scale });
+        tl.set(frontsuper, { x: cfg.frontXInit, y: cfg.frontYInit, scale: cfg.scale });
+
+        // 2. Animation de Parallaxe multi-axes (X + Rotation) étalée uniformément (duration: 1)
+        tl.to(backsuper, {
+            xPercent: -cfg.backX, // Distance de scroll relative
+            rotation: -cfg.rotate,
+            ease: "none",
+            duration: 1
+        }, 0); // Démarre au temps 0
+
+        tl.to(frontsuper, {
+            xPercent: cfg.frontX, // Distance de scroll relative, opposée
+            rotation: cfg.rotate,
+            ease: "none",
+            duration: 1
+        }, 0); // Démarre au temps 0
+
+        // 3. Séquençage des textes et compteurs
+        tl.to("#hero-title", { opacity: 0, y: -40, ease: "power2.inOut", duration: 0.1 }, 0.05)
+          
+          .fromTo("#mission-content", { opacity: 0, y: 40 }, { opacity: 1, y: 0, ease: "power2.out", duration: 0.1 }, 0.15)
+          .to({}, { 
+              onStart: () => triggerMissionCounter(),
+              onReverseComplete: () => { document.getElementById('mpct').innerText = "0%"; }
+          }, 0.18)
+          .to("#mission-content", { opacity: 0, y: -40, ease: "power2.in", duration: 0.1 }, 0.35)
+          
+          .fromTo("#amount-layer", { opacity: 0, y: 40 }, { opacity: 1, y: 0, ease: "power2.out", duration: 0.1 }, 0.45)
+          // Calcul de la progression (ex: objectif $100k)
+          .to("#progress-fill", { width: () => Math.min((realAmount / 100000) * 100, 100) + "%", ease: "power3.out", duration: 0.15 }, 0.48)
+          .to("#amount-layer", { opacity: 0, y: -40, ease: "power2.in", duration: 0.1 }, 0.65)
+          
+          .fromTo("#story-layer", { opacity: 0, y: 40 }, { opacity: 1, y: 0, ease: "power2.out", duration: 0.1 }, 0.72)
+          .to({}, { onStart: () => triggerTypewriter() }, 0.75)
+          .to("#story-layer", { opacity: 0, y: -40, ease: "power2.in", duration: 0.1 }, 0.88)
+          
+          .fromTo("#quote-layer", { opacity: 0, y: 40 }, { opacity: 1, y: 0, ease: "power2.out", duration: 0.1 }, 0.92);
+
+        ScrollTrigger.refresh();
     }
-  });
 
-  tl.fromTo(backsuper, 
-    { x: cfg.backXInit, y: cfg.backYInit, xPercent: 0, rotation: 0, scale: cfg.scale },
-    { x: cfg.backXInit, y: cfg.backYInit, xPercent: -cfg.backX, rotation: -cfg.rotate, scale: cfg.scale, ease: "none", duration: 1 }, 
-    0
-  );
+    // Reconstruction de l'animation au chargement
+    window.addEventListener('DOMContentLoaded', buildAnimation);
 
-  tl.fromTo(frontsuper, 
-    { x: cfg.frontXInit, y: cfg.frontYInit, xPercent: 0, rotation: 0, scale: cfg.scale },
-    { x: cfg.frontXInit, y: cfg.frontYInit, xPercent: cfg.frontX, rotation: cfg.rotate, scale: cfg.scale, ease: "none", duration: 1 }, 
-    0
-  );
+    // -- Fonctions d'exécution asynchrones liées au scroll ---
+    let counterFired = false;
+    function triggerMissionCounter() {
+        if (counterFired) return;
+        counterFired = true;
+        let o = { v: 0 };
+        gsap.to(o, {
+            v: 100,
+            duration: 1.5,
+            ease: "power2.out",
+            onUpdate: () => { document.getElementById('mpct').innerText = Math.ceil(o.v) + '%'; }
+        });
+    }
 
-  tl.to("#hero-title", { opacity: 0, y: -40, ease: "power2.inOut", duration: 0.1 }, 0.05)
-    .fromTo("#mission-content", { opacity: 0, y: 40 }, { opacity: 1, y: 0, ease: "power2.out", duration: 0.1 }, 0.15)
-    .to({}, { 
-      onStart: () => triggerMissionCounter(),
-      onReverseComplete: () => { document.getElementById('mpct').innerText = "0%"; }
-    }, 0.18)
-    .to("#mission-content", { opacity: 0, y: -40, ease: "power2.in", duration: 0.1 }, 0.35)
-    .fromTo("#amount-layer", { opacity: 0, y: 40 }, { opacity: 1, y: 0, ease: "power2.out", duration: 0.1 }, 0.45)
-    .to("#progress-fill", { width: () => pct + "%", ease: "power3.out", duration: 0.15 }, 0.48)
-    .to("#amount-layer", { opacity: 0, y: -40, ease: "power2.in", duration: 0.1 }, 0.65)
-    .fromTo("#story-layer", { opacity: 0, y: 40 }, { opacity: 1, y: 0, ease: "power2.out", duration: 0.1 }, 0.72)
-    .to({}, { onStart: () => triggerTypewriter() }, 0.75)
-    .to("#story-layer", { opacity: 0, y: -40, ease: "power2.in", duration: 0.1 }, 0.88)
+    let typewriterFired = false;
+    function triggerTypewriter() {
+        if (typewriterFired) return;
+        typewriterFired = true;
+        startTypewriter();
+    }
+
+    // --- CURSEUR CLIGNOTANT POUR LE TYPEWRITER ---
+    gsap.fromTo("#cursor", { opacity: 0 }, { opacity: 1, repeat: -1, duration: 0.35, ease: "steps(1)", yoyo: true });
+
+    const phrases = storedPhrases.length ? storedPhrases : DEFAULT_PHRASES;
+    let cur = 0, del = false, tx = '';
+    const twEl = document.getElementById('typewriter-text');
+
+    function startTypewriter() {
+        function loop() {
+            if (!twEl) return;
+            const f = phrases[cur];
+            tx = del ? f.substring(0, tx.length - 1) : f.substring(0, tx.length + 1);
+            twEl.textContent = tx;
+            let s = del ? 30 : 70; // Vitesse effaçage vs écriture
+            
+            if (!del && tx === f) { s = 2500; del = true; } // Pause à la fin d'une phrase
+            else if (del && tx === '') { del = false; cur = (cur + 1) % phrases.length; s = 300; } // Prochaine phrase
+            
+            setTimeout(loop, s);
+        }
+        loop();
+    }
+
+    // --- COPIER L'ADRESSE DU CONTRAT (CA) ---
+    document.getElementById('ca-text').onclick = function () {
+        navigator.clipboard.writeText(this.innerText.trim());
+        this.innerText = 'Copié !';
+        setTimeout(() => this.innerText = '3t4GiENDepWKkGicwDoMz2V2fWDZXHLAoJ3ZrpZQpump', 2000);
+    };
+
+    // --- SYSTÈME DE PARTICULES (NEIGE QUI MONTE) ---
+    const cv = document.getElementById('particles');
+    const cx = cv.getContext('2d');
+    let W, H;
     
-    // Le footer apparaît simultanément avec la dernière phrase à la toute fin du scroll
-    .fromTo("#quote-layer", { opacity: 0, y: 40 }, { opacity: 1, y: 0, ease: "power2.out", duration: 0.1 }, 0.92)
-    .to("#main-footer", { opacity: 1, ease: "power2.out", duration: 0.08 }, 0.92);
-
-  ScrollTrigger.refresh();
-}
-
-document.querySelectorAll('#dev-control-panel input').forEach(input => {
-  input.addEventListener('input', buildAnimation);
-});
-
-window.addEventListener('DOMContentLoaded', buildAnimation);
-
-// ENGINE DE DRAG DE SURFACE POUR LE PANNEAU (SANS BIBLIOTHÈQUE EXTERNE)
-(function setupDraggablePanel() {
-  const panel = document.getElementById('dev-control-panel');
-  const handle = panel.querySelector('.panel-handle');
-  let isDragging = false;
-  let startX, startY, initialLeft, initialTop;
-
-  handle.addEventListener('mousedown', (e) => {
-    isDragging = true;
-    startX = e.clientX;
-    startY = e.clientY;
-    const rect = panel.getBoundingClientRect();
-    initialLeft = rect.left;
-    initialTop = rect.top;
+    function rsz() { W = cv.width = innerWidth; H = cv.height = innerHeight; }
+    rsz();
+    window.addEventListener('resize', rsz);
     
-    // Switch de styles temporaires pour éviter les glitchs visuels au drag
-    panel.style.right = 'auto';
-    panel.style.bottom = 'auto';
-    document.addEventListener('mousemove', onMouseMove);
-    document.addEventListener('mouseup', onMouseUp);
-  });
-
-  function onMouseMove(e) {
-    if (!isDragging) return;
-    const dx = e.clientX - startX;
-    const dy = e.clientY - startY;
-    panel.style.left = (initialLeft + dx) + 'px';
-    panel.style.top = (initialTop + dy) + 'px';
-  }
-
-  function onMouseUp() {
-    isDragging = false;
-    document.removeEventListener('mousemove', onMouseMove);
-    document.removeEventListener('mouseup', onMouseUp);
-  }
-})();
-
-let counterFired = false;
-function triggerMissionCounter() {
-  if (counterFired) return;
-  counterFired = true;
-  let o = { v: 0 };
-  gsap.to(o, {
-    v: 100,
-    duration: 1.5,
-    ease: "power2.out",
-    onUpdate: () => { document.getElementById('mpct').innerText = Math.ceil(o.v) + '%'; }
-  });
-}
-
-let typewriterFired = false;
-function triggerTypewriter() {
-  if (typewriterFired) return;
-  typewriterFired = true;
-  startTypewriter();
-}
-
-gsap.fromTo("#cursor", { opacity: 0 }, { opacity: 1, repeat: -1, duration: 0.35, ease: "steps(1)", yoyo: true });
-
-const phrases = storedPhrases.length ? storedPhrases : DEFAULT_PHRASES;
-let cur = 0, del = false, tx = '';
-const twEl = document.getElementById('typewriter-text');
-
-function startTypewriter() {
-  function loop() {
-    if (!twEl) return;
-    const f = phrases[cur];
-    tx = del ? f.substring(0, tx.length - 1) : f.substring(0, tx.length + 1);
-    twEl.textContent = tx;
-    let s = del ? 30 : 70;
-    if (!del && tx === f)      { s = 2500; del = true; }
-    else if (del && tx === '') { del = false; cur = (cur + 1) % phrases.length; s = 300; }
-    setTimeout(loop, s);
-  }
-  loop();
-}
-
-document.getElementById('ca-text').onclick = function () {
-  navigator.clipboard.writeText(this.innerText.trim());
-  this.innerText = 'Copied!';
-  setTimeout(() => this.innerText = '3t4GiENDepWKkGicwDoMz2V2fWDZXHLAoJ3ZrpZQpump', 2000);
-};
-
-const cv = document.getElementById('particles');
-const cx = cv.getContext('2d');
-let W, H;
-function rsz() { W = cv.width = innerWidth; H = cv.height = innerHeight; }
-rsz(); window.addEventListener('resize', rsz);
-const pts = Array(60).fill(0).map(() => ({
-  x: Math.random() * innerWidth,
-  y: Math.random() * innerHeight,
-  r: Math.random() * 1.2 + 0.2,
-  vy: Math.random() * 0.15 + 0.05,
-  o: Math.random() * 0.4 + 0.1
-}));
-(function anim() {
-  cx.clearRect(0, 0, W, H);
-  pts.forEach(p => {
-    p.y -= p.vy; if (p.y < 0) p.y = H;
-    cx.fillStyle = `rgba(255,255,255,${p.o})`;
-    cx.beginPath(); cx.arc(p.x, p.y, p.r, 0, Math.PI * 2); cx.fill();
-  });
-  requestAnimationFrame(anim);
-})();
+    // Création des points de neige
+    const pts = Array(60).fill(0).map(() => ({
+        x: Math.random() * innerWidth,
+        y: Math.random() * innerHeight,
+        r: Math.random() * 1.2 + 0.2, // Taille
+        vy: Math.random() * 0.15 + 0.05, // Vitesse verticale
+        o: Math.random() * 0.4 + 0.1 // Opacité
+    }));
+    
+    // Boucle d'animation des particules
+    (function anim() {
+        cx.clearRect(0, 0, W, H);
+        pts.forEach(p => {
+            p.y -= p.vy; // Remonte
+            if (p.y < 0) p.y = H; // Recommence en bas
+            cx.fillStyle = `rgba(255,255,255,${p.o})`;
+            cx.beginPath();
+            cx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+            cx.fill();
+        });
+        requestAnimationFrame(anim);
+    })();
 </script>
 </body>
 </html>
+
+```
