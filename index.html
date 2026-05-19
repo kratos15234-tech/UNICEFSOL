@@ -17,7 +17,6 @@
             color: #fff;
             overflow-x: hidden;
             background-color: #020105;
-            /* Fond Solana : dégradés vifs fusionnés vers un noir profond */
             background-image: 
                 radial-gradient(circle at 85% 75%, rgba(153, 69, 255, 0.4) 0%, transparent 55%),
                 radial-gradient(circle at 15% 25%, rgba(20, 241, 149, 0.25) 0%, transparent 50%),
@@ -70,7 +69,6 @@
         }
         .btn:hover { background: rgba(255, 255, 255, 0.08); border-color: rgba(255, 255, 255, 0.3); transform: translateY(-2px); }
         
-        /* Bouton d'achat Solana Dégradé ultra-vif */
         .btn-buy { 
             background: linear-gradient(90deg, #14F195 0%, #9945FF 100%); 
             color: #ffffff; 
@@ -237,19 +235,23 @@
         #quote-layer h2 { font-size: clamp(3rem, 7vw, 5.5rem); font-weight: 800; line-height: 1.05; letter-spacing: -2px; }
         #quote-layer .accent { background: linear-gradient(90deg, #14F195, #9945FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        /* ── FOOTER POSITIONNÉ À LA FIN DU SITE ── */
+        /* ── FOOTER FIXÉ ET PILOTÉ PAR GSAP ── */
         footer {
-            position: relative;
+            position: fixed;
+            bottom: 20px;
+            left: 0;
             width: 100%;
             text-align: center;
             font-size: 0.7rem;
             z-index: 10;
             letter-spacing: 0.5px;
             line-height: 1.6;
-            padding: 50px 20px;
-            margin-top: -100px;
+            padding: 0 20px;
             color: rgba(153, 69, 255, 0.6); 
             background: transparent;
+            opacity: 0; /* Reste caché par défaut */
+            pointer-events: none; /* Désactivé tant qu'il n'est pas visible */
+            will-change: opacity;
         }
         footer a { color: rgba(20, 241, 149, 0.8); text-decoration: none; }
         footer a:hover { color: #14F195; }
@@ -330,7 +332,7 @@
             <h2>Crypto trading can<br><span class="accent">save a life.</span></h2>
         </div>
 
-    </div></div><footer>
+    </div></div><footer id="main-footer">
     Community Charity Project • Not Financial Advice • Invest Responsibly<br>
     <span style="opacity:0.7;">UNICEF is an independent community charity token on Solana. Not affiliated with, endorsed by, or operated by the UNICEF® Foundation.</span></footer><script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script><script>
     gsap.registerPlugin(ScrollTrigger);
@@ -431,7 +433,9 @@
           .to({}, { onStart: () => triggerTypewriter() }, 0.75)
           .to("#story-layer", { opacity: 0, y: -40, ease: "power2.in", duration: 0.1 }, 0.88)
           
-          .fromTo("#quote-layer", { opacity: 0, y: 40 }, { opacity: 1, y: 0, ease: "power2.out", duration: 0.1 }, 0.92);
+          // Entrée synchrone de l'écran final ET du footer (opacity 0 -> 1)
+          .fromTo("#quote-layer", { opacity: 0, y: 40 }, { opacity: 1, y: 0, ease: "power2.out", duration: 0.1 }, 0.92)
+          .fromTo("#main-footer", { opacity: 0, pointerEvents: "none" }, { opacity: 1, pointerEvents: "auto", ease: "power2.out", duration: 0.1 }, 0.92);
 
         ScrollTrigger.refresh();
     }
