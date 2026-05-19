@@ -25,7 +25,6 @@
       background-attachment: fixed;
     }
 
-    /* ── ARRIÈRE-PLANS FLUIDES ── */
     #bg-gradient {
       position: fixed;
       inset: 0;
@@ -34,7 +33,7 @@
     }
     canvas#particles { position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: 0.6; }
 
-    /* ── HEADER FUTURISTE (GLASSMORPHISM) ── */
+    /* ── HEADER GLASSMORPHISM ── */
     header {
       position: fixed;
       top: 20px;
@@ -71,27 +70,38 @@
     .btn-buy { background: #14F195; color: #020105; border: none; font-weight: 700; box-shadow: 0 4px 20px rgba(20, 241, 149, 0.25); }
     .btn-buy:hover { background: #12d885; box-shadow: 0 6px 24px rgba(20, 241, 149, 0.4); transform: translateY(-2px); }
 
-    /* ── STRUCTURE DE SCROLL ── */
-    #pin-wrap { position: relative; height: 700vh; }
+    /* ── STRUCTURE ── */
+    #pin-wrap { position: relative; height: 750vh; }
     #pin-scene { position: sticky; top: 0; height: 100vh; overflow: hidden; }
 
-    /* ── DÉCORS SUPER (PARALLAXE ÉVOLUTIF) ── */
+    /* ── SUPERS (FIXES ET SANS TROUS EN BAS) ── */
     #backsuper, #frontsuper {
       position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;               /* Aligné parfaitement en bas */
-      height: 120vh;           /* Plus haut que l'écran pour anticiper la montée */
-      background-size: cover;
+      inset: 0;
       background-repeat: no-repeat;
       mix-blend-mode: screen;
       pointer-events: none;
       will-change: transform, opacity;
+      transform-origin: bottom center; /* L'animation se base sur le bas pour éviter les décollements */
     }
-    #backsuper { background-image: url('backsuper.png'); background-position: center bottom; z-index: 1; }
-    #frontsuper { background-image: url('frontsuper.png'); background-position: center bottom; z-index: 5; }
+    
+    /* Le fond s'aligne à gauche par défaut */
+    #backsuper { 
+      background-image: url('backsuper.png'); 
+      background-position: left bottom; 
+      background-size: contain; 
+      z-index: 1; 
+    }
+    
+    /* Le premier plan s'aligne à droite pour garder la belle partie */
+    #frontsuper { 
+      background-image: url('frontsuper.png'); 
+      background-position: right bottom; 
+      background-size: contain; 
+      z-index: 5; 
+    }
 
-    /* ── CALQUES DE CONTENU ASYMÉTRIQUES ── */
+    /* ── CONTENUS ── */
     .layer {
       position: absolute;
       inset: 0;
@@ -104,7 +114,6 @@
       will-change: transform, opacity;
     }
 
-    /* ── CONTENU : HERO ── */
     #hero-title { align-items: flex-start; text-align: left; max-width: 800px; }
     #hero-title .line {
       display: block;
@@ -122,7 +131,6 @@
       -webkit-text-fill-color: transparent;
     }
 
-    /* ── CONTENU : MISSION (LE "WOW" EFFECT) ── */
     #mission-content { align-items: center; text-align: center; }
     .mission-card {
       background: rgba(255, 255, 255, 0.02);
@@ -164,7 +172,6 @@
       margin: 0 auto;
     }
     
-    /* ADRESSE CONTRAT (CA) */
     .ca-display {
       display: inline-flex;
       align-items: center;
@@ -184,7 +191,6 @@
     }
     .ca-display:hover { background: rgba(20, 241, 149, 0.12); border-color: #14F195; transform: scale(1.02); }
 
-    /* ── CONTENU : AMOUNT ── */
     #amount-layer { align-items: flex-start; text-align: left; }
     .amount-label { text-transform: uppercase; letter-spacing: 4px; font-size: 0.85rem; color: #9945FF; font-weight: 700; margin-bottom: 8px; }
     #total-donations { font-family: 'Space Grotesk', sans-serif; font-size: clamp(4rem, 10vw, 7.5rem); font-weight: 700; letter-spacing: -3px; line-height: 1; }
@@ -193,15 +199,12 @@
     #progress-fill { position: absolute; left: 0; top: 0; height: 100%; width: 0%; background: linear-gradient(90deg, #14F195, #9945FF); border-radius: 50px; box-shadow: 0 0 20px rgba(20, 241, 149, 0.6); transition: width 2s cubic-bezier(0.16, 1, 0.3, 1); }
     .goal-labels { display: flex; justify-content: space-between; margin-top: 14px; font-family: 'Space Grotesk', sans-serif; font-size: 0.9rem; color: rgba(255,255,255,0.4); }
 
-    /* ── CONTENU : STORY ── */
     #story-layer { align-items: center; text-align: center; }
     .story-intro { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 400; margin-bottom: 24px; color: rgba(255,255,255,0.6); }
     .story-intro .accent { color: #fff; font-weight: 700; }
     #dynamic-text { font-family: 'Space Grotesk', sans-serif; font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 700; color: #14F195; min-height: 1.2em; }
     #cursor { display: inline-block; width: 4px; height: 0.8em; background: #14F195; margin-left: 8px; vertical-align: middle; animation: blink 0.7s infinite; }
-    @keyframes blink { 0%, 100% { opacity: 1 } 50% { opacity: 0 } }
 
-    /* ── CONTENU : QUOTE ── */
     #quote-layer { align-items: center; text-align: center; }
     #quote-layer h2 { font-size: clamp(3rem, 7vw, 5.5rem); font-weight: 800; line-height: 1.05; letter-spacing: -2px; }
     #quote-layer .accent { background: linear-gradient(90deg, #14F195, #9945FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
@@ -220,25 +223,20 @@
       color: rgba(255, 255, 255, 0.4);
     }
 
-    /* ── RESPONSIVE MOBILE (AVEC LE FIX ALIGNEMENT DROITE) ── */
+    /* ── RESPONSIVE MOBILE ── */
     @media(max-width:768px) {
       header { width: 92%; padding: 12px 20px; top: 12px; }
       .logo-area { font-size: 1.1rem; }
       .logo-area img { height: 24px; }
       .btn { font-size: 0.8rem; padding: 8px 16px; border-radius: 10px; }
       
-      /* Cadrage parfait à droite demandé précédemment */
-      #backsuper, #frontsuper {
-        background-position: right bottom !important;
-        background-size: cover !important;
-      }
+      #backsuper { background-position: left bottom !important; background-size: contain !important; }
+      #frontsuper { background-position: right bottom !important; background-size: contain !important; }
 
       .layer { padding: 0 6%; }
       #hero-title { align-items: center; text-align: center; }
-      
       .mission-card { padding: 40px 24px; border-radius: 24px; }
       .ca-display { font-size: 0.7rem; padding: 10px 16px; word-break: break-all; }
-      
       #total-donations { font-size: clamp(3rem, 12vw, 5rem); }
     }
     @media(max-width:450px) {
@@ -280,9 +278,7 @@
           <span id="mpct">0%</span>
         </div>
         <p class="mission-subtitle">Every buy &amp; every sell — every movement of the token directly protects children around the world.</p>
-        <div class="ca-display" id="ca-text">
-          <span>3t4GiENDepWKkGicwDoMz2V2fWDZXHLAoJ3ZrpZQpump</span>
-        </div>
+        <div class="ca-display" id="ca-text">3t4GiENDepWKkGicwDoMz2V2fWDZXHLAoJ3ZrpZQpump</div>
       </div>
     </div>
 
@@ -371,9 +367,6 @@ const amountL    = document.getElementById('amount-layer');
 const storyL     = document.getElementById('story-layer');
 const quoteL     = document.getElementById('quote-layer');
 const footer     = document.querySelector('footer');
-const h1         = document.getElementById('h1');
-const h2         = document.getElementById('h2');
-const h3         = document.getElementById('h3');
 
 const S = {
   hero:    [0,     0,     0.10,  0.18],
@@ -388,25 +381,24 @@ let progressBarFired    = false;
 let typewriterFired     = false;
 
 function onScroll(p) {
-  // ── HERO TIMING
-  const hIn  = easeOut(local(p, S.hero[0], S.hero[1]));
+  // ── HERO
   const hOut = easeInOut(local(p, S.hero[2], S.hero[3]));
   heroTitle.style.opacity = Math.max(0, 1 - hOut);
-  heroTitle.style.transform = `translateY(${hOut * -40}px) scale(${1 - hOut*0.05})`;
+  heroTitle.style.transform = `translateY(${hOut * -30}px)`;
 
-  const slide = hOut * 120;
-  if (h1) h1.style.transform = `translateX(-${slide}px)`;
-  if (h2) h2.style.transform = `translateX(${slide * 0.5}px)`;
-  if (h3) h3.style.transform = `translateX(-${slide * 0.8}px)`;
+  // ── ANIMATION OPPOSÉE DES SUPERS (ZÉRO TROU EN BAS)
+  // frontsuper glisse vers la droite et pivote un millième de degré depuis le coin inférieur droit
+  frontsuper.style.transform = `translateX(${p * 40}px) rotate(${p * 0.5}deg)`;
+  
+  // backsuper glisse vers la gauche depuis le coin inférieur gauche
+  backsuper.style.transform = `translateX(${p * -40}px) rotate(${p * -0.5}deg)`;
 
-  // ── PARALLAX SUPERS (CORRIGÉ : SANS DÉCOLLEMENT)
+  // Gestion des opacités d'origine
   let bOp = 0.4;
   if (p > 0.30 && p < 0.38) bOp = (1 - easeInOut(local(p, 0.30, 0.38))) * 0.4;
   else if (p >= 0.38 && p < 0.60) bOp = easeOut(local(p, 0.38, 0.44)) * 0.4;
   else if (p >= 0.60) bOp = (1 - easeInOut(local(p, 0.60, 0.68))) * 0.4;
   backsuper.style.opacity = bOp;
-  // Modifié : la valeur reste dans la réserve des 120vh
-  backsuper.style.transform = `translateY(${p * -40}px) scale(${1 + p*0.05})`;
 
   let fOp = 0.6;
   if (p > 0.14 && p < 0.22) fOp = (1 - easeInOut(local(p, 0.14, 0.22))) * 0.6;
@@ -415,14 +407,12 @@ function onScroll(p) {
   else if (p >= 0.68 && p < 0.84) fOp = 0.6;
   else if (p >= 0.84) fOp = (1 - easeInOut(local(p, 0.84, 0.92))) * 0.6;
   frontsuper.style.opacity = fOp;
-  // Modifié : monte un poil plus vite que le fond pour la 3D, mais sans faire de trou
-  frontsuper.style.transform = `translateY(${p * -80}px) scale(${1 + p*0.05})`;
 
-  // ── MISSION TIMING
+  // ── MISSION
   const mIn  = easeOut(local(p, S.mission[0], S.mission[1]));
   const mOut = easeInOut(local(p, S.mission[2], S.mission[3]));
   mission.style.opacity   = Math.max(0, mIn - mOut);
-  mission.style.transform = `translateY(${(1 - mIn) * 40 + mOut * -40}px) scale(${0.95 + mIn*0.05})`;
+  mission.style.transform = `translateY(${(1 - mIn) * 30 + mOut * -30}px)`;
   if (p >= S.mission[0] + 0.02 && !missionCounterFired) {
     missionCounterFired = true;
     let o = { v: 0 };
@@ -430,30 +420,30 @@ function onScroll(p) {
       onUpdate: () => document.getElementById('mpct').innerText = Math.ceil(o.v) + '%' });
   }
 
-  // ── AMOUNT TIMING
+  // ── AMOUNT
   const aIn  = easeOut(local(p, S.amount[0], S.amount[1]));
   const aOut = easeInOut(local(p, S.amount[2], S.amount[3]));
   amountL.style.opacity   = Math.max(0, aIn - aOut);
-  amountL.style.transform = `translateY(${(1 - aIn) * 40 + aOut * -40}px)`;
+  amountL.style.transform = `translateY(${(1 - aIn) * 30 + aOut * -30}px)`;
   if (p >= S.amount[0] + 0.02 && !progressBarFired) {
     progressBarFired = true;
     document.getElementById('progress-fill').style.width = pct + '%';
   }
 
-  // ── STORY TIMING
+  // ── STORY
   const sIn  = easeOut(local(p, S.story[0], S.story[1]));
   const sOut = easeInOut(local(p, S.story[2], S.story[3]));
   storyL.style.opacity   = Math.max(0, sIn - sOut);
-  storyL.style.transform = `translateY(${(1 - sIn) * 40 + sOut * -40}px)`;
+  storyL.style.transform = `translateY(${(1 - sIn) * 30 + sOut * -30}px)`;
   if (p >= S.story[0] + 0.02 && !typewriterFired) {
     typewriterFired = true;
     startTypewriter();
   }
 
-  // ── QUOTE TIMING
+  // ── QUOTE
   const qIn  = easeOut(local(p, S.quote[0], S.quote[1]));
   quoteL.style.opacity   = qIn;
-  quoteL.style.transform = `translateY(${(1 - qIn) * 40}px)`;
+  quoteL.style.transform = `translateY(${(1 - qIn) * 30}px)`;
 
   // ── FOOTER
   footer.style.opacity = local(p, 0.90, 1.0);
@@ -490,12 +480,11 @@ function startTypewriter() {
 // COPY CONTRACT
 document.getElementById('ca-text').onclick = function () {
   navigator.clipboard.writeText(this.innerText.trim());
-  const original = this.innerHTML;
-  this.innerText = 'Copied to clipboard!';
-  setTimeout(() => this.innerHTML = original, 2000);
+  this.innerText = 'Copied!';
+  setTimeout(() => this.innerText = '3t4GiENDepWKkGicwDoMz2V2fWDZXHLAoJ3ZrpZQpump', 2000);
 };
 
-// PARTICLES ENGINE (PLUS FIN ET ÉLÉGANT)
+// PARTICLES
 const cv = document.getElementById('particles');
 const cx = cv.getContext('2d');
 let W, H;
