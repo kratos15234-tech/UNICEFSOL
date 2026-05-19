@@ -74,34 +74,37 @@
     #pin-wrap { position: relative; height: 750vh; }
     #pin-scene { position: sticky; top: 0; height: 100vh; overflow: hidden; }
 
-    /* ── SUPERS (FIXES ET SANS TROUS EN BAS) ── */
+    /* ── SUPERS (TAILLE APPAREIL FIXE — SANS TROU) ── */
     #backsuper, #frontsuper {
       position: absolute;
-      inset: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      top: 0;
       background-repeat: no-repeat;
       mix-blend-mode: screen;
       pointer-events: none;
-      will-change: transform, opacity;
-      transform-origin: bottom center; /* L'animation se base sur le bas pour éviter les décollements */
+      will-change: transform;
+      opacity: 1 !important; /* TOUJOURS VISIBLE SANS EFFET DE SUPPRESSION */
     }
     
-    /* Le fond s'aligne à gauche par défaut */
     #backsuper { 
       background-image: url('backsuper.png'); 
       background-position: left bottom; 
       background-size: contain; 
-      z-index: 1; 
+      z-index: 1;
+      transform-origin: bottom left; /* Point d'ancrage fixe pour éviter les trous */
     }
     
-    /* Le premier plan s'aligne à droite pour garder la belle partie */
     #frontsuper { 
       background-image: url('frontsuper.png'); 
       background-position: right bottom; 
       background-size: contain; 
-      z-index: 5; 
+      z-index: 5;
+      transform-origin: bottom right; /* Point d'ancrage fixe pour préserver la partie droite */
     }
 
-    /* ── CONTENUS ── */
+    /* ── CONTENUS LAYERS ── */
     .layer {
       position: absolute;
       inset: 0;
@@ -209,13 +212,14 @@
     #quote-layer h2 { font-size: clamp(3rem, 7vw, 5.5rem); font-weight: 800; line-height: 1.05; letter-spacing: -2px; }
     #quote-layer .accent { background: linear-gradient(90deg, #14F195, #9945FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
+    /* FOOTER TOUJOURS VISIBLE ET ACCESSIBLE */
     footer {
       position: fixed;
       bottom: 20px;
       width: 100%;
       text-align: center;
       font-size: 0.7rem;
-      opacity: 0;
+      opacity: 0.75 !important; /* Suppression de l'animation de disparition */
       z-index: 100;
       letter-spacing: 0.5px;
       line-height: 1.6;
@@ -366,7 +370,6 @@ const mission    = document.getElementById('mission-content');
 const amountL    = document.getElementById('amount-layer');
 const storyL     = document.getElementById('story-layer');
 const quoteL     = document.getElementById('quote-layer');
-const footer     = document.querySelector('footer');
 
 const S = {
   hero:    [0,     0,     0.10,  0.18],
@@ -386,27 +389,10 @@ function onScroll(p) {
   heroTitle.style.opacity = Math.max(0, 1 - hOut);
   heroTitle.style.transform = `translateY(${hOut * -30}px)`;
 
-  // ── ANIMATION OPPOSÉE DES SUPERS (ZÉRO TROU EN BAS)
-  // frontsuper glisse vers la droite et pivote un millième de degré depuis le coin inférieur droit
-  frontsuper.style.transform = `translateX(${p * 40}px) rotate(${p * 0.5}deg)`;
-  
-  // backsuper glisse vers la gauche depuis le coin inférieur gauche
-  backsuper.style.transform = `translateX(${p * -40}px) rotate(${p * -0.5}deg)`;
-
-  // Gestion des opacités d'origine
-  let bOp = 0.4;
-  if (p > 0.30 && p < 0.38) bOp = (1 - easeInOut(local(p, 0.30, 0.38))) * 0.4;
-  else if (p >= 0.38 && p < 0.60) bOp = easeOut(local(p, 0.38, 0.44)) * 0.4;
-  else if (p >= 0.60) bOp = (1 - easeInOut(local(p, 0.60, 0.68))) * 0.4;
-  backsuper.style.opacity = bOp;
-
-  let fOp = 0.6;
-  if (p > 0.14 && p < 0.22) fOp = (1 - easeInOut(local(p, 0.14, 0.22))) * 0.6;
-  else if (p >= 0.14 && p < 0.60) fOp = 0;
-  else if (p >= 0.60 && p < 0.68) fOp = easeOut(local(p, 0.60, 0.68)) * 0.6;
-  else if (p >= 0.68 && p < 0.84) fOp = 0.6;
-  else if (p >= 0.84) fOp = (1 - easeInOut(local(p, 0.84, 0.92))) * 0.6;
-  frontsuper.style.opacity = fOp;
+  // ── PARALLAXE MULTI-AXES INVERSÉE (ZÉRO TROU GARANTI)
+  // Utilisation de déplacements et de légères rotations ancrées sur le bas de la fenêtre.
+  frontsuper.style.transform = `translateX(${p * 35}px) rotate(${p * 0.4}deg)`;
+  backsuper.style.transform = `translateX(${p * -35}px) rotate(${p * -0.4}deg)`;
 
   // ── MISSION
   const mIn  = easeOut(local(p, S.mission[0], S.mission[1]));
@@ -444,9 +430,6 @@ function onScroll(p) {
   const qIn  = easeOut(local(p, S.quote[0], S.quote[1]));
   quoteL.style.opacity   = qIn;
   quoteL.style.transform = `translateY(${(1 - qIn) * 30}px)`;
-
-  // ── FOOTER
-  footer.style.opacity = local(p, 0.90, 1.0);
 }
 
 function getProgress() {
