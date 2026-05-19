@@ -15,12 +15,17 @@
     }
     html, body { min-height: 100vh; overflow-y: auto; }
     body {
-  font-family: 'Outfit', sans-serif;
-  color: #fff;
-  overflow-x: hidden;
-  background: #9945FF;
-  min-height: 100dvh; /* Assure que le body prend tout l'écran dynamique */
-}
+      font-family: 'Outfit', sans-serif;
+      color: #fff;
+      overflow-x: hidden;
+      background: var(--bg);
+      min-height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px 0;
+    }
     body::before {
       content: ''; position: fixed; inset: 0;
       background-image:
@@ -31,82 +36,56 @@
     .orb1 { position: fixed; width: 600px; height: 600px; background: radial-gradient(circle, rgba(153,69,255,0.12), transparent 70%); top: -200px; left: -200px; pointer-events: none; z-index: 0; }
     .orb2 { position: fixed; width: 400px; height: 400px; background: radial-gradient(circle, rgba(20,241,149,0.08), transparent 70%); bottom: -100px; right: -100px; pointer-events: none; z-index: 0; }
 
-    /* GIF header */
-    .gif-wrap {
-      position: relative; z-index: 1;
-      width: min(520px, 100%);
-      display: flex; flex-direction: column; align-items: center;
-      margin-bottom: 24px;
-    }
-    .gif-wrap iframe {
-      width: 100%; max-width: 320px; height: 320px;
-      border-radius: 16px; border: 1px solid var(--border);
-      display: block;
-    }
-    .gif-credit { font-size: .6rem; color: var(--muted); margin-top: 6px; letter-spacing: 1px; }
-    .gif-credit a { color: var(--muted); text-decoration: none; }
-    .gif-credit a:hover { color: var(--green); }
-
-    /* Card */
     .card {
       position: relative; z-index: 1;
       width: min(520px, 100%);
       background: var(--surface); border: 1px solid var(--border);
-      border-radius: 20px; padding: 40px 44px;
+      border-radius: 20px; padding: 30px 36px;
       backdrop-filter: blur(20px);
     }
     label { display: block; font-size: .7rem; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
-    .divider { height: 1px; background: var(--border); margin: 24px 0; }
+    .divider { height: 1px; background: var(--border); margin: 20px 0; }
 
-    .input-wrap { position: relative; margin-bottom: 20px; }
+    .input-wrap { position: relative; margin-bottom: 10px; }
     .input-wrap .prefix { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); font-family: 'Bebas Neue'; font-size: 1.4rem; color: var(--green); pointer-events: none; }
     input[type="number"] {
       width: 100%; background: rgba(255,255,255,0.04); border: 1px solid var(--border);
       border-radius: 10px; color: #fff; font-family: 'Bebas Neue'; font-size: 1.8rem;
-      padding: 16px 16px 16px 38px; outline: none;
-      transition: border-color .25s, box-shadow .25s; -moz-appearance: textfield;
+      padding: 12px 16px 12px 38px; outline: none;
     }
-    input[type="number"]::-webkit-outer-spin-button,
-    input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; }
-    input[type="number"]:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(20,241,149,0.08); }
+    input[type="number"]:focus { border-color: var(--green); }
 
-    .preview-block { margin-bottom: 8px; }
-    .preview-label { display: flex; justify-content: space-between; align-items: center; font-size: .7rem; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); margin-bottom: 10px; }
-    .preview-label span { color: var(--green); font-family: 'Bebas Neue'; font-size: 1rem; letter-spacing: 1px; }
-    .bar-track { height: 6px; background: rgba(255,255,255,0.08); border-radius: 50px; overflow: hidden; }
-    .bar-fill { height: 100%; background: linear-gradient(90deg, var(--green), var(--purple)); border-radius: 50px; box-shadow: 0 0 10px rgba(20,241,149,0.4); transition: width .4s cubic-bezier(.4,0,.2,1); width: 0%; }
-    .goal-labels { display: flex; justify-content: space-between; font-family: 'Bebas Neue'; font-size: .7rem; color: var(--muted); letter-spacing: 1px; margin-top: 6px; }
+    /* Configuration des Sliders */
+    .ctrl-group { border: 1px solid var(--border); padding: 12px; border-radius: 12px; margin-bottom: 12px; background: rgba(0,0,0,0.2); }
+    .ctrl-group-title { color: var(--green); font-family: 'Bebas Neue'; font-size: 1.1rem; letter-spacing: 1px; margin-bottom: 8px; text-transform: uppercase; }
+    .ctrl-row { display: flex; flex-direction: column; margin-bottom: 8px; }
+    .ctrl-row:last-child { margin-bottom: 0; }
+    .ctrl-row label { display: flex; justify-content: space-between; font-size: 0.65rem; color: #fff; letter-spacing: 1px; margin-bottom: 4px; }
+    .ctrl-row label span.val { color: var(--purple); font-weight: 600; }
+    .ctrl-row input[type="range"] { width: 100%; accent-color: var(--green); cursor: pointer; background: rgba(255,255,255,0.05); height: 6px; border-radius: 3px; outline: none; }
 
-    .btn-save { width: 100%; padding: 16px; background: linear-gradient(90deg, var(--green), #0fd87f); border: none; border-radius: 10px; font-family: 'Bebas Neue'; font-size: 1.2rem; letter-spacing: 3px; color: #000; cursor: pointer; transition: opacity .2s, transform .15s, box-shadow .2s; box-shadow: 0 0 20px rgba(20,241,149,0.2); margin-bottom: 10px; }
-    .btn-save:hover { opacity: .9; transform: translateY(-1px); box-shadow: 0 4px 24px rgba(20,241,149,0.35); }
-    .btn-save:active { transform: scale(.98); }
-    .btn-back { display: block; text-align: center; text-decoration: none; color: var(--muted); font-size: .75rem; letter-spacing: 2px; transition: color .2s; margin-top: 8px; }
+    .btn-save { width: 100%; padding: 16px; background: linear-gradient(90deg, var(--green), #0fd87f); border: none; border-radius: 10px; font-family: 'Bebas Neue'; font-size: 1.2rem; letter-spacing: 3px; color: #000; cursor: pointer; transition: opacity .2s; box-shadow: 0 0 20px rgba(20,241,149,0.2); margin-top: 10px; }
+    .btn-save:hover { opacity: .9; }
+    .btn-back { display: block; text-align: center; text-decoration: none; color: var(--muted); font-size: .75rem; letter-spacing: 2px; margin-top: 14px; }
     .btn-back:hover { color: #fff; }
 
     .toast { position: fixed; top: 30px; left: 50%; transform: translateX(-50%) translateY(-80px); background: var(--green); color: #000; font-family: 'Bebas Neue'; font-size: 1rem; letter-spacing: 3px; padding: 12px 28px; border-radius: 50px; box-shadow: 0 4px 30px rgba(20,241,149,0.4); transition: transform .35s cubic-bezier(.4,0,.2,1); z-index: 9999; }
     .toast.show { transform: translateX(-50%) translateY(0); }
 
-    /* Gate */
     #gate { position: fixed; inset: 0; z-index: 9998; background: var(--bg); display: flex; align-items: center; justify-content: center; }
     .gate-card { width: min(380px, 90%); background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 40px 36px; text-align: center; }
-    .gate-icon { font-size: 2.5rem; margin-bottom: 16px; }
     .gate-card h2 { font-family: 'Bebas Neue'; font-size: 2rem; margin-bottom: 6px; }
     .gate-card p { color: var(--muted); font-size: .82rem; margin-bottom: 24px; }
-    .gate-input { width: 100%; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 10px; color: #fff; font-family: 'Outfit'; font-size: 1rem; padding: 13px 16px; outline: none; margin-bottom: 12px; text-align: center; letter-spacing: 2px; transition: border-color .25s; }
+    .gate-input { width: 100%; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 10px; color: #fff; font-family: 'Outfit'; font-size: 1rem; padding: 13px 16px; outline: none; margin-bottom: 12px; text-align: center; letter-spacing: 2px; }
     .gate-input:focus { border-color: var(--green); }
-    .gate-input::placeholder { letter-spacing: 1px; opacity: .4; }
-    .gate-btn { width: 100%; padding: 13px; background: linear-gradient(90deg, var(--green), #0fd87f); border: none; border-radius: 10px; font-family: 'Bebas Neue'; font-size: 1.1rem; letter-spacing: 3px; color: #000; cursor: pointer; transition: opacity .2s; }
-    .gate-btn:hover { opacity: .9; }
-    .gate-btn:disabled { opacity: .5; cursor: not-allowed; }
-    .gate-error { color: #ff5050; font-size: .75rem; margin-top: 10px; min-height: 1.2em; }
-    .gate-warn  { color: rgba(255,165,0,0.85); font-size: .72rem; margin-top: 6px; min-height: 1em; }
+    .gate-btn { width: 100%; padding: 13px; background: linear-gradient(90deg, var(--green), #0fd87f); border: none; border-radius: 10px; font-family: 'Bebas Neue'; font-size: 1.1rem; letter-spacing: 3px; color: #000; cursor: pointer; }
+    .gate-error { color: #ff5050; font-size: .75rem; margin-top: 10px; }
   </style>
 </head>
 <body>
 <div class="orb1"></div>
 <div class="orb2"></div>
 
-<!-- ── LOGIN GATE ── -->
 <div id="gate">
   <div class="gate-card">
     <h2>Admin <span style="background:linear-gradient(90deg,#14F195,#9945FF);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Access</span></h2>
@@ -115,12 +94,9 @@
     <input class="gate-input" type="password" id="pwd-input"  placeholder="Password" autocomplete="off">
     <button class="gate-btn" id="login-btn" onclick="checkCreds()">Login</button>
     <p class="gate-error" id="gate-error"></p>
-    <p class="gate-warn"  id="gate-warn"></p>
   </div>
 </div>
 
-
-<!-- ── ADMIN PANEL ── -->
 <div class="card">
   <label>Total Donations Raised</label>
   <div class="input-wrap">
@@ -130,20 +106,48 @@
 
   <div class="divider"></div>
 
-  <button class="btn-save" onclick="saveAll()"> &nbsp;Save Changes</button>
+  <div class="ctrl-group">
+    <div class="ctrl-group-title">1. Global Container Mobile</div>
+    <div class="ctrl-row">
+      <label><span>Container Scale:</span><span class="val" id="v-cscale">1.00</span></label>
+      <input type="range" id="s-cscale" min="0.5" max="2.5" step="0.05" value="1.00" oninput="autoSaveMobileLayout()">
+    </div>
+    <div class="ctrl-row">
+      <label><span>Container X:</span><span class="val" id="v-cx">0px</span></label>
+      <input type="range" id="s-cx" min="-300" max="300" step="2" value="0" oninput="autoSaveMobileLayout()">
+    </div>
+    <div class="ctrl-row">
+      <label><span>Container Y:</span><span class="val" id="v-cy">0px</span></label>
+      <input type="range" id="s-cy" min="-300" max="500" step="2" value="0" oninput="autoSaveMobileLayout()">
+    </div>
+  </div>
+
+  <div class="ctrl-group">
+    <div class="ctrl-group-title">2. Individual Layers Mobile</div>
+    <div class="ctrl-row">
+      <label><span>Back Layer X:</span><span class="val" id="v-bx">0</span></label>
+      <input type="range" id="s-bx" min="-400" max="400" step="5" value="0" oninput="autoSaveMobileLayout()">
+    </div>
+    <div class="ctrl-row">
+      <label><span>Front Layer X:</span><span class="val" id="v-fx">0</span></label>
+      <input type="range" id="s-fx" min="-400" max="400" step="5" value="0" oninput="autoSaveMobileLayout()">
+    </div>
+  </div>
+
+  <button class="btn-save" onclick="saveAmountOnly()">Save Amount & Phrases</button>
   <a href="index.html" class="btn-back">← back to main site</a>
 </div>
 
-<div class="toast" id="toast">SAVED ✓</div>
+<div class="toast" id="toast">UPDATED ✓</div>
 
 <script>
   const HASH_USER = "9db955bc5af848209fc3b60ea02de9062e68c1c76927d62077a93a4eafc690b3";
   const HASH_PASS = "8880ad4a09aae87264c42db9b095b07716152aebac743249e3beeb8f0f7bbd84";
 
   let currentPassword = '';
-
-  let attempts    = parseInt(sessionStorage.getItem('adm_try')    || '0');
+  let attempts = parseInt(sessionStorage.getItem('adm_try') || '0');
   let lockedUntil = parseInt(sessionStorage.getItem('adm_locked') || '0');
+  let autoSaveTimeout;
 
   async function sha256(str) {
     const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
@@ -153,53 +157,38 @@
   async function checkCreds() {
     const now = Date.now();
     if (now < lockedUntil) {
-      const mins = Math.ceil((lockedUntil - now) / 60000);
-      document.getElementById('gate-error').textContent = `Too many attempts. Try again in ${mins} min.`;
+      document.getElementById('gate-error').textContent = `Locked.`;
       return;
     }
     const btn = document.getElementById('login-btn');
-    btn.disabled = true; btn.textContent = '...';
+    btn.disabled = true;
 
     const [hu, hp] = await Promise.all([
       sha256(document.getElementById('user-input').value),
       sha256(document.getElementById('pwd-input').value)
     ]);
 
-currentPassword = document.getElementById('pwd-input').value;
+    currentPassword = document.getElementById('pwd-input').value;
     
     if (hu === HASH_USER && hp === HASH_PASS) {
-      sessionStorage.removeItem('adm_try');
-      sessionStorage.removeItem('adm_locked');
       document.getElementById('gate').style.display = 'none';
       init();
     } else {
       attempts++;
       sessionStorage.setItem('adm_try', attempts);
-      document.getElementById('pwd-input').value = '';
       if (attempts >= 5) {
-        lockedUntil = Date.now() + 5 * 60 * 1000;
-        sessionStorage.setItem('adm_locked', lockedUntil);
-        document.getElementById('gate-error').textContent = 'Account locked for 5 minutes.';
-        document.getElementById('gate-warn').textContent  = '';
-      } else {
-        const left = 5 - attempts;
-        document.getElementById('gate-error').textContent = 'Incorrect credentials.';
-        document.getElementById('gate-warn').textContent  = `${left} attempt${left > 1 ? 's' : ''} remaining.`;
+        sessionStorage.setItem('adm_locked', Date.now() + 5 * 60 * 1000);
       }
-      btn.disabled = false; btn.textContent = 'Login';
+      document.getElementById('gate-error').textContent = 'Incorrect credentials.';
+      btn.disabled = false;
     }
   }
-
-  ['user-input', 'pwd-input'].forEach(id =>
-    document.getElementById(id).addEventListener('keydown', e => { if (e.key === 'Enter') checkCreds(); })
-  );
 
   function computeStats(amt) {
     return {
       vaccines: Math.floor(amt / 0.491),
       food:     Math.floor(amt / 2.46),
-      water:    Math.floor(amt / 1.686),
-      pct:      Math.min((amt / 100000) * 100, 100)
+      water:    Math.floor(amt / 1.686)
     };
   }
 
@@ -207,59 +196,88 @@ currentPassword = document.getElementById('pwd-input').value;
     const s = computeStats(amt);
     return [
       s.vaccines.toLocaleString() + " polio vaccines",
-      s.food.toLocaleString()     + " days of essential food",
+      s.food.toLocaleString()     + " days of essential nutrition",
       s.water.toLocaleString()    + " clean water kits",
-      "a second chance for thousands"
+      "a second chance for thousands of children"
     ];
   }
 
-  function updatePreview(amt) {
-    const s = computeStats(amt);
-    const p = s.pct.toFixed(2);
-    document.getElementById('bar-fill').style.width = p + '%';
-    document.getElementById('pct-label').textContent = p + '%';
+  // Fonction d'auto-sauvegarde déclenchée par les sliders
+  function autoSaveMobileLayout() {
+    const cscale = parseFloat(document.getElementById('s-cscale').value);
+    const cx = parseInt(document.getElementById('s-cx').value);
+    const cy = parseInt(document.getElementById('s-cy').value);
+    const bx = parseInt(document.getElementById('s-bx').value);
+    const fx = parseInt(document.getElementById('s-fx').value);
+
+    // Mettre à jour l'affichage des labels en direct
+    document.getElementById('v-cscale').innerText = cscale.toFixed(2);
+    document.getElementById('v-cx').innerText = cx + "px";
+    document.getElementById('v-cy').innerText = cy + "px";
+    document.getElementById('v-bx').innerText = bx;
+    document.getElementById('v-fx').innerText = fx;
+
+    // Évite le spam sur la BDD : Attend 400ms sans action avant d'envoyer la requête
+    clearTimeout(autoSaveTimeout);
+    autoSaveTimeout = setTimeout(async () => {
+      try {
+        await fetch('/api/update-amount', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            password: currentPassword,
+            mobileLayout: { containerScale: cscale, containerX: cx, containerY: cy, backX: bx, frontX: fx }
+          })
+        });
+        showToast();
+      } catch (e) { console.error("Auto-save configuration error", e); }
+    }, 400);
   }
 
-  async function saveAll() {
-  const amt = parseFloat(document.getElementById('amount-input').value) || 0;
-  const btn = document.querySelector('.btn-save');
-  const originalText = btn.innerHTML;
-  btn.textContent = '...Sauvegarde...';
-
-  try {
-    const response = await fetch('/api/update-amount', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ newAmount: amt, password: currentPassword })
-    });
-
-    if (response.ok) {
-      localStorage.setItem('unicef_phrases', JSON.stringify(buildPhrases(amt))); // Garde ça local si tu veux
-      const t = document.getElementById('toast');
-      t.classList.add('show'); 
-      setTimeout(() => t.classList.remove('show'), 2500);
-    } else {
-      alert("Erreur : Non autorisé ou problème serveur.");
-    }
-  } catch (e) {
-    alert("Erreur de connexion.");
+  function showToast() {
+    const t = document.getElementById('toast');
+    t.classList.add('show'); 
+    setTimeout(() => t.classList.remove('show'), 1500);
   }
-  
-  btn.innerHTML = originalText;
-}
 
+  async function saveAmountOnly() {
+    const amt = parseFloat(document.getElementById('amount-input').value) || 0;
+    try {
+      const response = await fetch('/api/update-amount', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ newAmount: amt, password: currentPassword })
+      });
+      if (response.ok) {
+        localStorage.setItem('unicef_phrases', JSON.stringify(buildPhrases(amt)));
+        showToast();
+      } else { alert("Error: Unauthorized."); }
+    } catch (e) { alert("Network error."); }
+  }
 
   async function init() {
-  try {
-    const res = await fetch('/api/get-amount');
-    const data = await res.json();
-    
-    // On affiche la valeur reçue du serveur
-    document.getElementById('amount-input').value = data.amount || 20931.49;
-  } catch (e) {
-    console.error("Impossible de lire le montant actuel", e);
+    try {
+      const res = await fetch('/api/get-amount');
+      const data = await res.json();
+      
+      document.getElementById('amount-input').value = data.amount || 20931.49;
+
+      if(data.mobileLayout) {
+        const m = data.mobileLayout;
+        document.getElementById('s-cscale').value = m.containerScale ?? 1.00;
+        document.getElementById('s-cx').value = m.containerX ?? 0;
+        document.getElementById('s-cy').value = m.containerY ?? 0;
+        document.getElementById('s-bx').value = m.backX ?? 0;
+        document.getElementById('s-fx').value = m.frontX ?? 0;
+
+        document.getElementById('v-cscale').innerText = (m.containerScale ?? 1.00).toFixed(2);
+        document.getElementById('v-cx').innerText = (m.containerX ?? 0) + "px";
+        document.getElementById('v-cy').innerText = (m.containerY ?? 0) + "px";
+        document.getElementById('v-bx').innerText = m.backX ?? 0;
+        document.getElementById('v-fx').innerText = m.frontX ?? 0;
+      }
+    } catch (e) { console.error("Error loading values.", e); }
   }
-}
 </script>
 </body>
 </html>
