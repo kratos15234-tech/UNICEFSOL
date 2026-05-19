@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>$unicef — admin</title>
+  <title>Admin</title>
   <link rel="icon" type="image/png" href="logo.png">
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
@@ -55,7 +55,6 @@
     }
     input[type="number"]:focus { border-color: var(--green); }
 
-    /* Configuration des Sliders */
     .ctrl-group { border: 1px solid var(--border); padding: 12px; border-radius: 12px; margin-bottom: 12px; background: rgba(0,0,0,0.2); }
     .ctrl-group-title { color: var(--green); font-family: 'Bebas Neue'; font-size: 1.1rem; letter-spacing: 1px; margin-bottom: 8px; text-transform: uppercase; }
     .ctrl-row { display: flex; flex-direction: column; margin-bottom: 8px; }
@@ -69,7 +68,7 @@
     .btn-back { display: block; text-align: center; text-decoration: none; color: var(--muted); font-size: .75rem; letter-spacing: 2px; margin-top: 14px; }
     .btn-back:hover { color: #fff; }
 
-    .toast { position: fixed; top: 30px; left: 50%; transform: translateX(-50%) translateY(-80px); background: var(--green); color: #000; font-family: 'Bebas Neue'; font-size: 1rem; letter-spacing: 3px; padding: 12px 28px; border-radius: 50px; box-shadow: 0 4px 30px rgba(20,241,149,0.4); transition: transform .35s cubic-bezier(.4,0,.2,1); z-index: 9999; }
+    .toast { position: fixed; top: 30px; left: 50%; transform: translateX(-50%) translateY(-80px); background: var(--green); color: #000; font-family: 'Bebas Neue'; font-size: 1rem; letter-spacing: 3px; padding: 12px 28px; border-radius: 50px; box-shadow: 0 4px 30px rgba(20, 241, 149, 0.4); transition: transform .35s cubic-bezier(.4,0,.2,1); z-index: 9999; }
     .toast.show { transform: translateX(-50%) translateY(0); }
 
     #gate { position: fixed; inset: 0; z-index: 9998; background: var(--bg); display: flex; align-items: center; justify-content: center; }
@@ -129,8 +128,16 @@
       <input type="range" id="s-bx" min="-400" max="400" step="5" value="0" oninput="autoSaveMobileLayout()">
     </div>
     <div class="ctrl-row">
+      <label><span>Back Layer Y:</span><span class="val" id="v-by">0</span></label>
+      <input type="range" id="s-by" min="-400" max="400" step="5" value="0" oninput="autoSaveMobileLayout()">
+    </div>
+    <div class="ctrl-row">
       <label><span>Front Layer X:</span><span class="val" id="v-fx">0</span></label>
       <input type="range" id="s-fx" min="-400" max="400" step="5" value="0" oninput="autoSaveMobileLayout()">
+    </div>
+    <div class="ctrl-row">
+      <label><span>Front Layer Y:</span><span class="val" id="v-fy">0</span></label>
+      <input type="range" id="s-fy" min="-400" max="400" step="5" value="0" oninput="autoSaveMobileLayout()">
     </div>
   </div>
 
@@ -202,22 +209,23 @@
     ];
   }
 
-  // Fonction d'auto-sauvegarde déclenchée par les sliders
   function autoSaveMobileLayout() {
     const cscale = parseFloat(document.getElementById('s-cscale').value);
     const cx = parseInt(document.getElementById('s-cx').value);
     const cy = parseInt(document.getElementById('s-cy').value);
     const bx = parseInt(document.getElementById('s-bx').value);
+    const by = parseInt(document.getElementById('s-by').value);
     const fx = parseInt(document.getElementById('s-fx').value);
+    const fy = parseInt(document.getElementById('s-fy').value);
 
-    // Mettre à jour l'affichage des labels en direct
     document.getElementById('v-cscale').innerText = cscale.toFixed(2);
     document.getElementById('v-cx').innerText = cx + "px";
     document.getElementById('v-cy').innerText = cy + "px";
     document.getElementById('v-bx').innerText = bx;
+    document.getElementById('v-by').innerText = by;
     document.getElementById('v-fx').innerText = fx;
+    document.getElementById('v-fy').innerText = fy;
 
-    // Évite le spam sur la BDD : Attend 400ms sans action avant d'envoyer la requête
     clearTimeout(autoSaveTimeout);
     autoSaveTimeout = setTimeout(async () => {
       try {
@@ -226,7 +234,7 @@
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ 
             password: currentPassword,
-            mobileLayout: { containerScale: cscale, containerX: cx, containerY: cy, backX: bx, frontX: fx }
+            mobileLayout: { containerScale: cscale, containerX: cx, containerY: cy, backX: bx, backY: by, frontX: fx, frontY: fy }
           })
         });
         showToast();
@@ -268,13 +276,17 @@
         document.getElementById('s-cx').value = m.containerX ?? 0;
         document.getElementById('s-cy').value = m.containerY ?? 0;
         document.getElementById('s-bx').value = m.backX ?? 0;
+        document.getElementById('s-by').value = m.backY ?? 0;
         document.getElementById('s-fx').value = m.frontX ?? 0;
+        document.getElementById('s-fy').value = m.frontY ?? 0;
 
         document.getElementById('v-cscale').innerText = (m.containerScale ?? 1.00).toFixed(2);
         document.getElementById('v-cx').innerText = (m.containerX ?? 0) + "px";
         document.getElementById('v-cy').innerText = (m.containerY ?? 0) + "px";
         document.getElementById('v-bx').innerText = m.backX ?? 0;
+        document.getElementById('v-by').innerText = m.backY ?? 0;
         document.getElementById('v-fx').innerText = m.frontX ?? 0;
+        document.getElementById('v-fy').innerText = m.frontY ?? 0;
       }
     } catch (e) { console.error("Error loading values.", e); }
   }
