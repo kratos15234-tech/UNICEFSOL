@@ -85,7 +85,7 @@
       mix-blend-mode: screen;
       pointer-events: none;
       will-change: transform;
-      opacity: 1 !important; /* TOUJOURS VISIBLE SANS EFFET DE SUPPRESSION */
+      opacity: 1 !important;
     }
     
     #backsuper { 
@@ -93,7 +93,7 @@
       background-position: left bottom; 
       background-size: contain; 
       z-index: 1;
-      transform-origin: bottom left; /* Point d'ancrage fixe pour éviter les trous */
+      transform-origin: bottom left;
     }
     
     #frontsuper { 
@@ -101,7 +101,7 @@
       background-position: right bottom; 
       background-size: contain; 
       z-index: 5;
-      transform-origin: bottom right; /* Point d'ancrage fixe pour préserver la partie droite */
+      transform-origin: bottom right;
     }
 
     /* ── CONTENUS LAYERS ── */
@@ -120,7 +120,7 @@
     #hero-title { align-items: flex-start; text-align: left; max-width: 800px; }
     #hero-title .line {
       display: block;
-      font-size: clamp(3.5rem, 8vw, 7.5rem);
+      font-size: clamp(3.2rem, 7.5vw, 7rem);
       font-weight: 800;
       line-height: 0.95;
       letter-spacing: -2px;
@@ -212,14 +212,13 @@
     #quote-layer h2 { font-size: clamp(3rem, 7vw, 5.5rem); font-weight: 800; line-height: 1.05; letter-spacing: -2px; }
     #quote-layer .accent { background: linear-gradient(90deg, #14F195, #9945FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-    /* FOOTER TOUJOURS VISIBLE ET ACCESSIBLE */
     footer {
       position: fixed;
       bottom: 20px;
       width: 100%;
       text-align: center;
       font-size: 0.7rem;
-      opacity: 0.75 !important; /* Suppression de l'animation de disparition */
+      opacity: 0.75 !important;
       z-index: 100;
       letter-spacing: 0.5px;
       line-height: 1.6;
@@ -269,9 +268,10 @@
 
     <div id="hero-title" class="layer">
       <div>
-        <span class="line" id="h1">Every Trade</span>
-        <span class="line" id="h2">For Every Child,</span>
-        <span class="line" id="h3">Every <span class="accent">Right.</span></span>
+        <span class="line">Every Trade</span>
+        <span class="line">For Every</span>
+        <span class="line">Child, Every</span>
+        <span class="line"><span class="accent">Right.</span></span>
       </div>
     </div>
 
@@ -389,8 +389,7 @@ function onScroll(p) {
   heroTitle.style.opacity = Math.max(0, 1 - hOut);
   heroTitle.style.transform = `translateY(${hOut * -30}px)`;
 
-  // ── PARALLAXE MULTI-AXES INVERSÉE (ZÉRO TROU GARANTI)
-  // Utilisation de déplacements et de légères rotations ancrées sur le bas de la fenêtre.
+  // ── PARALLAXE MULTI-AXES INVERSÉE (SANS TROUS)
   frontsuper.style.transform = `translateX(${p * 35}px) rotate(${p * 0.4}deg)`;
   backsuper.style.transform = `translateX(${p * -35}px) rotate(${p * -0.4}deg)`;
 
