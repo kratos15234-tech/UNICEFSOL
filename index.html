@@ -1,3 +1,16 @@
+Pour que tu puisses calibrer tes positions initiales et tes amplitudes à l'œil nu directement depuis ton navigateur, j'ai intégré un **panneau de contrôle interactif Web3 Premium** (GUI personnalisé) discret en haut à droite de ton écran.
+
+Il te permet d'ajuster en temps réel :
+
+* Les **Offsets horizontaux de départ** (pour repositionner tes images avant même de scroller).
+* Les **Échelles de sécurité initiales (Scale)**.
+* Les **Amplitudes maximales de mouvement** au scroll (X et Rotation).
+
+Ce panneau recalibre instantanément ta timeline GSAP à chaque changement sans casser le scroll original.
+
+Voici le code complet mis à jour à remplacer :
+
+```html
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -45,7 +58,7 @@
       justify-content: space-between;
       align-items: center;
       padding: 16px 32px;
-      z-index: 100;
+      z-index: 99;
       background: rgba(255, 255, 255, 0.03);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
@@ -70,16 +83,39 @@
     .btn-buy { background: #14F195; color: #020105; border: none; font-weight: 700; box-shadow: 0 4px 20px rgba(20, 241, 149, 0.25); }
     .btn-buy:hover { background: #12d885; box-shadow: 0 6px 24px rgba(20, 241, 149, 0.4); transform: translateY(-2px); }
 
+    /* ── PANNEAU DE CONTRÔLE INTERACTIF DES SUPERS ── */
+    #dev-control-panel {
+      position: fixed;
+      top: 100px;
+      right: 20px;
+      width: 320px;
+      background: rgba(11, 4, 22, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(153, 69, 255, 0.3);
+      border-radius: 16px;
+      padding: 20px;
+      z-index: 1000;
+      font-family: 'Space Grotesk', sans-serif;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6), inset 0 0 15px rgba(153, 69, 255, 0.1);
+    }
+    #dev-control-panel h3 { font-size: 1rem; color: #14F195; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: center; text-transform: uppercase; letter-spacing: 1px; }
+    .ctrl-group { margin-bottom: 14px; }
+    .ctrl-group label { display: flex; justify-content: space-between; font-size: 0.75rem; color: rgba(255,255,255,0.7); margin-bottom: 4px; }
+    .ctrl-group label span:last-child { color: #9945FF; font-weight: bold; }
+    .ctrl-group input[type="range"] { width: 100%; -webkit-appearance: none; background: rgba(255,255,255,0.1); height: 6px; border-radius: 3px; outline: none; }
+    .ctrl-group input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; border-radius: 50%; background: #14F195; cursor: pointer; box-shadow: 0 0 8px #14F195; }
+
     /* ── STRUCTURE ── */
     #pin-wrap { position: relative; height: 750vh; }
     #pin-scene { position: sticky; top: 0; height: 100vh; overflow: hidden; }
 
-    /* ── SUPERS (SCELLÉS AU BAS DE L'ÉCRAN — EFFET DE PARALLAXE INVERSÉ) ── */
+    /* ── SUPERS (VALEURS DE BASE SURCHARGÉES PAR LE PANNEAU DE CONTRÔLE) ── */
     #backsuper, #frontsuper {
       position: absolute;
       left: 0;
       right: 0;
-      bottom: 0;
+      bottom: -1px;
       top: 0;
       background-repeat: no-repeat;
       mix-blend-mode: screen;
@@ -117,7 +153,6 @@
       opacity: 0;
     }
 
-    /* Titre structuré pour éviter les coupures et overflows */
     #hero-title { align-items: flex-start; text-align: left; max-width: 800px; opacity: 1; }
     #hero-title .line {
       display: block;
@@ -220,7 +255,7 @@
       width: 100%;
       text-align: center;
       font-size: 0.7rem;
-      z-index: 100;
+      z-index: 90;
       letter-spacing: 0.5px;
       line-height: 1.6;
       padding: 0 20px;
@@ -231,6 +266,7 @@
     /* ── RESPONSIVE MOBILE ── */
     @media(max-width:768px) {
       header { width: 92%; padding: 12px 20px; top: 12px; }
+      #dev-control-panel { display: none; } /* Masqué sur mobile pour le confort */
       .logo-area { font-size: 1.1rem; }
       .logo-area img { height: 24px; }
       .btn { font-size: 0.8rem; padding: 8px 16px; border-radius: 10px; }
@@ -254,6 +290,41 @@
 <div id="bg-gradient"></div>
 <canvas id="particles"></canvas>
 
+<!-- LE PANNEAU DE CONFIGURATION EN TEMPS RÉEL -->
+<div id="dev-control-panel">
+  <h3>⚡ Config Supers</h3>
+  
+  <div class="ctrl-group">
+    <label><span>Initial Scale (Anti-trou)</span><span id="v-scale">1.10</span></label>
+    <input type="range" id="c-scale" min="1.00" max="1.30" step="0.01" value="1.10">
+  </div>
+  
+  <div class="ctrl-group">
+    <label><span>Back Initial X (px)</span><span id="v-backXInit">0</span></label>
+    <input type="range" id="c-backXInit" min="-200" max="200" step="5" value="0">
+  </div>
+
+  <div class="ctrl-group">
+    <label><span>Front Initial X (px)</span><span id="v-frontXInit">0</span></label>
+    <input type="range" id="c-frontXInit" min="-200" max="200" step="5" value="0">
+  </div>
+  
+  <div class="ctrl-group">
+    <label><span>Back Scroll Dist (xPercent)</span><span id="v-backX">15</span></label>
+    <input type="range" id="c-backX" min="0" max="50" step="1" value="15">
+  </div>
+
+  <div class="ctrl-group">
+    <label><span>Front Scroll Dist (xPercent)</span><span id="v-frontX">15</span></label>
+    <input type="range" id="c-frontX" min="0" max="50" step="1" value="15">
+  </div>
+
+  <div class="ctrl-group">
+    <label><span>Max Rotate Angle (deg)</span><span id="v-rotate">1.5</span></label>
+    <input type="range" id="c-rotate" min="0.0" max="5.0" step="0.1" value="1.5">
+  </div>
+</div>
+
 <header>
   <div class="logo-area"><img src="logo.png" height="32"><span>UNICEF</span></div>
   <div class="nav-btns">
@@ -268,7 +339,6 @@
     <div id="backsuper"></div>
     <div id="frontsuper"></div>
 
-    <!-- Titre corrigé : 2 mots max par ligne pour le respect du responsive -->
     <div id="hero-title" class="layer">
       <div>
         <span class="line">Every Trade</span>
@@ -322,7 +392,6 @@
   <span style="opacity:0.6;">UNICEF is an independent community charity token on Solana. Not affiliated with, endorsed by, or operated by UNICEF Foundation®.<br>Powered by @pumpdotfun × @donatedotgg</span>
 </footer>
 
-<!-- CDN GSAP PROPRE -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
@@ -364,58 +433,89 @@ fetch('/api/get-amount')
 const backsuper  = document.getElementById('backsuper');
 const frontsuper = document.getElementById('frontsuper');
 
-// Configuration Master Timeline ScrollTrigger native
-const tl = gsap.timeline({
-  scrollTrigger: {
-    trigger: "#pin-wrap",
-    start: "top top",
-    end: "bottom bottom",
-    scrub: 1, // Effet d'inertie ultra fluide
-    pin: "#pin-scene",
-    invalidateOnRefresh: true
+// Déclaration de la variable globale pour la timeline
+let tl;
+
+// Configuration et initialisation dynamique de l'animation GSAP
+function buildAnimation() {
+  // S'il y a déjà une timeline active, on la détruit proprement
+  if (tl) {
+    tl.scrollTrigger.kill(true);
+    tl.kill();
   }
+
+  // Lecture en temps réel des valeurs du panneau de contrôle
+  const cfg = {
+    scale: parseFloat(document.getElementById('c-scale').value),
+    backXInit: parseInt(document.getElementById('c-backXInit').value),
+    frontXInit: parseInt(document.getElementById('c-frontXInit').value),
+    backX: parseInt(document.getElementById('c-backX').value),
+    frontX: parseInt(document.getElementById('c-frontX').value),
+    rotate: parseFloat(document.getElementById('c-rotate').value),
+  };
+
+  // Mise à jour des valeurs textuelles dans le panneau UI
+  document.getElementById('v-scale').innerText = cfg.scale.toFixed(2);
+  document.getElementById('v-backXInit').innerText = cfg.backXInit + 'px';
+  document.getElementById('v-frontXInit').innerText = cfg.frontXInit + 'px';
+  document.getElementById('v-backX').innerText = cfg.backX;
+  document.getElementById('v-frontX').innerText = cfg.frontX;
+  document.getElementById('v-rotate').innerText = cfg.rotate.toFixed(1);
+
+  // Recréation de la timeline ScrollTrigger native
+  tl = gsap.timeline({
+    scrollTrigger: {
+      trigger: "#pin-wrap",
+      start: "top top",
+      end: "bottom bottom",
+      scrub: 1,
+      pin: "#pin-scene",
+      invalidateOnRefresh: true
+    }
+  });
+
+  // Injection des variables ajustées à la volée dans la parallaxe multi-axes
+  tl.fromTo(backsuper, 
+    { x: cfg.backXInit, xPercent: 0, rotation: 0, scale: cfg.scale },
+    { x: cfg.backXInit, xPercent: -cfg.backX, rotation: -cfg.rotate, scale: cfg.scale, ease: "none" }, 
+    0
+  );
+
+  tl.fromTo(frontsuper, 
+    { x: cfg.frontXInit, xPercent: 0, rotation: 0, scale: cfg.scale },
+    { x: cfg.frontXInit, xPercent: cfg.frontX, rotation: cfg.rotate, scale: cfg.scale, ease: "none" }, 
+    0
+  );
+
+  // Reconstruction des enchaînements cinématiques des couches de contenu
+  tl.to("#hero-title", { opacity: 0, y: -40, ease: "power2.inOut" }, 0.05)
+    .fromTo("#mission-content", { opacity: 0, y: 40 }, { opacity: 1, y: 0, ease: "power2.out" }, 0.15)
+    .to({}, { 
+      onStart: () => triggerMissionCounter(),
+      onReverseComplete: () => { document.getElementById('mpct').innerText = "0%"; }
+    }, 0.18)
+    .to("#mission-content", { opacity: 0, y: -40, ease: "power2.in" }, 0.35)
+    .fromTo("#amount-layer", { opacity: 0, y: 40 }, { opacity: 1, y: 0, ease: "power2.out" }, 0.42)
+    .to("#progress-fill", { width: () => pct + "%", ease: "power3.out" }, 0.45)
+    .to("#amount-layer", { opacity: 0, y: -40, ease: "power2.in" }, 0.62)
+    .fromTo("#story-layer", { opacity: 0, y: 40 }, { opacity: 1, y: 0, ease: "power2.out" }, 0.68)
+    .to({}, { onStart: () => triggerTypewriter() }, 0.72)
+    .to("#story-layer", { opacity: 0, y: -40, ease: "power2.in" }, 0.88)
+    .fromTo("#quote-layer", { opacity: 0, y: 40 }, { opacity: 1, y: 0, ease: "power2.out" }, 0.92);
+
+  // Rafraîchir de force le moteur ScrollTrigger pour enregistrer les nouvelles géométries
+  ScrollTrigger.refresh();
+}
+
+// Écouteurs d'événements sur les inputs du panneau pour recalculer l'animation instantanément
+document.querySelectorAll('#dev-control-panel input').forEach(input => {
+  input.addEventListener('input', buildAnimation);
 });
 
-// 1. ANIMATION DE PARALLAXE MULTI-AXES DES SUPERS SANS AUCUN TROU EN BAS
-// Le mouvement se fait horizontalement et s'accompagne d'une légère rotation opposée.
-tl.to(backsuper, {
-  xPercent: -15,
-  rotation: -1.5,
-  ease: "none"
-}, 0);
+// Lancement initial au chargement du DOM
+window.addEventListener('DOMContentLoaded', buildAnimation);
 
-tl.to(frontsuper, {
-  xPercent: 15,
-  rotation: 1.5,
-  ease: "none"
-}, 0);
-
-// 2. ENCHAÎNEMENT CINÉMATIQUE DES TEXTES (FADE-IN / FADE-OUT ET TRANSLATEY LÉGER)
-// Séquence : Hero Title -> Mission -> Amount -> Story -> Quote
-tl.to("#hero-title", { opacity: 0, y: -40, ease: "power2.inOut" }, 0.05)
-  
-  // Mission Layer
-  .fromTo("#mission-content", { opacity: 0, y: 40 }, { opacity: 1, y: 0, ease: "power2.out" }, 0.15)
-  .to({}, { 
-    onStart: () => triggerMissionCounter(),
-    onReverseComplete: () => { document.getElementById('mpct').innerText = "0%"; }
-  }, 0.18)
-  .to("#mission-content", { opacity: 0, y: -40, ease: "power2.in" }, 0.35)
-
-  // Amount Layer
-  .fromTo("#amount-layer", { opacity: 0, y: 40 }, { opacity: 1, y: 0, ease: "power2.out" }, 0.42)
-  .to("#progress-fill", { width: () => pct + "%", ease: "power3.out" }, 0.45)
-  .to("#amount-layer", { opacity: 0, y: -40, ease: "power2.in" }, 0.62)
-
-  // Story Layer
-  .fromTo("#story-layer", { opacity: 0, y: 40 }, { opacity: 1, y: 0, ease: "power2.out" }, 0.68)
-  .to({}, { onStart: () => triggerTypewriter() }, 0.72)
-  .to("#story-layer", { opacity: 0, y: -40, ease: "power2.in" }, 0.88)
-
-  // Quote Layer
-  .fromTo("#quote-layer", { opacity: 0, y: 40 }, { opacity: 1, y: 0, ease: "power2.out" }, 0.92);
-
-// Fonctions d'exécution asynchrones liées au scroll
+// Triggers d'exécution asynchrones
 let counterFired = false;
 function triggerMissionCounter() {
   if (counterFired) return;
@@ -436,7 +536,7 @@ function triggerTypewriter() {
   startTypewriter();
 }
 
-// TYPEWRITER BLINKING CURSOR
+// CURSEUR TYPEWRITER
 gsap.fromTo("#cursor", { opacity: 0 }, { opacity: 1, repeat: -1, duration: 0.35, ease: "steps(1)", yoyo: true });
 
 const phrases = storedPhrases.length ? storedPhrases : DEFAULT_PHRASES;
@@ -464,7 +564,7 @@ document.getElementById('ca-text').onclick = function () {
   setTimeout(() => this.innerText = '3t4GiENDepWKkGicwDoMz2V2fWDZXHLAoJ3ZrpZQpump', 2000);
 };
 
-// PARTICLES CANVAS
+// PARTICLES
 const cv = document.getElementById('particles');
 const cx = cv.getContext('2d');
 let W, H;
@@ -489,3 +589,5 @@ const pts = Array(60).fill(0).map(() => ({
 </script>
 </body>
 </html>
+
+```
