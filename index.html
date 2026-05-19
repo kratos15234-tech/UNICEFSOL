@@ -256,11 +256,11 @@
         footer a { color: rgba(20, 241, 149, 0.8); text-decoration: none; }
         footer a:hover { color: #14F195; }
 
-        /* ── PANNEAU DE CONFIGURATION MOBILE AJUSTÉ POUR LE CONTENEUR GLOBAL ── */
+        /* ── INTERFACE DÉPLACÉE EN HAUT ── */
         #mobile-editor {
             display: none;
             position: fixed;
-            bottom: 10px;
+            top: 10px; /* Mis en haut */
             left: 5%;
             width: 90%;
             background: rgba(2, 1, 5, 0.95);
@@ -284,7 +284,9 @@
         @media(max-width:768px) {
             #mobile-editor { display: block; } 
             
-            header { width: 92%; padding: 12px 20px; top: 12px; }
+            /* On pousse le vrai header un peu plus bas temporairement pour pas qu'il chevauche l'éditeur */
+            header { width: 92%; padding: 12px 20px; top: 290px; } 
+            
             .logo-area { font-size: 1.1rem; }
             .nav-btns { gap: 8px; }
             .btn { font-size: 0.8rem; padding: 8px 16px; border-radius: 10px; }
@@ -299,7 +301,7 @@
             }
 
             .layer { padding: 0 6%; }
-            #hero-title { align-items: center; text-align: center; }
+            #hero-title { align-items: center; text-align: center; padding-top: 150px; } /* Décale le texte pour qu'il soit lisible sous l'éditeur */
             .mission-card { padding: 40px 24px; border-radius: 24px; }
             .ca-display { font-size: 0.7rem; padding: 10px 16px; word-break: break-all; }
             #total-donations { font-size: clamp(3rem, 12vw, 5rem); }
@@ -438,7 +440,6 @@
     const particles  = document.getElementById('particles');
     let tl;
 
-    // Structure de configuration mobile dynamique étendue
     let mobCfg = {
         containerScale: 1.00,
         containerX: 0,
@@ -455,7 +456,6 @@
 
         const isMobile = window.innerWidth <= 768;
 
-        // On applique d'abord la position fixe sur le conteneur parent si on est sur mobile
         if(isMobile) {
             gsap.set(container, {
                 x: mobCfg.containerX,
@@ -467,7 +467,7 @@
         }
 
         const cfg = isMobile ? {
-            scale: 1, // Fixé à 1 à l'intérieur, car géré par le conteneur global au-dessus
+            scale: 1, 
             backXInit: mobCfg.backX,
             backYInit: 0,
             frontXInit: mobCfg.frontX,
@@ -537,7 +537,6 @@
         ScrollTrigger.refresh();
     }
 
-    // CONTRÔLES MOBILES ÉTENDUS
     if(window.innerWidth <= 768) {
         const inputs = {
             cscale: document.getElementById('s-cscale'),
