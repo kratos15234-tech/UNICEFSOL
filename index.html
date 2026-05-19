@@ -56,7 +56,7 @@
     .bebas{font-family:'Bebas Neue';}
 
     /* hero — visible dès le départ */
-    #hero-title{opacity:1 !important;}
+    #hero-title{opacity:1;}
     #hero-title .line{
       display:block;font-family:'Outfit', sans-serif; font-weight: 600;
       font-size:clamp(4.5rem,13vw,9.5rem);line-height:.88;
@@ -361,7 +361,7 @@ function onScroll(p) {
   // Au scroll 0, hIn=0 (easeOut(0)=0), hOut=0 → opacity = max(0, 0-0) = 0
   // Mais le CSS force opacity:1 via #hero-title{opacity:1!important}
   // On retire le !important et on gère tout ici en s'assurant qu'à p=0 c'est visible
-  const hIn  = p < 0.001 ? 1 : easeOut(local(p, S.hero[0], S.hero[1]));
+  const hIn  = easeOut(local(p, S.hero[0], S.hero[1]));
   const hOut = easeInOut(local(p, S.hero[2], S.hero[3]));
   heroTitle.style.opacity = Math.max(0, hIn - hOut);
   heroTitle.style.transform = `translateY(${hOut * -60}px)`;
