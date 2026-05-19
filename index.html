@@ -74,7 +74,7 @@
     #pin-wrap { position: relative; height: 750vh; }
     #pin-scene { position: sticky; top: 0; height: 100vh; overflow: hidden; }
 
-    /* ── SUPERS (TAILLE APPAREIL FIXE — SANS TROU) ── */
+    /* ── SUPERS (SCELLÉS AU BAS DE L'ÉCRAN — EFFET DE PARALLAXE INVERSÉ) ── */
     #backsuper, #frontsuper {
       position: absolute;
       left: 0;
@@ -85,7 +85,6 @@
       mix-blend-mode: screen;
       pointer-events: none;
       will-change: transform;
-      opacity: 1 !important;
     }
     
     #backsuper { 
@@ -115,18 +114,21 @@
       z-index: 10;
       pointer-events: none;
       will-change: transform, opacity;
+      opacity: 0;
     }
 
-    #hero-title { align-items: flex-start; text-align: left; max-width: 800px; }
+    /* Titre structuré pour éviter les coupures et overflows */
+    #hero-title { align-items: flex-start; text-align: left; max-width: 800px; opacity: 1; }
     #hero-title .line {
       display: block;
-      font-size: clamp(3.2rem, 7.5vw, 7rem);
+      font-size: clamp(2.8rem, 7.5vw, 6.5rem);
       font-weight: 800;
-      line-height: 0.95;
+      line-height: 1.05;
       letter-spacing: -2px;
       background: linear-gradient(180deg, #ffffff 0%, #c1b3df 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      margin-bottom: 8px;
     }
     #hero-title .accent {
       background: linear-gradient(90deg, #14F195, #9945FF);
@@ -199,14 +201,14 @@
     #total-donations { font-family: 'Space Grotesk', sans-serif; font-size: clamp(4rem, 10vw, 7.5rem); font-weight: 700; letter-spacing: -3px; line-height: 1; }
     .progress-wrap { width: 100%; max-width: 600px; margin-top: 40px; }
     .progress-track { position: relative; height: 8px; background: rgba(255, 255, 255, 0.08); border-radius: 50px; }
-    #progress-fill { position: absolute; left: 0; top: 0; height: 100%; width: 0%; background: linear-gradient(90deg, #14F195, #9945FF); border-radius: 50px; box-shadow: 0 0 20px rgba(20, 241, 149, 0.6); transition: width 2s cubic-bezier(0.16, 1, 0.3, 1); }
+    #progress-fill { position: absolute; left: 0; top: 0; height: 100%; width: 0%; background: linear-gradient(90deg, #14F195, #9945FF); border-radius: 50px; box-shadow: 0 0 20px rgba(20, 241, 149, 0.6); }
     .goal-labels { display: flex; justify-content: space-between; margin-top: 14px; font-family: 'Space Grotesk', sans-serif; font-size: 0.9rem; color: rgba(255,255,255,0.4); }
 
     #story-layer { align-items: center; text-align: center; }
     .story-intro { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 400; margin-bottom: 24px; color: rgba(255,255,255,0.6); }
     .story-intro .accent { color: #fff; font-weight: 700; }
     #dynamic-text { font-family: 'Space Grotesk', sans-serif; font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 700; color: #14F195; min-height: 1.2em; }
-    #cursor { display: inline-block; width: 4px; height: 0.8em; background: #14F195; margin-left: 8px; vertical-align: middle; animation: blink 0.7s infinite; }
+    #cursor { display: inline-block; width: 4px; height: 0.8em; background: #14F195; margin-left: 8px; vertical-align: middle; }
 
     #quote-layer { align-items: center; text-align: center; }
     #quote-layer h2 { font-size: clamp(3rem, 7vw, 5.5rem); font-weight: 800; line-height: 1.05; letter-spacing: -2px; }
@@ -218,12 +220,12 @@
       width: 100%;
       text-align: center;
       font-size: 0.7rem;
-      opacity: 0.75 !important;
       z-index: 100;
       letter-spacing: 0.5px;
       line-height: 1.6;
       padding: 0 20px;
       color: rgba(255, 255, 255, 0.4);
+      pointer-events: none;
     }
 
     /* ── RESPONSIVE MOBILE ── */
@@ -266,6 +268,7 @@
     <div id="backsuper"></div>
     <div id="frontsuper"></div>
 
+    <!-- Titre corrigé : 2 mots max par ligne pour le respect du responsive -->
     <div id="hero-title" class="layer">
       <div>
         <span class="line">Every Trade</span>
@@ -275,7 +278,7 @@
       </div>
     </div>
 
-    <div id="mission-content" class="layer" style="opacity:0;">
+    <div id="mission-content" class="layer">
       <div class="mission-card">
         <div class="mission-tag-text">of all fees going directly to unicef</div>
         <div class="mission-pct-wrap">
@@ -286,7 +289,7 @@
       </div>
     </div>
 
-    <div id="amount-layer" class="layer" style="opacity:0;">
+    <div id="amount-layer" class="layer">
       <p class="amount-label">Total Donations Generated</p>
       <h2 id="total-donations">$0.00</h2>
       <div class="progress-wrap">
@@ -302,12 +305,12 @@
       </div>
     </div>
 
-    <div id="story-layer" class="layer" style="opacity:0;">
+    <div id="story-layer" class="layer">
       <p class="story-intro"><span id="story-amount" class="accent">$0.00</span> représente...</p>
-      <div id="dynamic-text"><span id="typewriter-text"></span><span id="cursor"></span></div>
+      <div id="dynamic-text"><span id="typewriter-text"></span><span id="cursor">|</span></div>
     </div>
 
-    <div id="quote-layer" class="layer" style="opacity:0;">
+    <div id="quote-layer" class="layer">
       <h2>Trading crypto can<br><span class="accent">save a life.</span></h2>
     </div>
 
@@ -319,6 +322,7 @@
   <span style="opacity:0.6;">UNICEF is an independent community charity token on Solana. Not affiliated with, endorsed by, or operated by UNICEF Foundation®.<br>Powered by @pumpdotfun × @donatedotgg</span>
 </footer>
 
+<!-- CDN GSAP PROPRE -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
@@ -352,95 +356,89 @@ fetch('/api/get-amount')
       pct = Math.min((realAmount / 100000) * 100, 100);
       document.getElementById('total-donations').textContent = fmt(realAmount);
       document.getElementById('story-amount').textContent    = fmt(realAmount);
-      if (progressBarFired) {
-        document.getElementById('progress-fill').style.width = pct + '%';
-      }
     }
   })
   .catch(err => console.error("Erreur montant:", err));
 
-function local(p, start, end) { return Math.max(0, Math.min(1, (p - start) / (end - start))); }
-function easeInOut(t) { return t < .5 ? 2*t*t : -1+(4-2*t)*t; }
-function easeOut(t)    { return 1 - Math.pow(1 - t, 3); }
-
+// DOM Elements
 const backsuper  = document.getElementById('backsuper');
 const frontsuper = document.getElementById('frontsuper');
-const heroTitle  = document.getElementById('hero-title');
-const mission    = document.getElementById('mission-content');
-const amountL    = document.getElementById('amount-layer');
-const storyL     = document.getElementById('story-layer');
-const quoteL     = document.getElementById('quote-layer');
 
-const S = {
-  hero:    [0,     0,     0.10,  0.18],
-  mission: [0.12,  0.20,  0.32,  0.40],
-  amount:  [0.36,  0.44,  0.58,  0.66],
-  story:   [0.62,  0.70,  0.82,  0.90],
-  quote:   [0.86,  0.93,  1.0,   1.0 ],
-};
-
-let missionCounterFired = false;
-let progressBarFired    = false;
-let typewriterFired     = false;
-
-function onScroll(p) {
-  // ── HERO
-  const hOut = easeInOut(local(p, S.hero[2], S.hero[3]));
-  heroTitle.style.opacity = Math.max(0, 1 - hOut);
-  heroTitle.style.transform = `translateY(${hOut * -30}px)`;
-
-  // ── PARALLAXE MULTI-AXES INVERSÉE (SANS TROUS)
-  frontsuper.style.transform = `translateX(${p * 35}px) rotate(${p * 0.4}deg)`;
-  backsuper.style.transform = `translateX(${p * -35}px) rotate(${p * -0.4}deg)`;
-
-  // ── MISSION
-  const mIn  = easeOut(local(p, S.mission[0], S.mission[1]));
-  const mOut = easeInOut(local(p, S.mission[2], S.mission[3]));
-  mission.style.opacity   = Math.max(0, mIn - mOut);
-  mission.style.transform = `translateY(${(1 - mIn) * 30 + mOut * -30}px)`;
-  if (p >= S.mission[0] + 0.02 && !missionCounterFired) {
-    missionCounterFired = true;
-    let o = { v: 0 };
-    gsap.to(o, { v: 100, duration: 2, ease: 'power3.out',
-      onUpdate: () => document.getElementById('mpct').innerText = Math.ceil(o.v) + '%' });
+// Configuration Master Timeline ScrollTrigger native
+const tl = gsap.timeline({
+  scrollTrigger: {
+    trigger: "#pin-wrap",
+    start: "top top",
+    end: "bottom bottom",
+    scrub: 1, // Effet d'inertie ultra fluide
+    pin: "#pin-scene",
+    invalidateOnRefresh: true
   }
+});
 
-  // ── AMOUNT
-  const aIn  = easeOut(local(p, S.amount[0], S.amount[1]));
-  const aOut = easeInOut(local(p, S.amount[2], S.amount[3]));
-  amountL.style.opacity   = Math.max(0, aIn - aOut);
-  amountL.style.transform = `translateY(${(1 - aIn) * 30 + aOut * -30}px)`;
-  if (p >= S.amount[0] + 0.02 && !progressBarFired) {
-    progressBarFired = true;
-    document.getElementById('progress-fill').style.width = pct + '%';
-  }
+// 1. ANIMATION DE PARALLAXE MULTI-AXES DES SUPERS SANS AUCUN TROU EN BAS
+// Le mouvement se fait horizontalement et s'accompagne d'une légère rotation opposée.
+tl.to(backsuper, {
+  xPercent: -15,
+  rotation: -1.5,
+  ease: "none"
+}, 0);
 
-  // ── STORY
-  const sIn  = easeOut(local(p, S.story[0], S.story[1]));
-  const sOut = easeInOut(local(p, S.story[2], S.story[3]));
-  storyL.style.opacity   = Math.max(0, sIn - sOut);
-  storyL.style.transform = `translateY(${(1 - sIn) * 30 + sOut * -30}px)`;
-  if (p >= S.story[0] + 0.02 && !typewriterFired) {
-    typewriterFired = true;
-    startTypewriter();
-  }
+tl.to(frontsuper, {
+  xPercent: 15,
+  rotation: 1.5,
+  ease: "none"
+}, 0);
 
-  // ── QUOTE
-  const qIn  = easeOut(local(p, S.quote[0], S.quote[1]));
-  quoteL.style.opacity   = qIn;
-  quoteL.style.transform = `translateY(${(1 - qIn) * 30}px)`;
+// 2. ENCHAÎNEMENT CINÉMATIQUE DES TEXTES (FADE-IN / FADE-OUT ET TRANSLATEY LÉGER)
+// Séquence : Hero Title -> Mission -> Amount -> Story -> Quote
+tl.to("#hero-title", { opacity: 0, y: -40, ease: "power2.inOut" }, 0.05)
+  
+  // Mission Layer
+  .fromTo("#mission-content", { opacity: 0, y: 40 }, { opacity: 1, y: 0, ease: "power2.out" }, 0.15)
+  .to({}, { 
+    onStart: () => triggerMissionCounter(),
+    onReverseComplete: () => { document.getElementById('mpct').innerText = "0%"; }
+  }, 0.18)
+  .to("#mission-content", { opacity: 0, y: -40, ease: "power2.in" }, 0.35)
+
+  // Amount Layer
+  .fromTo("#amount-layer", { opacity: 0, y: 40 }, { opacity: 1, y: 0, ease: "power2.out" }, 0.42)
+  .to("#progress-fill", { width: () => pct + "%", ease: "power3.out" }, 0.45)
+  .to("#amount-layer", { opacity: 0, y: -40, ease: "power2.in" }, 0.62)
+
+  // Story Layer
+  .fromTo("#story-layer", { opacity: 0, y: 40 }, { opacity: 1, y: 0, ease: "power2.out" }, 0.68)
+  .to({}, { onStart: () => triggerTypewriter() }, 0.72)
+  .to("#story-layer", { opacity: 0, y: -40, ease: "power2.in" }, 0.88)
+
+  // Quote Layer
+  .fromTo("#quote-layer", { opacity: 0, y: 40 }, { opacity: 1, y: 0, ease: "power2.out" }, 0.92);
+
+// Fonctions d'exécution asynchrones liées au scroll
+let counterFired = false;
+function triggerMissionCounter() {
+  if (counterFired) return;
+  counterFired = true;
+  let o = { v: 0 };
+  gsap.to(o, {
+    v: 100,
+    duration: 1.5,
+    ease: "power2.out",
+    onUpdate: () => { document.getElementById('mpct').innerText = Math.ceil(o.v) + '%'; }
+  });
 }
 
-function getProgress() {
-  const wrap = document.getElementById('pin-wrap');
-  const totalScroll = wrap.offsetHeight - window.innerHeight;
-  return Math.max(0, Math.min(1, window.scrollY / totalScroll));
+let typewriterFired = false;
+function triggerTypewriter() {
+  if (typewriterFired) return;
+  typewriterFired = true;
+  startTypewriter();
 }
 
-window.addEventListener('scroll', () => onScroll(getProgress()), { passive: true });
-requestAnimationFrame(() => requestAnimationFrame(() => onScroll(0)));
+// TYPEWRITER BLINKING CURSOR
+gsap.fromTo("#cursor", { opacity: 0 }, { opacity: 1, repeat: -1, duration: 0.35, ease: "steps(1)", yoyo: true });
 
-// TYPEWRITER
 const phrases = storedPhrases.length ? storedPhrases : DEFAULT_PHRASES;
 let cur = 0, del = false, tx = '';
 const twEl = document.getElementById('typewriter-text');
@@ -466,7 +464,7 @@ document.getElementById('ca-text').onclick = function () {
   setTimeout(() => this.innerText = '3t4GiENDepWKkGicwDoMz2V2fWDZXHLAoJ3ZrpZQpump', 2000);
 };
 
-// PARTICLES
+// PARTICLES CANVAS
 const cv = document.getElementById('particles');
 const cx = cv.getContext('2d');
 let W, H;
