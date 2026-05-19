@@ -1,7 +1,7 @@
 <!DOCTYPE html><html lang="en"><head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UNICEFSOL • Every Trade Saves A Life</title>
+    <title>UNICEFSOL</title>
     <link rel="icon" type="image/png" href="logo.png">
     
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
@@ -57,7 +57,7 @@
         .logo-area img { height: 32px; }
         .nav-btns { display: flex; gap: 12px; }
         .btn {
-            text-decoration: none;
+            text-decoration: text;
             color: #fff;
             font-family: 'Space Grotesk', sans-serif;
             font-weight: 500;
@@ -256,37 +256,9 @@
         footer a { color: rgba(20, 241, 149, 0.8); text-decoration: none; }
         footer a:hover { color: #14F195; }
 
-        /* ── INTERFACE DÉPLACÉE EN HAUT ── */
-        #mobile-editor {
-            display: none;
-            position: fixed;
-            top: 10px; /* Mis en haut */
-            left: 5%;
-            width: 90%;
-            background: rgba(2, 1, 5, 0.95);
-            border: 2px solid #14F195;
-            border-radius: 16px;
-            padding: 12px;
-            z-index: 9999;
-            font-family: monospace;
-            font-size: 0.75rem;
-            color: #fff;
-            box-shadow: 0 0 20px rgba(20, 241, 149, 0.3);
-        }
-        #mobile-editor h4 { color: #14F195; margin-bottom: 6px; text-transform: uppercase; text-align: center; }
-        .ctrl-group { border: 1px solid rgba(255,255,255,0.1); padding: 8px; border-radius: 8px; margin-bottom: 6px; }
-        .ctrl-group-title { color: #14F195; font-weight: bold; margin-bottom: 4px; font-size: 0.7rem; text-transform: uppercase;}
-        .ctrl-row { display: flex; flex-direction: column; margin-bottom: 4px; }
-        .ctrl-row label { display: flex; justify-content: space-between; margin-bottom: 1px; color: #c1b3df; }
-        .ctrl-row input { width: 100%; accent-color: #14F195; }
-
         /* ── RESPONSIVE MOBILE ── */
         @media(max-width:768px) {
-            #mobile-editor { display: block; } 
-            
-            /* On pousse le vrai header un peu plus bas temporairement pour pas qu'il chevauche l'éditeur */
-            header { width: 92%; padding: 12px 20px; top: 290px; } 
-            
+            header { width: 92%; padding: 12px 20px; top: 12px; } 
             .logo-area { font-size: 1.1rem; }
             .nav-btns { gap: 8px; }
             .btn { font-size: 0.8rem; padding: 8px 16px; border-radius: 10px; }
@@ -301,7 +273,7 @@
             }
 
             .layer { padding: 0 6%; }
-            #hero-title { align-items: center; text-align: center; padding-top: 150px; } /* Décale le texte pour qu'il soit lisible sous l'éditeur */
+            #hero-title { align-items: center; text-align: center; } 
             .mission-card { padding: 40px 24px; border-radius: 24px; }
             .ca-display { font-size: 0.7rem; padding: 10px 16px; word-break: break-all; }
             #total-donations { font-size: clamp(3rem, 12vw, 5rem); }
@@ -314,41 +286,7 @@
     <div class="nav-btns">
         <a href="https://x.com/i/communities/2011296092843831350" target="_blank" class="btn">Community</a>
         <a href="https://pump.fun/coin/3t4GiENDepWKkGicwDoMz2V2fWDZXHLAoJ3ZrpZQpump" target="_blank" class="btn btn-buy">Buy $UNICEF</a>
-    </div></header>
-
-    <div id="mobile-editor">
-        <h4>Mobile Containers & Supers</h4>
-        
-        <div class="ctrl-group">
-            <div class="ctrl-group-title">1. Global Container</div>
-            <div class="ctrl-row">
-                <label><span>Container Scale:</span><span id="v-cscale">1.00</span></label>
-                <input type="range" id="s-cscale" min="0.5" max="2.5" step="0.05" value="1.00">
-            </div>
-            <div class="ctrl-row">
-                <label><span>Container X:</span><span id="v-cx">0</span></label>
-                <input type="range" id="s-cx" min="-300" max="300" step="2" value="0">
-            </div>
-            <div class="ctrl-row">
-                <label><span>Container Y:</span><span id="v-cy">0</span></label>
-                <input type="range" id="s-cy" min="-300" max="500" step="2" value="0">
-            </div>
-        </div>
-
-        <div class="ctrl-group">
-            <div class="ctrl-group-title">2. Individual Layers (Inside)</div>
-            <div class="ctrl-row">
-                <label><span>Back Layer X:</span><span id="v-bx">0</span></label>
-                <input type="range" id="s-bx" min="-400" max="400" step="5" value="0">
-            </div>
-            <div class="ctrl-row">
-                <label><span>Front Layer X:</span><span id="v-fx">0</span></label>
-                <input type="range" id="s-fx" min="-400" max="400" step="5" value="0">
-            </div>
-        </div>
-    </div>
-
-    <div id="pin-wrap">
+    </div></header><div id="pin-wrap">
     <div id="pin-scene">
 
         <div id="supers-container">
@@ -406,7 +344,7 @@
     gsap.registerPlugin(ScrollTrigger);
 
     const DEFAULT_AMOUNT  = 20931.49;
-    const DEFAULT_PHRASES = [
+    let DEFAULT_PHRASES = [
         "42,600 polio vaccines",
         "8,500 days of essential nutrition",
         "12,400 clean water kits",
@@ -417,22 +355,8 @@
         return '$' + n.toLocaleString('en-US', { minimumFractionDigits:2, maximumFractionDigits:2 });
     }
 
-    const storedPhrases = JSON.parse(localStorage.getItem('unicef_phrases') || 'null') || DEFAULT_PHRASES;
-    
     let realAmount = DEFAULT_AMOUNT;
-    document.getElementById('total-donations').textContent = fmt(realAmount);
-    document.getElementById('story-amount').textContent    = fmt(realAmount);
-
-    fetch('/api/get-amount')
-        .then(res => res.json())
-        .then(data => {
-            if(data && data.amount) {
-                realAmount = data.amount;
-                document.getElementById('total-donations').textContent = fmt(realAmount);
-                document.getElementById('story-amount').textContent    = fmt(realAmount);
-            }
-        })
-        .catch(err => console.error("Real amount error:", err));
+    let mobCfg = { containerScale: 1.00, containerX: 0, containerY: 0, backX: 0, frontX: 0 };
 
     const container  = document.getElementById('supers-container');
     const backsuper  = document.getElementById('backsuper');
@@ -440,13 +364,27 @@
     const particles  = document.getElementById('particles');
     let tl;
 
-    let mobCfg = {
-        containerScale: 1.00,
-        containerX: 0,
-        containerY: 0,
-        backX: 0,
-        frontX: 0
-    };
+    // LECTURE DYNAMIQUE DE TOUTES LES DONNÉES DEPUIS L'API UNIQUE
+    fetch('/api/get-amount')
+        .then(res => res.json())
+        .then(data => {
+            if(data) {
+                if(data.amount) {
+                    realAmount = data.amount;
+                    document.getElementById('total-donations').textContent = fmt(realAmount);
+                    document.getElementById('story-amount').textContent    = fmt(realAmount);
+                }
+                // Récupère la mise en page trouvée via l'admin
+                if(data.mobileLayout) {
+                    mobCfg = data.mobileLayout;
+                }
+            }
+            buildAnimation(); // Lance la timeline une fois les variables chargées
+        })
+        .catch(err => {
+            console.error("Data load error:", err);
+            buildAnimation();
+        });
 
     function buildAnimation() {
         if (tl) {
@@ -456,11 +394,12 @@
 
         const isMobile = window.innerWidth <= 768;
 
+        // Application des styles du conteneur mobile récupéré de la DB
         if(isMobile) {
             gsap.set(container, {
-                x: mobCfg.containerX,
-                y: mobCfg.containerY,
-                scale: mobCfg.containerScale
+                x: mobCfg.containerX ?? 0,
+                y: mobCfg.containerY ?? 0,
+                scale: mobCfg.containerScale ?? 1
             });
         } else {
             gsap.set(container, { x: 0, y: 0, scale: 1 });
@@ -468,9 +407,9 @@
 
         const cfg = isMobile ? {
             scale: 1, 
-            backXInit: mobCfg.backX,
+            backXInit: mobCfg.backX ?? 0,
             backYInit: 0,
-            frontXInit: mobCfg.frontX,
+            frontXInit: mobCfg.frontX ?? 0,
             frontYInit: 0,
             backScrollX: 10,
             frontScrollX: 10,
@@ -537,42 +476,6 @@
         ScrollTrigger.refresh();
     }
 
-    if(window.innerWidth <= 768) {
-        const inputs = {
-            cscale: document.getElementById('s-cscale'),
-            cx: document.getElementById('s-cx'),
-            cy: document.getElementById('s-cy'),
-            bx: document.getElementById('s-bx'),
-            fx: document.getElementById('s-fx')
-        };
-        const views = {
-            cscale: document.getElementById('v-cscale'),
-            cx: document.getElementById('v-cx'),
-            cy: document.getElementById('v-cy'),
-            bx: document.getElementById('v-bx'),
-            fx: document.getElementById('v-fx')
-        };
-
-        function updateFromSliders() {
-            mobCfg.containerScale = parseFloat(inputs.cscale.value);
-            mobCfg.containerX = parseInt(inputs.cx.value);
-            mobCfg.containerY = parseInt(inputs.cy.value);
-            mobCfg.backX = parseInt(inputs.bx.value);
-            mobCfg.frontX = parseInt(inputs.fx.value);
-
-            views.cscale.innerText = mobCfg.containerScale.toFixed(2);
-            views.cx.innerText = mobCfg.containerX + "px";
-            views.cy.innerText = mobCfg.containerY + "px";
-            views.bx.innerText = mobCfg.backX;
-            views.fx.innerText = mobCfg.frontX;
-
-            buildAnimation();
-        }
-
-        Object.values(inputs).forEach(input => input.addEventListener('input', updateFromSliders));
-    }
-
-    window.addEventListener('DOMContentLoaded', buildAnimation);
     window.addEventListener('resize', () => { buildAnimation(); });
 
     let counterFired = false;
@@ -597,20 +500,37 @@
 
     gsap.fromTo("#cursor", { opacity: 0 }, { opacity: 1, repeat: -1, duration: 0.35, ease: "steps(1)", yoyo: true });
 
-    const phrases = storedPhrases.length ? storedPhrases : DEFAULT_PHRASES;
+    // Génération à la volée des phrases en anglais synchronisées sur la somme
+    function getPhrases() {
+        const stored = JSON.parse(localStorage.getItem('unicef_phrases'));
+        if(stored && stored.length) return stored;
+        
+        const vac = Math.floor(realAmount / 0.491).toLocaleString();
+        const foo = Math.floor(realAmount / 2.46).toLocaleString();
+        const wat = Math.floor(realAmount / 1.686).toLocaleString();
+        
+        return [
+            vac + " polio vaccines",
+            foo + " days of essential nutrition",
+            wat + " clean water kits",
+            "a second chance for thousands of children"
+        ];
+    }
+
     let cur = 0, del = false, tx = '';
     const twEl = document.getElementById('typewriter-text');
 
     function startTypewriter() {
         function loop() {
             if (!twEl) return;
-            const f = phrases[cur];
+            const currentPhrases = getPhrases();
+            const f = currentPhrases[cur];
             tx = del ? f.substring(0, tx.length - 1) : f.substring(0, tx.length + 1);
             twEl.textContent = tx;
             let s = del ? 30 : 70; 
             
             if (!del && tx === f) { s = 2500; del = true; } 
-            else if (del && tx === '') { del = false; cur = (cur + 1) % phrases.length; s = 300; } 
+            else if (del && tx === '') { del = false; cur = (cur + 1) % currentPhrases.length; s = 300; } 
             
             setTimeout(loop, s);
         }
