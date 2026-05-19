@@ -235,7 +235,6 @@
         #quote-layer h2 { font-size: clamp(3rem, 7vw, 5.5rem); font-weight: 800; line-height: 1.05; letter-spacing: -2px; }
         #quote-layer .accent { background: linear-gradient(90deg, #14F195, #9945FF); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        /* ── FOOTER FIXÉ ET PILOTÉ PAR GSAP ── */
         footer {
             position: fixed;
             bottom: 20px;
@@ -249,22 +248,53 @@
             padding: 0 20px;
             color: rgba(153, 69, 255, 0.6); 
             background: transparent;
-            opacity: 0; /* Reste caché par défaut */
-            pointer-events: none; /* Désactivé tant qu'il n'est pas visible */
+            opacity: 0; 
+            pointer-events: none; 
             will-change: opacity;
         }
         footer a { color: rgba(20, 241, 149, 0.8); text-decoration: none; }
         footer a:hover { color: #14F195; }
 
+        /* ── PANNEAU DE CONFIGURATION MOBILE ÉPHÉMÈRE ── */
+        #mobile-editor {
+            display: none;
+            position: fixed;
+            bottom: 10px;
+            left: 5%;
+            width: 90%;
+            background: rgba(2, 1, 5, 0.95);
+            border: 2px solid #14F195;
+            border-radius: 16px;
+            padding: 15px;
+            z-index: 9999;
+            font-family: monospace;
+            font-size: 0.75rem;
+            color: #fff;
+            box-shadow: 0 0 20px rgba(20, 241, 149, 0.3);
+        }
+        #mobile-editor h4 { color: #14F195; margin-bottom: 8px; text-transform: uppercase; text-align: center; }
+        .ctrl-row { display: flex; flex-direction: column; margin-bottom: 8px; }
+        .ctrl-row label { display: flex; justify-content: space-between; margin-bottom: 2px; color: #9945FF; }
+        .ctrl-row input { width: 100%; accent-color: #14F195; }
+
         /* ── RESPONSIVE MOBILE ── */
         @media(max-width:768px) {
+            #mobile-editor { display: block; } /* Affiché uniquement sur mobile */
+            
             header { width: 92%; padding: 12px 20px; top: 12px; }
             .logo-area { font-size: 1.1rem; }
             .nav-btns { gap: 8px; }
             .btn { font-size: 0.8rem; padding: 8px 16px; border-radius: 10px; }
             
-            #backsuper { background-position: left bottom !important; background-size: contain !important; }
-            #frontsuper { background-position: right bottom !important; background-size: contain !important; }
+            /* C'est ICI que vous changerez les valeurs par défaut une fois trouvées avec les sliders */
+            #backsuper { 
+                background-position: center bottom !important; 
+                background-size: contain !important; 
+            }
+            #frontsuper { 
+                background-position: center bottom !important; 
+                background-size: contain !important; 
+            }
 
             .layer { padding: 0 6%; }
             #hero-title { align-items: center; text-align: center; }
@@ -280,7 +310,33 @@
     <div class="nav-btns">
         <a href="https://x.com/i/communities/2011296092843831350" target="_blank" class="btn">Community</a>
         <a href="https://pump.fun/coin/3t4GiENDepWKkGicwDoMz2V2fWDZXHLAoJ3ZrpZQpump" target="_blank" class="btn btn-buy">Buy $UNICEF</a>
-    </div></header><div id="pin-wrap">
+    </div></header>
+
+    <div id="mobile-editor">
+        <h4>Mobile Supers Config</h4>
+        <div class="ctrl-row">
+            <label><span>Global Scale:</span><span id="v-scale">1.50</span></label>
+            <input type="range" id="s-scale" min="0.5" max="3" step="0.05" value="1.50">
+        </div>
+        <div class="ctrl-row">
+            <label><span>Back X (Init):</span><span id="v-bx">0</span></label>
+            <input type="range" id="s-bx" min="-400" max="400" step="5" value="0">
+        </div>
+        <div class="ctrl-row">
+            <label><span>Back Y (Init):</span><span id="v-by">0</span></label>
+            <input type="range" id="s-by" min="-200" max="600" step="5" value="0">
+        </div>
+        <div class="ctrl-row">
+            <label><span>Front X (Init):</span><span id="v-fx">0</span></label>
+            <input type="range" id="s-fx" min="-400" max="400" step="5" value="0">
+        </div>
+        <div class="ctrl-row">
+            <label><span>Front Y (Init):</span><span id="v-fy">0</span></label>
+            <input type="range" id="s-fy" min="-200" max="600" step="5" value="0">
+        </div>
+    </div>
+
+    <div id="pin-wrap">
     <div id="pin-scene">
 
         <div id="supers-container">
@@ -371,20 +427,43 @@
     const particles  = document.getElementById('particles');
     let tl;
 
+    // Configuration initiale Mobile dynamique (gérée par le menu)
+    let mobCfg = {
+        scale: 1.50,
+        backX: 0,
+        backY: 0,
+        frontX: 0,
+        frontY: 0
+    };
+
     function buildAnimation() {
         if (tl) {
             tl.scrollTrigger.kill(true);
             tl.kill();
         }
 
-        const cfg = {
+        // On vérifie si l'appareil est un mobile
+        const isMobile = window.innerWidth <= 768;
+
+        // Configuration finale différenciée sans impacter le Web d'un poil !
+        const cfg = isMobile ? {
+            scale: mobCfg.scale,
+            backXInit: mobCfg.backX,
+            backYInit: mobCfg.backY,
+            frontXInit: mobCfg.frontX,
+            frontYInit: mobCfg.frontY,
+            backScrollX: 10,
+            frontScrollX: 10,
+            rotate: 2
+        } : {
+            // Vos paramètres Web initiaux, strictement intouchés
             scale: 1.23, 
             backXInit: -175,
             backYInit: 0,
             frontXInit: 86,
             frontYInit: 240, 
-            backX: 15,
-            frontX: 15,
+            backScrollX: 15,
+            frontScrollX: 15,
             rotate: 3.5 
         };
 
@@ -403,14 +482,14 @@
         tl.set(frontsuper, { x: cfg.frontXInit, y: cfg.frontYInit, scale: cfg.scale });
 
         tl.to(backsuper, {
-            xPercent: -cfg.backX, 
+            xPercent: -cfg.backScrollX, 
             rotation: -cfg.rotate,
             ease: "none",
             duration: 1
         }, 0); 
 
         tl.to(frontsuper, {
-            xPercent: cfg.frontX, 
+            xPercent: cfg.frontScrollX, 
             rotation: cfg.rotate,
             ease: "none",
             duration: 1
@@ -433,14 +512,50 @@
           .to({}, { onStart: () => triggerTypewriter() }, 0.75)
           .to("#story-layer", { opacity: 0, y: -40, ease: "power2.in", duration: 0.1 }, 0.88)
           
-          // Entrée synchrone de l'écran final ET du footer (opacity 0 -> 1)
           .fromTo("#quote-layer", { opacity: 0, y: 40 }, { opacity: 1, y: 0, ease: "power2.out", duration: 0.1 }, 0.92)
           .fromTo("#main-footer", { opacity: 0, pointerEvents: "none" }, { opacity: 1, pointerEvents: "auto", ease: "power2.out", duration: 0.1 }, 0.92);
 
         ScrollTrigger.refresh();
     }
 
+    // ── GESTION DES SLIDERS EN TEMPS RÉEL (MOBILE UNIQUEMENT) ──
+    if(window.innerWidth <= 768) {
+        const inputs = {
+            scale: document.getElementById('s-scale'),
+            bx: document.getElementById('s-bx'),
+            by: document.getElementById('s-by'),
+            fx: document.getElementById('s-fx'),
+            fy: document.getElementById('s-fy')
+        };
+        const views = {
+            scale: document.getElementById('v-scale'),
+            bx: document.getElementById('v-bx'),
+            by: document.getElementById('v-by'),
+            fx: document.getElementById('v-fx'),
+            fy: document.getElementById('v-fy')
+        };
+
+        function updateFromSliders() {
+            mobCfg.scale = parseFloat(inputs.scale.value);
+            mobCfg.backX = parseInt(inputs.bx.value);
+            mobCfg.backY = parseInt(inputs.by.value);
+            mobCfg.frontX = parseInt(inputs.fx.value);
+            mobCfg.frontY = parseInt(inputs.fy.value);
+
+            views.scale.innerText = mobCfg.scale.toFixed(2);
+            views.bx.innerText = mobCfg.backX;
+            views.by.innerText = mobCfg.backY;
+            views.fx.innerText = mobCfg.frontX;
+            views.fy.innerText = mobCfg.frontY;
+
+            buildAnimation(); // Reconstruit instantanément la timeline avec les nouvelles coordonnées
+        }
+
+        Object.values(inputs).forEach(input => input.addEventListener('input', updateFromSliders));
+    }
+
     window.addEventListener('DOMContentLoaded', buildAnimation);
+    window.addEventListener('resize', () => { buildAnimation(); });
 
     let counterFired = false;
     function triggerMissionCounter() {
