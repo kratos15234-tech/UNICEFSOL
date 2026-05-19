@@ -78,7 +78,10 @@
     /* ── DÉCORS SUPER (PARALLAXE ÉVOLUTIF) ── */
     #backsuper, #frontsuper {
       position: absolute;
-      inset: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;               /* Aligné parfaitement en bas */
+      height: 120vh;           /* Plus haut que l'écran pour anticiper la montée */
       background-size: cover;
       background-repeat: no-repeat;
       mix-blend-mode: screen;
@@ -396,13 +399,14 @@ function onScroll(p) {
   if (h2) h2.style.transform = `translateX(${slide * 0.5}px)`;
   if (h3) h3.style.transform = `translateX(-${slide * 0.8}px)`;
 
-  // ── PARALLAX SUPERS (EFFET PROFONDEUR WEB3)
+  // ── PARALLAX SUPERS (CORRIGÉ : SANS DÉCOLLEMENT)
   let bOp = 0.4;
   if (p > 0.30 && p < 0.38) bOp = (1 - easeInOut(local(p, 0.30, 0.38))) * 0.4;
   else if (p >= 0.38 && p < 0.60) bOp = easeOut(local(p, 0.38, 0.44)) * 0.4;
   else if (p >= 0.60) bOp = (1 - easeInOut(local(p, 0.60, 0.68))) * 0.4;
   backsuper.style.opacity = bOp;
-  backsuper.style.transform = `translateY(${p * -100}px) scale(${1 + p*0.05})`;
+  // Modifié : la valeur reste dans la réserve des 120vh
+  backsuper.style.transform = `translateY(${p * -40}px) scale(${1 + p*0.05})`;
 
   let fOp = 0.6;
   if (p > 0.14 && p < 0.22) fOp = (1 - easeInOut(local(p, 0.14, 0.22))) * 0.6;
@@ -411,7 +415,8 @@ function onScroll(p) {
   else if (p >= 0.68 && p < 0.84) fOp = 0.6;
   else if (p >= 0.84) fOp = (1 - easeInOut(local(p, 0.84, 0.92))) * 0.6;
   frontsuper.style.opacity = fOp;
-  frontsuper.style.transform = `translateY(${p * -180}px) scale(${1 + p*0.1})`;
+  // Modifié : monte un poil plus vite que le fond pour la 3D, mais sans faire de trou
+  frontsuper.style.transform = `translateY(${p * -80}px) scale(${1 + p*0.05})`;
 
   // ── MISSION TIMING
   const mIn  = easeOut(local(p, S.mission[0], S.mission[1]));
