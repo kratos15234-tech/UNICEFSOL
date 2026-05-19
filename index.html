@@ -161,8 +161,14 @@
 .btn{font-size:.85rem;padding:7px 14px;}
 
 /* MODIFICATION ICI : Cadrage forcé à droite sur mobile */
-#backsuper, #frontsuper {
+#frontsuper {
   background-position: right bottom !important; /* Force l'alignement à droite */
+  background-size: cover !important;            /* Force le remplissage de l'écran */
+  background-repeat: no-repeat;
+}
+
+#backsuper{
+  background-position: left bottom !important; /* Force l'alignement à droite */
   background-size: cover !important;            /* Force le remplissage de l'écran */
   background-repeat: no-repeat;
 }
