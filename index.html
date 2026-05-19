@@ -38,6 +38,7 @@
     #backsuper,#frontsuper{
       position:absolute;inset:0;
       background-size:cover;background-position:center bottom;
+      background-repeat:no-repeat;
       mix-blend-mode:screen;pointer-events:none;will-change:transform,opacity;
     }
     #backsuper { background-image:url('backsuper.png'); z-index:1; }
@@ -156,7 +157,8 @@
 
       #backsuper,#frontsuper{
         background-position:center bottom;
-        background-size:auto 55%;
+        background-size:contain;
+        background-repeat:no-repeat;
       }
 
       .layer{padding:0 5%;justify-content:center;}
@@ -364,7 +366,8 @@ function onScroll(p) {
   heroTitle.style.opacity = Math.max(0, hIn - hOut);
   heroTitle.style.transform = `translateY(${hOut * -60}px)`;
 
-  const slide = easeInOut(local(p, 0, S.hero[3])) * 140;
+  // Le slide suit le fade-out : 0 au repos, max quand opacity=0
+  const slide = hOut * 160;
   if (h1) h1.style.transform = `translateX(-${slide}px)`;
   if (h2) h2.style.transform = `translateX(${slide}px)`;
   if (h3) h3.style.transform = `translateX(-${slide}px)`;
